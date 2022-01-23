@@ -6,7 +6,7 @@ let s4 = Symbol('qux')
 let o = {
     s1 : 'foo var'
 }
-console.log(o);
+console.log(o)
 
 Object.defineProperty(o, s2, {value : 'bar value'})
-console.log(o);
+console.log(o)
