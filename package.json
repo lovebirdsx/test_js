@@ -5,6 +5,9 @@
   "main": "index.js",
   "type": "module",
   "dependencies": {
+    "co": "^4.6.0",
+    "node-fetch": "^3.2.0",
+    "thunkify": "^2.1.2",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {},
