@@ -1,4 +1,4 @@
-import { XMLHttpRequest } from 'xmlhttprequest';
+let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function () {

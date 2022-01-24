@@ -1,4 +1,5 @@
-import { XMLHttpRequest } from 'xmlhttprequest';
+// import { XMLHttpRequest } from 'xmlhttprequest'
+let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 
 const getContent = function (url) {
     const promise = new Promise(function (resolve, reject) {

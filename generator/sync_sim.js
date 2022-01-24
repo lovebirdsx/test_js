@@ -1,4 +1,5 @@
-import { XMLHttpRequest } from 'xmlhttprequest';
+// import { XMLHttpRequest } from 'xmlhttprequest'
+let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 
 function* main() {
     let response = yield request_url('https://www.sqlite.org/about.html')
