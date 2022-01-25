@@ -41,6 +41,7 @@
         "linebreak-style": "off",
         "no-plusplus": "off",
         "no-console": "off",
-        "indent": "off"
+        "indent": "off",
+        "lines-between-class-members": "off"
     }
 }
