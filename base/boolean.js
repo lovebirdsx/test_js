@@ -1,3 +1,5 @@
+const { log } = require("console")
+
 let str1 = ""
 console.log("str1 is " + Boolean(str1))
 let str2 = "Hello"
@@ -13,3 +15,6 @@ console.log("obj1 is " + Boolean(obj1))
 let obj2 = Object()
 console.log("obj2 is " + Boolean(obj2))
 
+
+console.log(0 ? true : false);
+console.log(1 ? true : false);
