@@ -19,3 +19,5 @@ console.log(`
 let value = 5
 let exponent = 'second'
 console.log(`${value} by ${exponent} is ${value * value}`);
+
+console.log(exponent.includes('sec'))
