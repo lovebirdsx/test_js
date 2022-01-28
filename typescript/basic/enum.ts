@@ -16,8 +16,21 @@ class TestEnum {
         console.log(Days[0]);
     }
 
+    static testConst() {
+        // eslint-disable-next-line no-shadow
+        const enum Goo {
+            Foo,
+            Bar,
+            Car
+        }
+        console.log(Goo.Foo);
+        console.log(Goo.Bar);
+        console.log(Goo.Car);
+    }
+
     static Run() {
         TestEnum.testBasic();
+        TestEnum.testConst();
     }
 }
 
