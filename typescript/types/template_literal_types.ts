@@ -24,7 +24,7 @@ module template_literal_types {
     type PropertyEventSource<Type> = {
         on<Key extends string & keyof Type>(
             eventName: `${Key}Changed`, callback: (value: Type[Key]) => void
-        ):void;
+        ): void;
     };
 
     declare function MakeEventCallback<Type>(obj: Type) : Type & PropertyEventSource<Type>;
