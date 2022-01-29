@@ -34,11 +34,18 @@ class TestArray {
         console.log(f);
     }
 
+    static testRemove() {
+        const a = [1, 2, 3, 4];
+        a.splice(1, 1);
+        console.log(a);
+    }
+
     static Run(): void {
         TestArray.testBasic();
         TestArray.testInterface();
         TestArray.testInterface2();
         TestArray.testAny();
+        TestArray.testRemove();
     }
 }
 
