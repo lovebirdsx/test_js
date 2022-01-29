@@ -95,6 +95,17 @@ class TestFunction {
         console.log(typeof a, a);
     }
 
+    static testLeftParams() {
+        function foo(name:string, ...otherParams : string[]) {
+            console.log(name);
+            for (let i = 0; i < otherParams.length; i++) {
+                console.log(otherParams[i]);
+            }
+        }
+
+        foo('Hello', 'foo', 'bar', 'car');
+    }
+
     static Run(): void {
         TestFunction.testBasic();
         TestFunction.testExpression();
@@ -104,6 +115,7 @@ class TestFunction {
         TestFunction.testDefault();
         TestFunction.testParam();
         TestFunction.testReturn();
+        TestFunction.testLeftParams();
     }
 }
 

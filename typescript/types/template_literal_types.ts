@@ -28,11 +28,14 @@ module template_literal_types {
     };
 
     declare function MakeEventCallback<Type>(obj: Type) : Type & PropertyEventSource<Type>;
-    const player = MakeEventCallback({
+
+    const data = {
         firstName: 'Song',
         lastName: 'Xiao',
         age: 18,
-    });
+    };
+    const player = MakeEventCallback(data);
+    console.log(player.firstName);
     player.on('firstNameChanged', (value) => console.log(value));
     player.firstName = 'lovebird';
 }
