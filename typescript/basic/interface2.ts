@@ -56,8 +56,27 @@ class TestInterface2 {
         // (howable as IEatable).eat(); 报错
     }
 
+    static testAdvanced() {
+        interface Foo {
+            foo: string;
+        }
+        interface Bar {
+            bar: string;
+        }
+
+        function isFoo(obj:Foo | Bar): obj is Foo {
+            return (obj as Foo).foo !== undefined;
+        }
+
+        const foo = { foo: 'Foo' };
+        const bar = { bar: 'Bar' };
+        console.log(`foo is foo = ${isFoo(foo)}`);
+        console.log(`bar is foo = ${isFoo(bar)}`);
+    }
+
     static Run() {
         TestInterface2.testBasic();
+        TestInterface2.testAdvanced();
     }
 }
 
