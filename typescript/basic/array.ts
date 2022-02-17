@@ -3,6 +3,8 @@ class TestArray {
         const fabolacci: number[] = [1, 2, 3, 5, 8];
         console.log(fabolacci);
 
+        console.log('fabolacci[-1]', fabolacci[-1]);
+
         // fabolacci.push('8'); 只允许传入number类型
     }
 
@@ -35,9 +37,8 @@ class TestArray {
     }
 
     static testRemove() {
-        const a = [1, 2, 3, 4];
-        a.splice(1, 1);
-        console.log(a);
+        console.log('[1, 2, 3, 4].splice(1, 1)', [1, 2, 3, 4].splice(1, 1));
+        console.log('[1, 2, 3, 4].splice(1)', [1, 2, 3, 4].splice(1));
     }
 
     static Run(): void {
