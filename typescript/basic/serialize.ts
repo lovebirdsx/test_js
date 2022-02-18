@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { jsonMember, jsonObject, TypedJSON } from 'typedjson';
 
 class TestSerialize {
-    static TestBasic() {
+    static testBasic() {
         class Animal {
             name: string;
             leg: number;
@@ -21,7 +21,7 @@ class TestSerialize {
         console.log(a2);
     }
 
-    static TestExtend() {
+    static testExtend() {
         class Animal {
             name: string;
             constructor(name: string) {
@@ -61,7 +61,7 @@ class TestSerialize {
         animal2.halk();
     }
 
-    static TestExtend2() {
+    static testExtend2() {
         @jsonObject
         class Animal {
             @jsonMember
@@ -99,10 +99,19 @@ class TestSerialize {
         animal?.halk();
     }
 
+    static testFilter() {
+        const foo = {
+            id: 1,
+            name: 'Hello',
+        };
+        console.log('testFilter', JSON.stringify(foo, ['name']));
+    }
+
     static Main() {
-        TestSerialize.TestBasic();
-        TestSerialize.TestExtend();
-        TestSerialize.TestExtend2();
+        TestSerialize.testBasic();
+        TestSerialize.testExtend();
+        TestSerialize.testExtend2();
+        TestSerialize.testFilter();
     }
 }
 

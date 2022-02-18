@@ -6,6 +6,11 @@ class TestArray {
         console.log('fabolacci[-1]', fabolacci[-1]);
 
         // fabolacci.push('8'); 只允许传入number类型
+
+        const foo = [1, 2];
+        console.log(foo[1], foo[2]);
+        foo[2] = 3;
+        console.log(foo, foo.length);
     }
 
     static testInterface(): void {
