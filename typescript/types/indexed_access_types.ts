@@ -8,8 +8,7 @@ module indexed_access_types {
     const c1: C = 12;
     const c2: C = 'foo';
 
-    type AliveOrName = 'name' | 'alive';
-    type D = A[AliveOrName];
+    type D = A['name' | 'alive'];
     const d1: D = false;
     const d2: D = 'bar';
 
