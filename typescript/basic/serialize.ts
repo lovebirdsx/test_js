@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { jsonMember, jsonObject, TypedJSON } from 'typedjson';
@@ -107,11 +109,107 @@ class TestSerialize {
         console.log('testFilter', JSON.stringify(foo, ['name']));
     }
 
+    static deepEqual(a: any, b: any) {
+        for (const key in a) {
+            if (Object.prototype.hasOwnProperty.call(a, key)) {
+                const va = a[key];
+                const vb = b[key];
+                if (vb === undefined) {
+                    console.log('1', key, va);
+                    return false;
+                }
+
+                const vaType = typeof va;
+                const vbType = typeof vb;
+                if (vaType !== vbType) {
+                    console.log('2', vaType, vbType);
+                    return false;
+                }
+
+                if (vaType === 'object') {
+                    if (!this.deepEqual(va, vb)) {
+                        return false;
+                    }
+                } else if (va !== vb) {
+                    console.log('3', va, vb);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    static mergeDeep(obj1: any, obj2: any) {
+        for (const key in obj2) {
+            if (Object.prototype.hasOwnProperty.call(obj2, key)) {
+                const v2 = obj2[key];
+                if (typeof v2 === 'object') {
+                    if (!obj1[key]) {
+                        obj1[key] = {};
+                    }
+                    obj1[key] = TestSerialize.mergeDeep(obj1[key], obj2[key]);
+                } else {
+                    obj1[key] = obj2[key];
+                }
+            }
+        }
+        return obj1;
+    }
+
+    static testFilterByName() {
+        const data = {
+            id: 1,
+            name: 'lovebird',
+            _fold: false,
+            flow: {
+                name: 'foo',
+                _fold: true,
+                _bar: {
+                    _name: '_bar',
+                },
+                baz: {
+                    name: '_baz',
+                    _fold: true,
+                },
+            },
+        };
+
+        console.log('data', data);
+
+        const configStr = JSON.stringify(data, (key, value) => {
+            if (typeof key === 'string' && key[0] === '_') {
+                return undefined;
+            }
+            return value;
+        }, 2);
+
+        const stateStr = JSON.stringify(data, (key, value) => {
+            if (typeof key === 'string' && key.length > 0 && key[0] !== '_' && typeof value !== 'object') {
+                return undefined;
+            }
+            return value;
+        }, 2);
+
+        const config = JSON.parse(configStr);
+        console.log('config', config);
+
+        const state = JSON.parse(stateStr);
+        console.log('state', state);
+
+        const data2 = TestSerialize.mergeDeep(TestSerialize.mergeDeep({}, config), state);
+        console.log('data2', data2);
+        if (!TestSerialize.deepEqual(data, data2)) {
+            console.log('data1 !== data2');
+        }
+    }
+
     static Main() {
         TestSerialize.testBasic();
         TestSerialize.testExtend();
         TestSerialize.testExtend2();
         TestSerialize.testFilter();
+        TestSerialize.testFilterByName();
     }
 }
 
