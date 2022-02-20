@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable max-len */
 function testMyFunctions() {
     // 条件判断
     function condition() {
@@ -10,51 +9,106 @@ function testMyFunctions() {
         type r4 = 'car' & 'plane' extends 'car' | 'plane' ? true : false;
         type r5 = 'car' extends 'car' | 'plane' ? true : false;
         type r6 = 'plane' & 'car' extends 'car' & 'plane' ? true : false;
-        type r7 = {name: string} extends {name: string} ? true : false;
-        type r8 = {name: string, id: number} extends {name: string} ? true : false;
-        type r9 = {name: string} extends {name: string, id: number} ? true : false;
+        type r7 = { name: string } extends { name: string } ? true : false;
+        type r8 = { name: string; id: number } extends { name: string }
+            ? true
+            : false;
+        type r9 = { name: string } extends { name: string; id: number }
+            ? true
+            : false;
         type r10 = [1, 2] extends [1] ? true : false;
         type r11 = [1] extends [1, 2] ? true : false;
         type r12 = [1, 2] extends [1, 2] ? true : false;
 
         // 是否包含字段
-        type GetValueType<T, K extends string> = T extends {[key in K]: any} ? T[K] : never;
-        type vt1 = GetValueType<{name: string, id: number}, 'name'> // string
-        type vt2 = GetValueType<{name: string, id: number}, 'ids'> // never
+        type GetValueType<T, K extends string> = T extends { [key in K]: any }
+            ? T[K]
+            : never;
+        type vt1 = GetValueType<{ name: string; id: number }, 'name'>; // string
+        type vt2 = GetValueType<{ name: string; id: number }, 'ids'>; // never
 
         interface Action {
             name: string;
             params: {
                 id: number;
-            }
+            };
         }
-        type pt = GetValueType<Action, 'params'>
+        type pt = GetValueType<Action, 'params'>;
 
         // 获得最后1个
-        type GetLast<T extends any[]> = T extends [...any[], infer R] ? R : never;
-        type l1 = GetLast<[1, 2, 3]>
+        type GetLast<T extends any[]> = T extends [...any[], infer R]
+            ? R
+            : never;
+        type l1 = GetLast<[1, 2, 3]>;
 
         // 获得字段个数
         type GetLen<T extends any[]> = T extends any ? T['length'] : never;
-        type len = GetLen<[1, 2, 3, 4]>
+        type len = GetLen<[1, 2, 3, 4]>;
     }
 
     // 递归调用
     function recursion() {
-        type Combine<T, U> = [T, U]
-        type C = Combine<'foo', 'bar'>
-        type C1 = [keyof C]
-        type D = C['length']
+        type Combine<T, U> = [T, U];
+        type C = Combine<'foo', 'bar'>;
+        type C1 = [keyof C];
+        type D = C['length'];
 
-        type GetLast<T extends any[]> = T extends [...any[], infer R] ? R : never;
-        type Map<T extends any[]> = T extends [...infer Args, infer Last] ? [Last, ...Map<Args>] : never;
-        type l = Map<[1, 2, 3, 4]>
+        type GetLast<T extends any[]> = T extends [...any[], infer R]
+            ? R
+            : never;
+        type Map<T extends any[]> = T extends [...infer Args, infer Last]
+            ? [Last, ...Map<Args>]
+            : never;
+        type l = Map<[1, 2, 3, 4]>;
     }
 
     function testA() {
-        type Foo = {name: string, id: number};
-        type ValueType<T> = T extends {[K: string] : infer R} ? R : never;
+        type Foo = { name: string; id: number };
+        type ValueType<T> = T extends { [K: string]: infer R } ? R : never;
         type FooV = ValueType<Foo>;
+    }
+
+    function containers() {
+        /* eslint-disable max-len */
+
+        // type MakeByKes<T extends keyof any> = {[P in keyof T]: any}
+        type ReplaceValByOwnKey<T, S extends T> = { [P in keyof T]: S[P] };
+        type A1 = {
+            foo: string;
+            bar: boolean;
+        };
+        type B1 = { bar: boolean };
+        type R1 = ReplaceValByOwnKey<B1, A1>;
+
+        type ShiftAction<T extends any[]> = [...args: T] extends [
+            arg1: any,
+            ...rest: infer R
+        ]
+            ? R
+            : never;
+        type UnshiftAction<T extends any[], A> = [
+            args1: A,
+            ...rest: T
+        ] extends [...args: infer R]
+            ? R
+            : never;
+        type PopAction<T extends any[]> = [...args: T] extends [
+            ...rest: infer R,
+            arg: any
+        ]
+            ? R
+            : never;
+        type PushAction<T extends any[], A> = [...rest: T, arg: A] extends [
+            ...args: infer R
+        ]
+            ? R
+            : never;
+
+        type tuple1 = ['vue', 'react', 'angular'];
+        type resultWithShiftAction = ShiftAction<tuple1>; // ["react", "angular"]
+        type resultWithUnshiftAction = UnshiftAction<tuple1, 'jquery'>; // ["jquery", "vue", "react", "angular"]
+        type resultWithPopAction = PopAction<tuple1>; // ["vue", "react"]
+        type resultWithPushAction = PushAction<tuple1, 'jquery'>; // ["vue", "react", "angular", "jquery"]
     }
 
     // 官方示例
@@ -66,17 +120,26 @@ function testMyFunctions() {
         };
 
         type PropEventSouce<T> = {
-            data: T,
-            on<Key extends string & keyof T>(eventName: `${Key}Changed`, callback: (value: T[Key]) => void) : void;
+            data: T;
+            on<Key extends string & keyof T>(
+                eventName: `${Key}Changed`,
+                callback: (value: T[Key]) => void
+            ): void;
         };
 
         type PropEventEnv<T> = {
-            register<Key extends string & keyof T>(eventName: `${Key}Changed`, callback: (value: T[Key]) => void) : void
-            fire<Key extends string & keyof T>(eventName: `${Key}Changed`, value: T[Key]): void;
-        }
+            register<Key extends string & keyof T>(
+                eventName: `${Key}Changed`,
+                callback: (value: T[Key]) => void
+            ): void;
+            fire<Key extends string & keyof T>(
+                eventName: `${Key}Changed`,
+                value: T[Key]
+            ): void;
+        };
 
         type EventCallback = (value: any) => void;
-        function createEnv<T>(data:T) : PropEventEnv<T> {
+        function createEnv<T>(data: T): PropEventEnv<T> {
             class Env implements PropEventEnv<T> {
                 callbacks = new Map<string, EventCallback>();
 
@@ -96,7 +159,7 @@ function testMyFunctions() {
 
         const env = createEnv(data);
 
-        function declareCallback<T>(data:T) : PropEventSouce<T> {
+        function declareCallback<T>(data: T): PropEventSouce<T> {
             class Callback implements PropEventSouce<T> {
                 data = data;
                 on(eventName: any, callback: (value: any) => void): void {

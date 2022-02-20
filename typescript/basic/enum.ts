@@ -1,7 +1,9 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
-class TestEnum {
-    static testBasic() {
-        // eslint-disable-next-line no-shadow
+function TestEnum() {
+    function testBasic() {
         enum Days {
             Sun,
             Mon,
@@ -16,8 +18,7 @@ class TestEnum {
         console.log(Days[0]);
     }
 
-    static testConst() {
-        // eslint-disable-next-line no-shadow
+    function testConst() {
         const enum Goo {
             Foo,
             Bar,
@@ -28,10 +29,18 @@ class TestEnum {
         console.log(Goo.Car);
     }
 
-    static Run() {
-        TestEnum.testBasic();
-        TestEnum.testConst();
+    function getEnumNames(e: any) {
+        return Object.keys(e).filter((e) => Number.isNaN(parseInt(e, 10)));
     }
+
+    function testMeta() {
+        enum A {Foo, Bar, Car}
+        console.log(getEnumNames(A));
+    }
+
+    testBasic();
+    testConst();
+    testMeta();
 }
 
-TestEnum.Run();
+TestEnum();
