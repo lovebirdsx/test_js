@@ -7,29 +7,47 @@ function testBind() {
         }
 
         logInfo() {
-            console.log(`Foo.name = ${this.name}`);
+            console.log('Foo.name', this && this.name);
         }
+    }
 
-        logInfoDelay() {
-            setTimeout(this.logInfo, 0.1);
-        }
+    function call(cb:() => void) {
+        cb();
     }
 
     function classBind() {
         const foo = new Foo('classBind');
-        console.log(JSON.stringify(foo.logInfo));
-        console.log(JSON.stringify(foo));
-        // 以下两个都会输出undefined
-        foo.logInfoDelay();
-        setTimeout(foo.logInfo, 0.1);
+        // 会输出undefined
+        call(foo.logInfo);
 
         // 为了避免该情况,使用bind来明确告知函数运行时的this位置
         foo.logInfo = foo.logInfo.bind(foo);
-        foo.logInfoDelay();
-        setTimeout(foo.logInfo, 0.1);
+        call(foo.logInfo);
     }
 
-    classBind();
+    function objectBind() {
+        const foo = {
+            name: 'objectBind',
+            loginInfo() {
+                console.log('info', this && this.name);
+            },
+        };
+
+        foo.loginInfo();
+        const cb1 = foo.loginInfo;
+        cb1();
+
+        const cb2 = foo.loginInfo.bind(foo);
+        cb2();
+    }
+
+    function test(cb:() => void) {
+        console.log('=========== Test', cb.name);
+        cb();
+    }
+
+    test(classBind);
+    test(objectBind);
 }
 
 testBind();
