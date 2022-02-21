@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-class TestMap {
-    static testBase() {
+function testMap() {
+    function testBase() {
         class Foo {
             name: string;
             constructor(name:string) {
@@ -20,9 +20,18 @@ class TestMap {
         console.log(foo, bar);
     }
 
-    static run() {
-        TestMap.testBase();
+    function testSet() {
+        const a = new Map();
+        a.set('hello', 'world');
+
+        // 注意,此处输出的结果是 '{}'
+        console.log(JSON.stringify(a));
+
+        console.log(typeof a, typeof {});
     }
+
+    testBase();
+    testSet();
 }
 
-TestMap.run();
+testMap();
