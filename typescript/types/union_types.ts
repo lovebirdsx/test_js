@@ -70,5 +70,16 @@ function testUnionTypes() {
         type LocaleNames = `${Lan}_${Name}`
     }
 
-    testBasic();
+    function constToUnion() {
+        const FooNames = ['a', 'b', 'c'] as const;
+        type Foo = typeof FooNames[number];
+        const f: Foo = 'a';
+        console.log(FooNames);
+        FooNames.forEach((e) => console.log(e));
+    }
+
+    // testBasic();
+    constToUnion();
 }
+
+testUnionTypes();
