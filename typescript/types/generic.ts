@@ -1,5 +1,4 @@
-/* eslint-disable new-cap */
-module test.types.generic {
+function testGeneric() {
     function testBaisc() {
         function geta<Type>(value: Type): Type {
             return value;
@@ -29,19 +28,23 @@ module test.types.generic {
     }
 
     function testKeyOf() {
-        function getd<T, K extends keyof T>(value:T, key: K) {
+        function getd<T, K extends keyof T>(value: T, key: K) {
             return value[key];
         }
 
         const d1 = {
-            a: 1, b: 2, c: 3, 4: 'haha',
+            a: 1,
+            b: 2,
+            c: 3,
+            4: 'haha',
         };
         console.log(getd(d1, 4));
         // console.log(getd(d1, 5)); 报错
     }
 
     function testConstructor() {
-        function create<T>(t:{new(): T}): T {
+        function create<T>(t: { new (): T }): T {
+            // eslint-disable-next-line new-cap
             return new t();
         }
 
@@ -76,6 +79,7 @@ module test.types.generic {
         }
 
         function createInstance<A extends Animal>(c: new () => A): A {
+            // eslint-disable-next-line new-cap
             return new c();
         }
 

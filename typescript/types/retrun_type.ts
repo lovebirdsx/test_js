@@ -1,4 +1,4 @@
-module test.return_types {
+function testReturnTypes() {
     type Foo = () => boolean;
     type K = ReturnType<Foo>;
     const a: K = false;

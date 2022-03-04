@@ -1,4 +1,4 @@
-module test.type_assertion {
+function testTypeAssertion() {
     function testBasic() {
         interface Cat {
             name: string;

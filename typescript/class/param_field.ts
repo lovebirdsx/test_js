@@ -1,4 +1,4 @@
-module test.param_field {
+function testParamField() {
     class Foo {
         constructor(
             public name:string,
