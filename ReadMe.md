@@ -6,7 +6,7 @@
 
 ## Test
 
-- `jest` (Run `npm i jest --global` to install jest)
+- `npm test`
 
 ## VScode Plugins
 
