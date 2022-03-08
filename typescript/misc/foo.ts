@@ -1,7 +1,9 @@
-interface Foo {
-    a ? : String;
+module foo {
+    interface Foo {
+        a?: String;
+    }
+
+    const f: Foo = {};
+
+    console.log(f.a || 'hello');
 }
-
-const f: Foo = {};
-
-console.log(f.a || 'hello');
