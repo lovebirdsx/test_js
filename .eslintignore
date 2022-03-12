@@ -3,3 +3,4 @@ base
 generator
 iterator
 promise
+typescript/tsc/**/*.js
