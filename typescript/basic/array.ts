@@ -71,12 +71,19 @@ function testArray() {
         testFor([{ _key: 10 }, { _key: 103 }, { _key: 203 }]);
     }
 
+    function testIndex() {
+        const a = [1, 2, 3, 4, 5];
+        console.log(a[-1]);
+        console.log(a.at(-1));
+    }
+
     testBasic();
     testInterface();
     testInterface2();
     testAny();
     testRemove();
     testRemove2();
+    testIndex();
 }
 
 testArray();
