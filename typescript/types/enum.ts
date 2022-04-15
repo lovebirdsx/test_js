@@ -67,9 +67,21 @@ function testEnumType() {
         console.log(testEnum3.name, 'values', allObjectFilters.join(','));
     }
 
+    // 根据枚举类型来推测对应的类型
+    function testEnum4() {
+        type Foo = 'int' | 'string' | 'boolean'
+        type Value<T extends Foo> = T extends 'int' ? number:
+            T extends 'string' ? string :
+            T extends 'boolean' ? boolean : undefined;
+        const intValue: Value<'int'> = 10;
+        const stringValue: Value<'string'> = 'hello';
+        const boolValue: Value<'boolean'> = true;
+    }
+
     testEnum();
     testEnum2();
     testEnum3();
+    testEnum4();
 }
 
 testEnumType();
