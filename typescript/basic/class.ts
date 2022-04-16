@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-class TestClass {
-    static testBasic() {
+function TestClass() {
+    function testBasic() {
         class Animal {
             readonly name;
 
@@ -30,7 +30,7 @@ class TestClass {
         console.log(c.name, c.getLegCount());
     }
 
-    static testAbstract() {
+    function testAbstract() {
         abstract class Animal {
             readonly name;
 
@@ -56,10 +56,15 @@ class TestClass {
         cat.run();
     }
 
-    static Run() {
-        TestClass.testBasic();
-        TestClass.testAbstract();
+    function testClassName() {
+        class Foo {}
+        const obj = new Foo();
+        console.log(obj.constructor.name);
     }
+
+    testBasic();
+    testAbstract();
+    testClassName();
 }
 
-TestClass.Run();
+TestClass();
