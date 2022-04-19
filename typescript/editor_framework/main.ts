@@ -1,12 +1,14 @@
 import { registry } from './public';
+import { IMeta, IScheme } from './scheme/define';
 import {
- IAny, IDoCaculation, ILog, IShowMessage, ValueType,
+    IAny, IDoCaculation, ILog, IShowMessage, ValueType,
 } from './type/action';
 
-function createValue<T>(type: ValueType, t: T) {
+function createValue<T, M=IMeta>(type: ValueType, t: T, m?: M) {
     return {
         type,
         value: t,
+        meta: m,
     };
 }
 
