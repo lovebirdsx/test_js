@@ -1,9 +1,12 @@
-module foo {
+function testFoo() {
     interface Foo {
-        a?: String;
+        run?: () => void;
     }
 
-    const f: Foo = {};
-
-    console.log(f.a || 'hello');
+    const foo: Foo = {};
+    foo.run?.call(foo);
+    const foo2: Foo = { run: () => console.log('foo') };
+    foo2.run?.call(foo2);
 }
+
+testFoo();
