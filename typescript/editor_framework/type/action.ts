@@ -1,12 +1,12 @@
-export enum ValueType {
-    int,
-    float,
-    boolean,
-    string,
-    log,
-    showMessage,
-    doCaculation,
-    any,
+export enum DataType {
+    int = 'int',
+    float = 'float',
+    boolean = 'boolean',
+    string = 'string',
+    log = 'log',
+    showMessage = 'showMessage',
+    doCaculation = 'doCaculation',
+    any = 'any',
 }
 
 export interface ILog {
@@ -26,6 +26,6 @@ export interface IDoCaculation {
 }
 
 export interface IAny {
-    type: ValueType,
+    type: DataType,
     value: unknown,
 }

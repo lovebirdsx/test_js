@@ -5,6 +5,9 @@ import { ILogMeta, IShowMessageMeta } from '../type/actionMeta';
 
 export function renderLog(props: IProps<ILog, ILogMeta>) {
     console.log(props.prefixElement, 'renderLog', props.value.content, 'meta', props.scheme.meta.foo);
+    if (props.parent) {
+        console.log('', 'parent type', props.parentScheme?.type, props.parent);
+    }
 }
 
 export function renderShowMessage(props: IProps<IShowMessage, IShowMessageMeta>) {
