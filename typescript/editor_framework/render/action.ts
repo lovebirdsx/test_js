@@ -4,18 +4,15 @@ import { IDoCaculation, ILog, IShowMessage } from '../type/action';
 import { ILogMeta, IShowMessageMeta } from '../type/actionMeta';
 
 export function renderLog(props: IProps<ILog, ILogMeta>) {
-    console.log(props.prefixElement, 'renderLog', props.value.content, 'meta', props.scheme.meta.foo);
-    if (props.parent) {
-        console.log('', 'parent type', props.parent);
-    }
+    return `${props.prefix} Log ${props.value.content} meta = ${props.scheme.meta.foo}`;
 }
 
 export function renderShowMessage(props: IProps<IShowMessage, IShowMessageMeta>) {
     const { scheme, value } = props;
-    console.log(props.prefixElement, value.content, 'meta', scheme.meta.bar);
+    return `${props.prefix} ShowMessage ${value.content} meta = ${scheme.meta.bar}`;
 }
 
 export function renderCaculation(props: IProps<IDoCaculation>) {
     const { scheme, value } = props;
-    console.log(props.prefixElement, value.a, value.op, value.b, CaculationOp.Caculate(props.value));
+    return `${props.prefix} Caculation ${value.a} ${value.op} ${value.b} = ${CaculationOp.Caculate(value)}`;
 }

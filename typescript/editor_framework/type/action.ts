@@ -7,6 +7,9 @@ export enum DataType {
     showMessage = 'showMessage',
     doCaculation = 'doCaculation',
     any = 'any',
+    talkItem = 'talkItem',
+    showTalk = 'showTalk',
+    op = 'op',
 }
 
 export interface ILog {
@@ -17,6 +20,16 @@ export interface IShowMessage {
     content: string;
 }
 
+export interface ITalkItem {
+    who: string;
+    content: string;
+}
+
+export interface IShowTalk {
+    resetCamera: boolean;
+    items: ITalkItem[];
+}
+
 export type Op = 'sub' | 'add' | 'mut' | 'div';
 
 export interface IDoCaculation {
@@ -25,7 +38,7 @@ export interface IDoCaculation {
     op: Op;
 }
 
-export interface IAny {
+export interface IDynamic {
     type: DataType,
     value: unknown,
 }

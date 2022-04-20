@@ -1,13 +1,13 @@
-import { registry } from './public';
+import { renderRegistry } from './render/public';
+import { schemeRegistry } from './scheme/public';
 import {
-    IAny, IDoCaculation, ILog, IShowMessage, DataType,
+    IDynamic, IDoCaculation, ILog, IShowMessage, DataType,
 } from './type/action';
 
-function createValue<T, M=undefined>(type: DataType, t: T, m?: M) {
+function createValue<T>(type: DataType, t: T) {
     return {
         type,
         value: t,
-        meta: m,
     };
 }
 
@@ -18,16 +18,17 @@ const values: {type: DataType, value: unknown}[] = [
     createValue<IShowMessage>(DataType.showMessage, { content: 'hello message' }),
     createValue<ILog>(DataType.log, { content: 'hello log' }),
     createValue<IDoCaculation>(DataType.doCaculation, { a: 1, b: 2, op: 'div' }),
-    createValue<IAny>(DataType.any, createValue<ILog>(DataType.log, { content: 'hello log any' })),
+    createValue<IDynamic>(DataType.any, createValue<ILog>(DataType.log, { content: 'hello log any' })),
 ];
 
 values.forEach((value, id) => {
-    const render = registry.getRender(value.type);
+    const scheme = schemeRegistry.getScheme(value.type);
+    const render = renderRegistry.getRender(scheme.renderType);
     render({
         value: value.value,
-        scheme: registry.getScheme(value.type),
+        scheme,
         parent: undefined,
         onModify: () => {},
-        prefixElement: id.toString(),
+        prefix: id.toString(),
     });
 });
