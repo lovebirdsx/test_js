@@ -7,7 +7,7 @@ import { IProps, JSXElement, makeIndent } from '../define';
 
 export function renderDynamic(props: IProps<IDynamic, IDynamicMeta>) {
     const dynamic = props.value;
-    const scheme = schemeRegistry.getScheme<unknown, unknown, IDynamic>(dynamic.type);
+    const scheme = schemeRegistry.getObjScheme<unknown, unknown, IDynamic>(dynamic.type);
     const render = renderRegistry.getRender<unknown, IMeta, IDynamic>(scheme.renderType);
     const lines: JSXElement[] = [];
     lines.push(`${props.prefix}dynamic`);
@@ -15,7 +15,7 @@ export function renderDynamic(props: IProps<IDynamic, IDynamicMeta>) {
     const propsForValue: IProps<unknown, IMeta, IDynamic> = {
         value: dynamic.value,
         parent: dynamic,
-        scheme: schemeRegistry.getScheme(dynamic.type),
+        scheme: schemeRegistry.getObjScheme(dynamic.type),
         parentScheme: props.scheme,
         onModify: () => {},
         prefix: `${childPrefix}`,

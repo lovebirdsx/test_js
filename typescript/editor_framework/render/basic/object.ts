@@ -1,9 +1,9 @@
-import { Obj, IObjMeta, IObjectScheme } from '../../scheme/define';
+import { Obj, IObjMeta, ObjectScheme } from '../../scheme/define';
 import { schemeRegistry } from '../../scheme/schemeRegistry';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
-export function renderObject(props: IProps<Obj, IObjMeta, unknown, IObjectScheme<Obj, IObjMeta>>): JSXElement {
+export function renderObject(props: IProps<Obj, IObjMeta, unknown, ObjectScheme<Obj, IObjMeta>>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 

@@ -1,10 +1,10 @@
-import { IMeta, IScheme } from '../scheme/define';
+import { IMeta, Scheme } from '../scheme/define';
 
 export interface IProps<
     TData = unknown,
     TMeta extends IMeta = IMeta,
     TParent = unknown,
-    TScheme extends IScheme<TData, TMeta, TParent> = IScheme<
+    TScheme extends Scheme<TData, TMeta, TParent> = Scheme<
         TData,
         TMeta,
         TParent
@@ -13,7 +13,7 @@ export interface IProps<
     value: TData;
     scheme: TScheme;
     parent: TParent;
-    parentScheme?: IScheme<TParent>;
+    parentScheme?: Scheme<TParent>;
     onModify: (obj: TData) => void;
     prefix: string;
 }
@@ -24,7 +24,7 @@ export type Render<
     TData = unknown,
     TMeta = unknown,
     TParent = unknown,
-    TScheme extends IScheme<TData, TMeta, TParent> = IScheme<
+    TScheme extends Scheme<TData, TMeta, TParent> = Scheme<
         TData,
         TMeta,
         TParent

@@ -1,93 +1,58 @@
-import { DataType } from '../type/action';
 import {
- Filter, IObjectScheme, IObjMeta, IScheme, Obj,
+ Filter, ObjectScheme as ObjScheme, ObjectSchemeClass as ObjSchemeClass, Scheme, SchemeClass,
 } from './define';
 
 class SchemeRegistry {
-    private readonly schemeByType = new Map<DataType, IScheme>();
-    private readonly typeByScheme = new Map<IScheme, DataType>();
-    private readonly objectSchemes = [] as IObjectScheme[];
-    private readonly objectFilterMap = new Map<Filter, DataType[]>();
+    private readonly objSchemeMap = new Map<ObjSchemeClass, ObjScheme>();
+    private readonly objSchemeClasses = [] as ObjSchemeClass[];
+    private readonly objSchemeClassFilterMap = new Map<Filter, ObjSchemeClass[]>();
 
-    regScheme<TData, TMeta = unknown, TParent = unknown>(
-        schemeType: DataType,
-        scheme: IScheme<TData, TMeta, TParent>,
-    ) {
-        const exist = this.schemeByType.get(schemeType);
-        if (exist) {
-            throw new Error(`reg duplicate scheme ${schemeType}`);
-        }
-        this.schemeByType.set(schemeType, scheme as IScheme);
-        this.typeByScheme.set(scheme as IScheme, schemeType);
-    }
-
-    regObjScheme<TData, TMeta extends IObjMeta, TParent>(
-        schemeType: DataType,
-        schema: IObjectScheme<TData, TMeta, TParent>,
-    ) {
-        if (this.objectFilterMap.size > 0) {
+    regObjScheme(objSchemaClass: ObjSchemeClass) {
+        if (this.objSchemeClassFilterMap.size > 0) {
             throw new Error(
-                `Can not reg objscheme for ${schemeType} while parsed`,
+                `Can not reg objscheme for ${objSchemaClass.name} while parsed`,
             );
         }
 
-        this.objectSchemes.push(schema as IObjectScheme);
-        this.regScheme(schemeType, schema);
+        // eslint-disable-next-line new-cap
+        const objScheme = new objSchemaClass();
+        this.objSchemeClasses.push(objSchemaClass);
+        this.objSchemeMap.set(objSchemaClass, objScheme);
     }
 
     private parseAllObjSchemes() {
-        this.objectSchemes.forEach((scheme) => {
-            const typeName = this.typeByScheme.get(scheme);
-            if (!typeName) {
-                throw new Error(`No type name for ${scheme}`);
-            }
+        this.objSchemeClasses.forEach((schemeClass) => {
+            const scheme = this.getObjScheme(schemeClass);
             scheme.meta.filters.forEach((filter) => {
-                let names = this.objectFilterMap.get(filter);
-                if (!names) {
-                    names = [];
-                    this.objectFilterMap.set(filter, names);
+                let schemas = this.objSchemeClassFilterMap.get(filter);
+                if (!schemas) {
+                    schemas = [];
+                    this.objSchemeClassFilterMap.set(filter, schemas);
                 }
-                names.push(typeName);
+                schemas.push(schemeClass);
             });
         });
     }
 
-    getObjTypesByFilter(filter: Filter): DataType[] {
-        if (this.objectFilterMap.size <= 0) {
+    getObjSchemClassesByFilter(filter: Filter): ObjSchemeClass[] {
+        if (this.objSchemeClassFilterMap.size <= 0) {
             this.parseAllObjSchemes();
         }
 
-        let result = this.objectFilterMap.get(filter);
+        const result = this.objSchemeClassFilterMap.get(filter);
         if (!result) {
-            result = [];
+            return [];
         }
 
         return result;
     }
 
-    getScheme<
-        TData,
-        TMeta = unknown,
-        TParent = unknown,
-        TScheme extends IScheme<TData, TMeta, TParent> = IScheme<
-            TData,
-            TMeta,
-            TParent
-        >
-    >(schemeType: DataType): IScheme<TData, TMeta, TParent> {
-        const result = this.schemeByType.get(schemeType);
+    getObjScheme(schemeClass: ObjSchemeClass): ObjScheme {
+        const result = this.objSchemeMap.get(schemeClass);
         if (!result) {
-            throw new Error(`No sheme for type [${schemeType}]`);
+            throw new Error(`No sheme for type [${schemeClass.name}]`);
         }
 
-        return result as TScheme;
-    }
-
-    getSchemeType(scheme: IScheme): DataType {
-        const result = this.typeByScheme.get(scheme);
-        if (!result) {
-            throw new Error(`No data type for scheme ${scheme}`);
-        }
         return result;
     }
 }

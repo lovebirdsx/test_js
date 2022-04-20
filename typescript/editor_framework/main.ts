@@ -47,8 +47,8 @@ const values: { type: DataType; value: unknown }[] = [
 ];
 
 values.forEach((value, id) => {
-    const scheme = schemeRegistry.getScheme(value.type);
-    const render = renderRegistry.getRender(scheme.renderType);
+    const scheme = schemeRegistry.getObjScheme(value.type);
+    const render = renderRegistry.getRender(scheme);
     console.log(
         render({
             value: value.value,

@@ -1,6 +1,6 @@
-import { DataType, IDynamic } from '../type/action';
+import { IDynamic } from '../type/action';
 import {
- Filter, IMeta, IScheme, RenderType,
+ Filter, IMeta, Scheme, RenderType,
 } from './define';
 import { schemeRegistry } from './schemeRegistry';
 
@@ -8,24 +8,20 @@ export interface IDynamicMeta extends IMeta {
     filter: Filter,
 }
 
-export type DynamicScheme = IScheme<IDynamic, IDynamicMeta>;
+export abstract class DynamicScheme extends Scheme<IDynamic, IDynamicMeta> {
+    abstract meta: IDynamicMeta;
 
-export function createDynamicScheme(meta: IDynamicMeta): DynamicScheme {
-    return {
-        renderType: RenderType.dynamic,
-        createDefault: (): IDynamic => {
-            const typeNames = schemeRegistry.getObjTypesByFilter(meta.filter);
+    createDefault(parent: unknown): IDynamic {
+        const typeNames = schemeRegistry.getObjSchemsByFilter(this.meta.filter);
             if (typeNames.length <= 0) {
                 return undefined as any;
             }
 
-            const objScheme = schemeRegistry.getScheme<IDynamic, IDynamicMeta>(typeNames[0]);
-            return objScheme.createDefault(undefined);
-        },
-        check: () => 0,
-        fix: () => 0,
-        meta,
-    };
+        const objScheme = schemeRegistry.getObjScheme<IDynamic, IDynamicMeta>(typeNames[0]);
+        return objScheme.createDefault(undefined);
+    }
 }
 
-schemeRegistry.regScheme(DataType.dynamic, createDynamicScheme({ filter: Filter.normal }));
+export class NormalDynamicScheme extends DynamicScheme {
+    meta: IDynamicMeta = { filter: Filter.normal };
+}

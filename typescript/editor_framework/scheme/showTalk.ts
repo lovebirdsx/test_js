@@ -1,17 +1,23 @@
-import { DataType, IShowTalk, ITalkItem } from '../type/action';
-import { createArrayScheme, createObjectScheme, IObjMeta } from './define';
-import { schemeRegistry } from './schemeRegistry';
+import { IShowTalk, ITalkItem } from '../type/action';
+import { BooleanScheme, StringScheme } from './basic';
+import {
+ ArrayScheme, IObjMeta, ObjectScheme, TFields,
+} from './define';
 
-const talkItemScheme = createObjectScheme<ITalkItem, IObjMeta>({
-    who: schemeRegistry.getScheme(DataType.string),
-    content: schemeRegistry.getScheme(DataType.string),
-});
+export class TalkItemSheme extends ObjectScheme<ITalkItem, IObjMeta> {
+    fields: TFields<ITalkItem> = {
+        who: new StringScheme(),
+        content: new StringScheme(),
+    };
+}
 
-schemeRegistry.regScheme(DataType.talkItem, talkItemScheme);
+class TalkItemArrayScheme extends ArrayScheme<ITalkItem, IObjMeta, IShowTalk> {
+    elementScheme = new TalkItemSheme();
+}
 
-const showTalkScheme = createObjectScheme<IShowTalk, IObjMeta>({
-    resetCamera: schemeRegistry.getScheme(DataType.boolean),
-    items: createArrayScheme(talkItemScheme),
-});
-
-schemeRegistry.regObjScheme(DataType.showTalk, showTalkScheme);
+export class ShowTalkScheme extends ObjectScheme<IShowTalk, IObjMeta> {
+    fields: TFields<IShowTalk> = {
+        resetCamera: new BooleanScheme(),
+        items: new TalkItemArrayScheme(),
+    };
+}

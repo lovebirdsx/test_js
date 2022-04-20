@@ -1,30 +1,57 @@
 import {
- DataType, IDoCaculation, ILog, IShowMessage, Op,
+ IDoCaculation, ILog, IShowMessage, Op,
 } from '../type/action';
-import { createObjectScheme, createScheme, RenderType } from './define';
-import { schemeRegistry } from './schemeRegistry';
+import { ObjectScheme, Scheme, TFields } from './define';
 
-schemeRegistry.regScheme<number>(DataType.int, createScheme(RenderType.int, () => 0, undefined));
-schemeRegistry.regScheme<number>(DataType.float, createScheme(RenderType.float, () => 0, undefined));
-schemeRegistry.regScheme<boolean>(DataType.boolean, createScheme(RenderType.boolean, () => false, undefined));
-schemeRegistry.regScheme<string>(DataType.string, createScheme(RenderType.string, () => '', undefined));
+export class IntScheme extends Scheme<number> {
+    createDefault(parent: unknown): number {
+        return 0;
+    }
+}
 
-const opScheme = createScheme<Op>(RenderType.string, () => 'add', undefined);
-schemeRegistry.regScheme(DataType.op, opScheme);
+export class FloatScheme extends Scheme<number> {
+    createDefault(parent: unknown): number {
+        return 0;
+    }
+}
 
-const logScheme = createObjectScheme<ILog>({
-    content: schemeRegistry.getScheme(DataType.string),
-});
-schemeRegistry.regObjScheme(DataType.log, logScheme);
+export class BooleanScheme extends Scheme<boolean> {
+    createDefault(parent: unknown): boolean {
+        return false;
+    }
+}
 
-const showMessageScheme = createObjectScheme<IShowMessage>({
-    content: schemeRegistry.getScheme(DataType.string),
-});
-schemeRegistry.regObjScheme(DataType.showMessage, showMessageScheme);
+export class StringScheme extends Scheme<string> {
+    createDefault(parent: unknown): string {
+        return '';
+    }
+}
 
-const caculationScheme = createObjectScheme<IDoCaculation>({
-    a: schemeRegistry.getScheme(DataType.int),
-    b: schemeRegistry.getScheme(DataType.int),
-    op: schemeRegistry.getScheme(DataType.op),
-});
-schemeRegistry.regObjScheme(DataType.doCaculation, caculationScheme);
+export class OpScheme extends Scheme<Op> {
+    createDefault(parent: unknown): Op {
+        return 'add';
+    }
+}
+
+export class LogScheme extends ObjectScheme<ILog> {
+    name: string = 'Log';
+    fields: TFields<ILog> = {
+        content: new StringScheme(),
+    };
+}
+
+export class ShowMessageScheme extends ObjectScheme<IShowMessage> {
+    name: string = 'ShowMessage';
+    fields: TFields<IShowMessage> = {
+        content: new StringScheme(),
+    };
+}
+
+class CaculationScheme extends ObjectScheme<IDoCaculation> {
+    name: string = 'Caculation';
+    fields: TFields<IDoCaculation> = {
+        a: new IntScheme(),
+        b: new IntScheme(),
+        op: new OpScheme(),
+    };
+}

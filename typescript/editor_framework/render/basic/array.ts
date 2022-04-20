@@ -1,5 +1,5 @@
 import {
-  IArrayScheme, IArrayMeta,
+  ArrayScheme, IArrayMeta,
 } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../renderRegistry';
@@ -9,7 +9,7 @@ export function renderArray(
         unknown[],
         IArrayMeta,
         unknown,
-        IArrayScheme<unknown, IArrayMeta, unknown>
+        ArrayScheme<unknown, IArrayMeta, unknown>
     >,
 ): JSXElement {
     const { prefix, scheme, value } = props;
