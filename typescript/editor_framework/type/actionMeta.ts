@@ -1,9 +1,7 @@
-import { IMeta } from '../scheme/define';
-
-export interface ILogMeta extends IMeta {
+export interface ILogMeta {
     foo: string
 }
 
-export interface IShowMessageMeta extends IMeta {
+export interface IShowMessageMeta {
     bar: string
 }

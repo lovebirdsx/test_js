@@ -1,22 +1,19 @@
-import { DataType } from '../type/action';
-
-export interface IMeta {
-    hideName?: boolean; // 是否显示字段的名字
-}
-
-export interface IScheme<T = {}, M extends IMeta = IMeta> {
-    type: DataType;
-    createDefault: (container: unknown) => T;
+// T为Data类型, M为meta类型,PT为父节点类型
+export interface IScheme<T = unknown, M = unknown, PT = unknown> {
+    type: string,
+    createDefault: (parent: PT) => T;
     meta: M;
 }
 
-export interface IProps<T, M extends IMeta = IMeta> {
+export interface IProps<T = unknown, M = unknown, PT = unknown> {
     value: T;
-    scheme: IScheme<T, M>;
-    parent?: unknown,
-    parentScheme?: IScheme,
+    scheme: IScheme<T, M, PT>;
+    parent: PT,
+    parentScheme?: IScheme<PT>,
     onModify: (obj: T) => void;
     prefixElement?: string;
 }
 
-export type Render<T, M> = (props: IProps<T, M>) => void;
+type JSXElement = void;
+
+export type Render<T=unknown, M=unknown, PT=unknown> = (props: IProps<T, M, PT>) => JSXElement;

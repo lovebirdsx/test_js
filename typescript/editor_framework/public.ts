@@ -7,8 +7,8 @@ import {
 } from './type/action';
 import { ILogMeta, IShowMessageMeta } from './type/actionMeta';
 
-registry.regType<number>(DataType.int, { createDefault: () => 0, meta: {} }, renderBasic);
-registry.regType<number>(DataType.float, { createDefault: () => 0, meta: {} }, renderBasic);
+registry.regType<number>(DataType.int, { createDefault: () => 0, meta: undefined }, renderBasic);
+registry.regType<number>(DataType.float, { createDefault: () => 0, meta: undefined }, renderBasic);
 registry.regType<boolean>(DataType.boolean, { createDefault: () => false, meta: {} }, renderBasic);
 registry.regType<string>(DataType.string, { createDefault: () => '', meta: {} }, renderBasic);
 
@@ -19,12 +19,12 @@ registry.regType<IDoCaculation>(DataType.doCaculation, {
 
 registry.regType<IShowMessage, IShowMessageMeta>(DataType.showMessage, {
     createDefault: (): IShowMessage => ({ content: 'hello' }),
-    meta: { hideName: true, bar: 'metaBar' },
+    meta: { bar: 'metaBar' },
 }, renderShowMessage);
 
 registry.regType<ILog, ILogMeta>(DataType.log, {
     createDefault: (): ILog => ({ content: 'log' }),
-    meta: { hideName: true, foo: 'metaFoo' },
+    meta: { foo: 'metaFoo' },
 }, renderLog);
 
 registry.regType<IAny>(DataType.any, {

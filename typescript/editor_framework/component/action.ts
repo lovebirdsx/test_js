@@ -6,14 +6,16 @@ import { ILogMeta, IShowMessageMeta } from '../type/actionMeta';
 export function renderLog(props: IProps<ILog, ILogMeta>) {
     console.log(props.prefixElement, 'renderLog', props.value.content, 'meta', props.scheme.meta.foo);
     if (props.parent) {
-        console.log('', 'parent type', props.parentScheme?.type, props.parent);
+        console.log('', 'parent type', props.parent);
     }
 }
 
 export function renderShowMessage(props: IProps<IShowMessage, IShowMessageMeta>) {
-    console.log(props.prefixElement, 'renderShowMessage', props.value.content, 'meta', props.scheme.meta.bar);
+    const { scheme, value } = props;
+    console.log(props.prefixElement, scheme.type, value.content, 'meta', scheme.meta.bar);
 }
 
 export function renderCaculation(props: IProps<IDoCaculation>) {
-    console.log(props.prefixElement, 'renderCaculation', props.value.a, props.value.op, props.value.b, caculationOp.Caculate(props.value));
+    const { scheme, value } = props;
+    console.log(props.prefixElement, scheme.type, value.a, value.op, value.b, caculationOp.Caculate(props.value));
 }

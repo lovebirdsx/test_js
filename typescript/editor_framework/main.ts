@@ -1,10 +1,9 @@
 import { registry } from './public';
-import { IMeta, IScheme } from './scheme/define';
 import {
     IAny, IDoCaculation, ILog, IShowMessage, DataType,
 } from './type/action';
 
-function createValue<T, M=IMeta>(type: DataType, t: T, m?: M) {
+function createValue<T, M=undefined>(type: DataType, t: T, m?: M) {
     return {
         type,
         value: t,
@@ -24,14 +23,11 @@ const values: {type: DataType, value: unknown}[] = [
 
 values.forEach((value, id) => {
     const render = registry.getRender(value.type);
-    if (!render) {
-        console.error(`render for ${DataType[value.type]} is undefined`);
-    } else {
-        render({
-            value: value.value,
-            scheme: registry.getScheme(value.type),
-            onModify: () => {},
-            prefixElement: id.toString(),
-        });
-    }
+    render({
+        value: value.value,
+        scheme: registry.getScheme(value.type),
+        parent: undefined,
+        onModify: () => {},
+        prefixElement: id.toString(),
+    });
 });

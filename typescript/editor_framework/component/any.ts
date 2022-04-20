@@ -1,14 +1,15 @@
 import { registry } from '../registry';
-import { IMeta, IProps } from '../scheme/define';
+import { IProps } from '../scheme/define';
 import { IAny } from '../type/action';
 
-export function renderAny(props: IProps<IAny, IMeta>) {
-    const render = registry.getRender(props.value.type);
-    const propsForAny: IProps<unknown, IMeta> = {
-        value: props.value.value,
-        parent: props.value,
+export function renderAny(props: IProps<IAny>) {
+    const render = registry.getRender<unknown, unknown, IAny>(props.value.type);
+    const any = props.value;
+    const propsForAny: IProps<unknown, unknown, IAny> = {
+        value: any.value,
+        parent: any,
+        scheme: registry.getScheme(any.type),
         parentScheme: props.scheme,
-        scheme: registry.getScheme(props.value.type),
         onModify: () => {},
         prefixElement: `${props.prefixElement} any`,
     };
