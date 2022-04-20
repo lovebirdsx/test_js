@@ -1,7 +1,7 @@
 import { IDoCaculation } from '../type/action';
 
-class CaculationOp {
-    public Caculate(caculate: IDoCaculation) {
+export class CaculationOp {
+    public static Caculate(caculate: IDoCaculation) {
         switch (caculate.op) {
             case 'add': return caculate.a + caculate.b;
             case 'sub': return caculate.a - caculate.b;
@@ -11,5 +11,3 @@ class CaculationOp {
         }
     }
 }
-
-export const caculationOp = new CaculationOp();

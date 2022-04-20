@@ -1,6 +1,5 @@
 // T为Data类型, M为meta类型,PT为父节点类型
 export interface IScheme<T = unknown, M = unknown, PT = unknown> {
-    type: string,
     createDefault: (parent: PT) => T;
     meta: M;
 }

@@ -5,10 +5,9 @@ class Registry {
     private readonly shemeMap = new Map<DataType, IScheme>();
     private readonly renderMap = new Map<DataType, Render>();
 
-    regType<T, M=unknown, PT=unknown>(type: DataType, scheme: Omit<IScheme<T, M, PT>, 'type'>, render: Render<T, M, PT>) {
+    regData<T, M=unknown, PT=unknown>(type: DataType, scheme: IScheme<T, M, PT>, render: Render<T, M, PT>) {
         const newScheme: IScheme<T, M, PT> = {
             ...scheme,
-            type,
         };
         this.shemeMap.set(type, newScheme as IScheme);
         this.renderMap.set(type, render as Render);
