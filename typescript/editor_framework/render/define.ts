@@ -15,7 +15,7 @@ export interface IProps<
     parent: TParent;
     parentScheme?: IScheme<TParent>;
     onModify: (obj: TData) => void;
-    prefix?: string;
+    prefix: string;
 }
 
 export type JSXElement = string;
@@ -30,3 +30,11 @@ export type Render<
         TParent
     >
 > = (props: IProps<TData, TMeta, TParent, TScheme>) => JSXElement;
+
+export function makeIndent(prefix: string): string {
+    let indentCount = prefix.split('--').length - 1;
+    if (indentCount <= 0) {
+        indentCount = 0;
+    }
+    return `${'--'.repeat(indentCount + 1)}`;
+}

@@ -6,7 +6,7 @@ import {
 class SchemeRegistry {
     private readonly schemeByType = new Map<DataType, IScheme>();
     private readonly typeByScheme = new Map<IScheme, DataType>();
-    private readonly objectSchemes = [] as IObjectScheme [];
+    private readonly objectSchemes = [] as IObjectScheme[];
     private readonly objectFilterMap = new Map<Filter, DataType[]>();
 
     regScheme<TData, TMeta = unknown, TParent = unknown>(
@@ -21,12 +21,14 @@ class SchemeRegistry {
         this.typeByScheme.set(scheme as IScheme, schemeType);
     }
 
-    regObjScheme<TData extends Obj, TMeta extends IObjMeta, TParent>(
+    regObjScheme<TData, TMeta extends IObjMeta, TParent>(
         schemeType: DataType,
         schema: IObjectScheme<TData, TMeta, TParent>,
     ) {
         if (this.objectFilterMap.size > 0) {
-            throw new Error(`Can not reg objscheme for ${schemeType} while parsed`);
+            throw new Error(
+                `Can not reg objscheme for ${schemeType} while parsed`,
+            );
         }
 
         this.objectSchemes.push(schema as IObjectScheme);
@@ -63,13 +65,30 @@ class SchemeRegistry {
         return result;
     }
 
-    getScheme<TData, TMeta = unknown, TParent = unknown, TScheme extends IScheme<TData, TMeta, TParent> = IScheme<TData, TMeta, TParent>>(schemeType: DataType): IScheme<TData, TMeta, TParent> {
+    getScheme<
+        TData,
+        TMeta = unknown,
+        TParent = unknown,
+        TScheme extends IScheme<TData, TMeta, TParent> = IScheme<
+            TData,
+            TMeta,
+            TParent
+        >
+    >(schemeType: DataType): IScheme<TData, TMeta, TParent> {
         const result = this.schemeByType.get(schemeType);
         if (!result) {
             throw new Error(`No sheme for type [${schemeType}]`);
         }
 
         return result as TScheme;
+    }
+
+    getSchemeType(scheme: IScheme): DataType {
+        const result = this.typeByScheme.get(scheme);
+        if (!result) {
+            throw new Error(`No data type for scheme ${scheme}`);
+        }
+        return result;
     }
 }
 

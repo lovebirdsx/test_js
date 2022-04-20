@@ -1,14 +1,17 @@
-import {
- IObjectScheme, IObjMeta, Obj,
-} from '../scheme/define';
-import { IProps, JSXElement } from './define';
-import { renderRegistry } from './renderRegistry';
+import { Obj, IObjMeta, IObjectScheme } from '../../scheme/define';
+import { schemeRegistry } from '../../scheme/schemeRegistry';
+import { IProps, JSXElement, makeIndent } from '../define';
+import { renderRegistry } from '../renderRegistry';
 
 export function renderObject(props: IProps<Obj, IObjMeta, unknown, IObjectScheme<Obj, IObjMeta>>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 
-    const result: JSXElement[] = [];
+    const lines: JSXElement[] = [];
+    const dataType = schemeRegistry.getSchemeType(scheme);
+    lines.push(`${prefix}${dataType}`);
+
+    const childPrefix = makeIndent(prefix);
     for (const fieldKey in fields) {
         const filedScheme = fields[fieldKey];
         const filedValue = value[fieldKey];
@@ -19,9 +22,10 @@ export function renderObject(props: IProps<Obj, IObjMeta, unknown, IObjectScheme
             parent: value,
             parentScheme: scheme,
             onModify: (() => {}),
+            prefix: `${childPrefix}${fieldKey}: `,
         });
-        result.push(`${prefix}${fieldKey}:${fieldRenderResult}`);
+        lines.push(fieldRenderResult);
     }
 
-    return result.join('\n');
+    return lines.join('\n');
 }

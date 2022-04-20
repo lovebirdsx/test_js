@@ -1,8 +1,8 @@
 import {
   IArrayScheme, IArrayMeta,
-} from '../scheme/define';
-import { IProps, JSXElement } from './define';
-import { renderRegistry } from './renderRegistry';
+} from '../../scheme/define';
+import { IProps, JSXElement, makeIndent } from '../define';
+import { renderRegistry } from '../renderRegistry';
 
 export function renderArray(
     props: IProps<
@@ -25,6 +25,7 @@ export function renderArray(
         IArrayMeta,
         unknown[]
     >(elementScheme.renderType);
+    const childPrefix = makeIndent(prefix);
     value.forEach((e, id) => {
         const elementRenderResult = elementRender({
             value: e,
@@ -32,8 +33,9 @@ export function renderArray(
             parent: value,
             parentScheme: scheme,
             onModify: () => {},
+            prefix: `${childPrefix}${id} `,
         });
-        result.push(`${prefix}${id}:${elementRenderResult}`);
+        result.push(elementRenderResult);
     });
 
     return result.join('\n');

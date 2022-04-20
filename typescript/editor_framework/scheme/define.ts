@@ -1,5 +1,3 @@
-import { IDynamic } from '../type/action';
-
 // T为Data类型, M为meta类型,PT为父节点类型
 export type TFixResult = number;
 
@@ -124,7 +122,7 @@ export function createArrayScheme<
         createDefault: () => [],
         fix: () => 0,
         check: () => 0,
-        meta: schema.meta as any,
+        meta: schema.meta || {} as TElementMeta,
         elementScheme,
     };
 }

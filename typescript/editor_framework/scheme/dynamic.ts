@@ -28,4 +28,4 @@ export function createDynamicScheme(meta: IDynamicMeta): DynamicScheme {
     };
 }
 
-schemeRegistry.regScheme(DataType.any, createDynamicScheme({ filter: Filter.normal }));
+schemeRegistry.regScheme(DataType.dynamic, createDynamicScheme({ filter: Filter.normal }));

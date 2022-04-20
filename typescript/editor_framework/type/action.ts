@@ -6,7 +6,7 @@ export enum DataType {
     log = 'log',
     showMessage = 'showMessage',
     doCaculation = 'doCaculation',
-    any = 'any',
+    dynamic = 'dynamic',
     talkItem = 'talkItem',
     showTalk = 'showTalk',
     op = 'op',

@@ -1,5 +1,4 @@
 import { DataType, IShowTalk, ITalkItem } from '../type/action';
-import { IShowTalkMeta } from '../type/actionMeta';
 import { createArrayScheme, createObjectScheme, IObjMeta } from './define';
 import { schemeRegistry } from './schemeRegistry';
 
@@ -15,4 +14,4 @@ const showTalkScheme = createObjectScheme<IShowTalk, IObjMeta>({
     items: createArrayScheme(talkItemScheme),
 });
 
-schemeRegistry.regScheme(DataType.showTalk, showTalkScheme);
+schemeRegistry.regObjScheme(DataType.showTalk, showTalkScheme);

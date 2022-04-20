@@ -15,16 +15,16 @@ schemeRegistry.regScheme(DataType.op, opScheme);
 const logScheme = createObjectScheme<ILog>({
     content: schemeRegistry.getScheme(DataType.string),
 });
-schemeRegistry.regScheme(DataType.log, logScheme);
+schemeRegistry.regObjScheme(DataType.log, logScheme);
 
 const showMessageScheme = createObjectScheme<IShowMessage>({
     content: schemeRegistry.getScheme(DataType.string),
 });
-schemeRegistry.regScheme(DataType.showMessage, showMessageScheme);
+schemeRegistry.regObjScheme(DataType.showMessage, showMessageScheme);
 
 const caculationScheme = createObjectScheme<IDoCaculation>({
     a: schemeRegistry.getScheme(DataType.int),
     b: schemeRegistry.getScheme(DataType.int),
     op: schemeRegistry.getScheme(DataType.op),
 });
-schemeRegistry.regScheme(DataType.doCaculation, caculationScheme);
+schemeRegistry.regObjScheme(DataType.doCaculation, caculationScheme);
