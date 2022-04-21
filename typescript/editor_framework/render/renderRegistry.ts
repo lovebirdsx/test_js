@@ -1,7 +1,7 @@
 import {
- Scheme, IMeta, SchemeClass, IObjMeta, ObjectScheme, ArrayScheme, IArrayMeta,
+ Scheme, SchemeClass, ObjectScheme, ArrayScheme,
 } from '../scheme/define';
-import { ActionScheme, IActionMeta } from '../scheme/dynamic';
+import { ActionScheme } from '../scheme/dynamic';
 import { IAction } from '../type/action';
 import { Render } from './define';
 
@@ -12,26 +12,26 @@ class RenderRegistry {
         this.renderClassMap.set(schemeClass, render as Render);
     }
 
-    regArrayRender<TData>(schemeClass: new() => ArrayScheme<TData>, render: Render<TData[], IArrayMeta, ArrayScheme<TData>>) {
+    regArrayRender<TData>(schemeClass: new() => ArrayScheme<TData>, render: Render<TData[], ArrayScheme<TData>>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    regObjRender<TData>(schemeClass: new() => ObjectScheme<TData>, render: Render<TData, IObjMeta, ObjectScheme<TData>>) {
+    regObjRender<TData>(schemeClass: new() => ObjectScheme<TData>, render: Render<TData, ObjectScheme<TData>>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, IActionMeta, ActionScheme>) {
+    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, ActionScheme>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    getRender<TData, TMeta = unknown, TParent = unknown, TScheme extends Scheme<TData, TMeta> = Scheme<TData, TMeta>>(
+    getRender<TData, TScheme extends Scheme<TData> = Scheme<TData>>(
         schemeClass: new() => TScheme,
-    ): Render<TData, TMeta, TScheme> {
+    ): Render<TData, TScheme> {
         const result = this.renderClassMap.get(schemeClass);
         if (!result) {
             throw new Error(`No render for type [${schemeClass.name}]`);
         }
-        return result as Render<TData, TMeta, TScheme>;
+        return result as Render<TData, TScheme>;
     }
 }
 

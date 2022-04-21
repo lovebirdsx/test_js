@@ -50,7 +50,7 @@ class ActionSchemeRegistry {
 
     private parseAllActionSchemes() {
         this.actionSchemes.forEach((scheme) => {
-            scheme.meta.filters.forEach((filter) => {
+            scheme.filters.forEach((filter) => {
                 let names = this.actionSchemeClassFilterMap.get(filter);
                 if (!names) {
                     names = [];

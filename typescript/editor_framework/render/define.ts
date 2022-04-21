@@ -1,4 +1,4 @@
-import { IMeta, Scheme, SchemeClass } from '../scheme/define';
+import { Scheme, SchemeClass } from '../scheme/define';
 
 type ContextHandler = number;
 
@@ -48,13 +48,11 @@ export function getGlobalContexts() {
 
 export interface IProps<
     TData = unknown,
-    TMeta extends IMeta = IMeta,
-    TScheme extends Scheme<TData, TMeta> = Scheme<TData, TMeta>
+    TScheme extends Scheme<TData> = Scheme<TData>
 > {
     value: TData;
     scheme: TScheme;
     onModify?: (obj: TData) => void;
-    context?: GlobalContexts;
     prefix: string;
 }
 
@@ -62,9 +60,8 @@ export type JSXElement = string;
 
 export type Render<
     TData = unknown,
-    TMeta extends IMeta = IMeta,
-    TScheme extends Scheme<TData, TMeta> = Scheme<TData, TMeta>
-> = (props: IProps<TData, TMeta, TScheme>) => JSXElement;
+    TScheme extends Scheme<TData> = Scheme<TData>
+> = (props: IProps<TData, TScheme>) => JSXElement;
 
 export function makeIndent(prefix: string): string {
     let indentCount = prefix.split('--').length - 1;

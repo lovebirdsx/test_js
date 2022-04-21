@@ -1,10 +1,10 @@
-import { getSchemeClass, IObjMeta, ObjectScheme } from '../../scheme/define';
+import { getSchemeClass, ObjectScheme } from '../../scheme/define';
 import {
  getGlobalContexts, IProps, JSXElement, makeIndent,
 } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
-export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, IObjMeta, TScheme>): JSXElement {
+export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, TScheme>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 

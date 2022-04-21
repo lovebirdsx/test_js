@@ -1,15 +1,9 @@
 import { IAction } from '../type/action';
-import {
- Filter, IMeta, Scheme,
-} from './define';
+import { Filter, Scheme } from './define';
 import { schemeRegistry } from './schemeRegistry';
 
-export interface IActionMeta extends IMeta {
-    filter: Filter,
-}
-
-export abstract class ActionScheme extends Scheme<IAction, IActionMeta> {
-    abstract meta: IActionMeta;
+export abstract class ActionScheme extends Scheme<IAction> {
+    abstract filter: Filter;
 
     static createAction<TAction>(actionName: string, action: TAction): IAction {
         return {
@@ -33,10 +27,10 @@ export abstract class ActionScheme extends Scheme<IAction, IActionMeta> {
     }
 
     createDefault(): IAction {
-        return ActionScheme.createDefault(this.meta.filter);
+        return ActionScheme.createDefault(this.filter);
     }
 }
 
 export class NormalActionScheme extends ActionScheme {
-    meta: IActionMeta = { filter: Filter.normal };
+    filter: Filter = Filter.normal;
 }

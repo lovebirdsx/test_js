@@ -1,22 +1,20 @@
-import {
-  ArrayScheme, getSchemeClass, IArrayMeta, SchemeClass,
-} from '../../scheme/define';
+import { ArrayScheme, getSchemeClass } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
 export function renderArray<TData, TScheme extends ArrayScheme<TData>>(
-    props: IProps<TData[], IArrayMeta, TScheme>,
+    props: IProps<TData[], TScheme>,
 ): JSXElement {
     const { prefix, scheme, value } = props;
-    const { elementScheme, meta } = scheme;
+    const { elementScheme } = scheme;
 
     const result: JSXElement[] = [];
-    if (meta.showName) {
+    if (scheme.hideName) {
         result.push(`${prefix}`);
     }
 
     const elementSchemeClass = getSchemeClass(elementScheme);
-    const elementRender = renderRegistry.getRender<unknown, IArrayMeta, unknown[]>(elementSchemeClass);
+    const elementRender = renderRegistry.getRender<unknown>(elementSchemeClass);
     const childPrefix = makeIndent(prefix);
     value.forEach((e, id) => {
         const elementRenderResult = elementRender({

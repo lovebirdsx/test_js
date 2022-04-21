@@ -27,7 +27,6 @@ renderRegistry.regObjRender<IShowTalk>(ShowTalkScheme, renderObject);
 renderRegistry.regObjRender<IShowMessage>(ShowMessageScheme, renderObject);
 renderRegistry.regObjRender<ILog>(LogScheme, renderObject);
 renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderDoCalculate);
-// renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderObject);
 renderRegistry.regActionRender(NormalActionScheme, renderAction);
 
 export * from './renderRegistry';

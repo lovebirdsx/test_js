@@ -3,27 +3,22 @@ import { BooleanScheme, StringScheme } from './basic';
 import {
     ActionScheme,
     ArrayScheme,
-    IObjMeta,
     ObjectScheme,
     TFields,
 } from './define';
 
-export class TalkItemSheme extends ObjectScheme<ITalkItem, IObjMeta> {
+export class TalkItemSheme extends ObjectScheme<ITalkItem> {
     fields: TFields<ITalkItem> = {
         who: new StringScheme(),
         content: new StringScheme(),
     };
 }
 
-export class TalkItemArrayScheme extends ArrayScheme<
-    ITalkItem,
-    IObjMeta,
-    IShowTalk
-> {
+export class TalkItemArrayScheme extends ArrayScheme<ITalkItem> {
     elementScheme = new TalkItemSheme();
 }
 
-export class ShowTalkScheme extends ActionScheme<IShowTalk, IObjMeta> {
+export class ShowTalkScheme extends ActionScheme<IShowTalk> {
     name: string = 'ShowTalk';
     fields: TFields<IShowTalk> = {
         resetCamera: new BooleanScheme(),
