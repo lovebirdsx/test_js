@@ -8,7 +8,7 @@ type ParamScheme<T> = {
     formater : (value: string) => T,
 }
 
-type ActionScheme<T extends {[key: string]: any}> = {
+type ActionScheme1<T extends {[key: string]: any}> = {
     name: string;
     element: ActionElement;
     check: (t: T) => boolean;
@@ -38,7 +38,7 @@ const intParamScheme : ParamScheme<number> = {
     },
 };
 
-const logActionScheme: ActionScheme<LogAction> = {
+const logActionScheme: ActionScheme1<LogAction> = {
     params: {
         content: textParamScheme,
         id: intParamScheme,

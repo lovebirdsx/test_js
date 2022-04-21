@@ -20,31 +20,31 @@ class ActionSchemeRegistry {
         this.regActionScheme(DoCaculationScheme);
     }
 
-    regActionScheme(actionSchemaClass: ActionSchemeClass) {
+    regActionScheme(actionSchemeClass: ActionSchemeClass) {
         if (this.actionSchemeClassFilterMap.size > 0) {
             throw new Error(
-                `Can not reg action scheme for ${actionSchemaClass.name} while parsed`,
+                `Can not reg action scheme for ${actionSchemeClass.name} while parsed`,
             );
         }
 
-        if (this.actionSchemeByClass.has(actionSchemaClass)) {
+        if (this.actionSchemeByClass.has(actionSchemeClass)) {
             throw new Error(
-                `Can not reg action scheme for ${actionSchemaClass.name} again`,
+                `Can not reg action scheme for ${actionSchemeClass.name} again`,
             );
         }
 
         // eslint-disable-next-line new-cap
-        const actionScheme = new actionSchemaClass();
+        const actionScheme = new actionSchemeClass();
         const actionName = actionScheme.name;
         if (this.actionSchemeByName.has(actionName)) {
             throw new Error(
-                `Reg duplicate action name ${actionName}[${actionSchemaClass.name}]`,
+                `Reg duplicate action name ${actionName}[${actionSchemeClass.name}]`,
             );
         }
 
         this.actionSchemes.push(actionScheme);
-        this.actionSchemeByClass.set(actionSchemaClass, actionScheme);
-        this.actionSchemeClassByName.set(actionName, actionSchemaClass);
+        this.actionSchemeByClass.set(actionSchemeClass, actionScheme);
+        this.actionSchemeClassByName.set(actionName, actionSchemeClass);
         this.actionSchemeByName.set(actionName, actionScheme);
     }
 

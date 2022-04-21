@@ -11,6 +11,8 @@ import { renderBasic } from './basic/basic';
 import { renderAction } from './basic/action';
 import { renderObject } from './basic/object';
 import { renderRegistry } from './renderRegistry';
+import { renderDoCalculate } from './extend/caculate';
+import { renderTalkItem } from './extend/showTalk';
 
 renderRegistry.regRender<number>(IntScheme, renderBasic);
 renderRegistry.regRender<number>(FloatScheme, renderBasic);
@@ -18,13 +20,14 @@ renderRegistry.regRender<boolean>(BooleanScheme, renderBasic);
 renderRegistry.regRender<string>(StringScheme, renderBasic);
 renderRegistry.regRender<Op>(OpScheme, renderBasic);
 
-renderRegistry.regObjRender<ITalkItem>(TalkItemSheme, renderObject);
+renderRegistry.regObjRender<ITalkItem>(TalkItemSheme, renderTalkItem);
 renderRegistry.regArrayRender<ITalkItem>(TalkItemArrayScheme, renderArray);
 renderRegistry.regObjRender<IShowTalk>(ShowTalkScheme, renderObject);
 
 renderRegistry.regObjRender<IShowMessage>(ShowMessageScheme, renderObject);
 renderRegistry.regObjRender<ILog>(LogScheme, renderObject);
-renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderObject);
+renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderDoCalculate);
+// renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderObject);
 renderRegistry.regActionRender(NormalActionScheme, renderAction);
 
 export * from './renderRegistry';

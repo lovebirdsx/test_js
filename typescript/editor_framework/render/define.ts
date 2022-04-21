@@ -1,4 +1,50 @@
-import { IMeta, Scheme } from '../scheme/define';
+import { IMeta, Scheme, SchemeClass } from '../scheme/define';
+
+type ContextHandler = number;
+
+interface IContextSlot {
+    handle: ContextHandler,
+    SchemeClass: SchemeClass,
+}
+
+export class GlobalContexts {
+    contextMap = new Map<SchemeClass, unknown>();
+    slots: IContextSlot[] = [];
+    slotHandle = 0;
+
+    set<T>(SchemeClass: SchemeClass<T>, t: T): ContextHandler {
+        const slot: IContextSlot = {
+            handle: this.slotHandle++,
+            SchemeClass,
+        };
+        this.contextMap.set(SchemeClass, t);
+        this.slots.push(slot);
+        return slot.handle;
+    }
+
+    remove(handler: ContextHandler) {
+        const slotIndex = this.slots.findIndex((slot) => slot.handle === handler);
+        if (slotIndex < 0) {
+            throw new Error(`Remove unexist handle ${handler}`);
+        }
+
+        const [slot] = this.slots.splice(slotIndex, 1);
+        this.contextMap.delete(slot.SchemeClass);
+    }
+
+    get<T>(scheme: SchemeClass<T>) {
+        return this.contextMap.get(scheme) as T;
+    }
+}
+
+let globalContext: GlobalContexts;
+
+export function getGlobalContexts() {
+    if (!globalContext) {
+        globalContext = new GlobalContexts();
+    }
+    return globalContext;
+}
 
 export interface IProps<
     TData = unknown,
@@ -15,6 +61,7 @@ export interface IProps<
     parent: TParent;
     parentScheme?: Scheme<TParent>;
     onModify?: (obj: TData) => void;
+    context?: GlobalContexts;
     prefix: string;
 }
 

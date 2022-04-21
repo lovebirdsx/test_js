@@ -20,16 +20,16 @@ class RenderRegistry {
         this.regRender(schemeClass, render as Render);
     }
 
-    regActionRender(schemaClass: new() => ActionScheme, render: Render<IAction, IActionMeta, unknown, ActionScheme>) {
-        this.regRender(schemaClass, render as Render);
+    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, IActionMeta, unknown, ActionScheme>) {
+        this.regRender(schemeClass, render as Render);
     }
 
     getRender<TData, TMeta = unknown, TParent = unknown, TScheme extends Scheme<TData, TMeta, TParent> = Scheme<TData, TMeta, TParent>>(
-        schemaClass: new() => TScheme,
+        schemeClass: new() => TScheme,
     ): Render<TData, TMeta, TParent, TScheme> {
-        const result = this.renderClassMap.get(schemaClass);
+        const result = this.renderClassMap.get(schemeClass);
         if (!result) {
-            throw new Error(`No render for type [${schemaClass.name}]`);
+            throw new Error(`No render for type [${schemeClass.name}]`);
         }
         return result as Render<TData, TMeta, TParent, TScheme>;
     }
