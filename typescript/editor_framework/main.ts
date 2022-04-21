@@ -62,7 +62,6 @@ tests.forEach((test, id) => {
         render({
             value: test.value,
             scheme,
-            parent: undefined,
             prefix: `${id} `,
         }),
     );

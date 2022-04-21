@@ -3,7 +3,7 @@ import { IObjMeta, ObjectScheme } from '../../scheme/define';
 import { IDoCaculation } from '../../type/action';
 import { IProps, JSXElement, makeIndent } from '../define';
 
-export function renderDoCalculate(props: IProps<IDoCaculation, IObjMeta, unknown, ObjectScheme<IDoCaculation>>): JSXElement {
+export function renderDoCalculate(props: IProps<IDoCaculation, IObjMeta, ObjectScheme<IDoCaculation>>): JSXElement {
     const { scheme, prefix, value } = props;
     const { meta } = scheme;
     if (meta.newLine) {

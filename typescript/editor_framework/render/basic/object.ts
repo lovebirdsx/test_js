@@ -4,7 +4,7 @@ import {
 } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
-export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, IObjMeta, unknown, TScheme>): JSXElement {
+export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, IObjMeta, TScheme>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 
@@ -24,8 +24,6 @@ export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: 
         const fieldRenderResult = render({
             value: filedValue,
             scheme: filedScheme,
-            parent: value,
-            parentScheme: scheme,
             onModify: (() => {}),
             prefix: `${childPrefix}${fieldKey}: `,
         });

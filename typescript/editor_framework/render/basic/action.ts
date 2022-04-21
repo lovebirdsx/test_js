@@ -12,11 +12,9 @@ export function renderAction(props: IProps<IAction, IActionMeta>) {
     const lines: JSXElement[] = [];
     lines.push(`${props.prefix}dynamic`);
     const childPrefix = makeIndent(props.prefix);
-    const propsForValue: IProps<unknown, IMeta, IAction, ActionScheme> = {
+    const propsForValue: IProps<unknown, IMeta, ActionScheme> = {
         value: dynamic.value,
-        parent: dynamic,
         scheme: schemeRegistry.getActionScheme(dynamic.name),
-        parentScheme: props.scheme,
         onModify: () => {},
         prefix: `${childPrefix}`,
     };

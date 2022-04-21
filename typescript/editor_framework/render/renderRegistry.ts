@@ -12,26 +12,26 @@ class RenderRegistry {
         this.renderClassMap.set(schemeClass, render as Render);
     }
 
-    regArrayRender<TData>(schemeClass: new() => ArrayScheme<TData>, render: Render<TData[], IArrayMeta, unknown, ArrayScheme<TData>>) {
+    regArrayRender<TData>(schemeClass: new() => ArrayScheme<TData>, render: Render<TData[], IArrayMeta, ArrayScheme<TData>>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    regObjRender<TData>(schemeClass: new() => ObjectScheme<TData>, render: Render<TData, IObjMeta, unknown, ObjectScheme<TData>>) {
+    regObjRender<TData>(schemeClass: new() => ObjectScheme<TData>, render: Render<TData, IObjMeta, ObjectScheme<TData>>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, IActionMeta, unknown, ActionScheme>) {
+    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, IActionMeta, ActionScheme>) {
         this.regRender(schemeClass, render as Render);
     }
 
-    getRender<TData, TMeta = unknown, TParent = unknown, TScheme extends Scheme<TData, TMeta, TParent> = Scheme<TData, TMeta, TParent>>(
+    getRender<TData, TMeta = unknown, TParent = unknown, TScheme extends Scheme<TData, TMeta> = Scheme<TData, TMeta>>(
         schemeClass: new() => TScheme,
-    ): Render<TData, TMeta, TParent, TScheme> {
+    ): Render<TData, TMeta, TScheme> {
         const result = this.renderClassMap.get(schemeClass);
         if (!result) {
             throw new Error(`No render for type [${schemeClass.name}]`);
         }
-        return result as Render<TData, TMeta, TParent, TScheme>;
+        return result as Render<TData, TMeta, TScheme>;
     }
 }
 

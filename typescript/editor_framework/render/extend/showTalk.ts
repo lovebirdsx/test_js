@@ -5,7 +5,7 @@ import {
  getGlobalContexts, IProps, JSXElement,
 } from '../define';
 
-export function renderTalkItem(props: IProps<ITalkItem, IObjMeta, unknown, ObjectScheme<ITalkItem>>): JSXElement {
+export function renderTalkItem(props: IProps<ITalkItem, IObjMeta, ObjectScheme<ITalkItem>>): JSXElement {
     const { scheme, prefix, value } = props;
     const showTalk = getGlobalContexts().get<IShowTalk>(ShowTalkScheme);
     const index = showTalk.items.indexOf(value);

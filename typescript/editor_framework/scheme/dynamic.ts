@@ -28,11 +28,11 @@ export abstract class ActionScheme extends Scheme<IAction, IActionMeta> {
         const objScheme = schemeRegistry.getActionScheme(defaultActionName);
         return {
             name: defaultActionName,
-            value: objScheme.createDefault(undefined),
+            value: objScheme.createDefault(),
         };
     }
 
-    createDefault(parent: unknown): IAction {
+    createDefault(): IAction {
         return ActionScheme.createDefault(this.meta.filter);
     }
 }

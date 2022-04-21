@@ -6,31 +6,31 @@ import {
 } from './define';
 
 export class IntScheme extends Scheme<number> {
-    createDefault(parent: unknown): number {
+    createDefault(): number {
         return 0;
     }
 }
 
 export class FloatScheme extends Scheme<number> {
-    createDefault(parent: unknown): number {
+    createDefault(): number {
         return 0;
     }
 }
 
 export class BooleanScheme extends Scheme<boolean> {
-    createDefault(parent: unknown): boolean {
+    createDefault(): boolean {
         return false;
     }
 }
 
 export class StringScheme extends Scheme<string> {
-    createDefault(parent: unknown): string {
+    createDefault(): string {
         return '';
     }
 }
 
 export class OpScheme extends Scheme<Op> {
-    createDefault(parent: unknown): Op {
+    createDefault(): Op {
         return 'add';
     }
 }

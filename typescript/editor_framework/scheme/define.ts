@@ -6,21 +6,21 @@ export interface IMeta {
     newLine?: boolean,
 }
 
-export abstract class Scheme<TData = unknown, TMeta extends IMeta = IMeta, TParent = unknown> {
-    abstract createDefault(parent: TParent): TData;
+export abstract class Scheme<TData = unknown, TMeta extends IMeta = IMeta> {
+    abstract createDefault(): TData;
 
-    fix(value: TData, container: TParent): TFixResult {
+    fix(value: TData): TFixResult {
         return 0;
     }
 
-    check(value: TData, container: TParent, messages: string[]): number {
+    check(value: TData, messages: string[]): number {
         return 0;
     }
 
     meta: TMeta = {} as TMeta;
 }
 
-export type SchemeClass<TData = unknown, TMeta extends IMeta = IMeta, TParent = unknown> = new() => Scheme<TData, TMeta, TParent>;
+export type SchemeClass<TData = unknown, TMeta extends IMeta = IMeta> = new() => Scheme<TData, TMeta>;
 
 export function getSchemeClass(scheme: Scheme) {
     return scheme.constructor as SchemeClass;
@@ -43,15 +43,15 @@ export abstract class ObjectScheme<
     TData = unknown,
     TMeta extends IObjMeta = IObjMeta,
     TParent = unknown
-> extends Scheme<TData, TMeta, TParent> {
+> extends Scheme<TData, TMeta> {
     abstract fields: TFields<TData>;
     meta: TMeta = { filters: [Filter.normal] } as TMeta;
 
-    createDefault<TData>(parent: TParent): TData {
+    createDefault<TData>(): TData {
         const fieldArray = [];
         for (const key in this.fields) {
             const fieldScheme = this.fields[key];
-            fieldArray.push([key, fieldScheme.createDefault(undefined)]);
+            fieldArray.push([key, fieldScheme.createDefault()]);
         }
         return Object.fromEntries(fieldArray) as TData;
     }
@@ -75,9 +75,9 @@ export abstract class ArrayScheme<
     TElement = unknown,
     TElementMeta = IArrayMeta,
     TParent = unknown,
-    TElementScheme extends Scheme<TElement, TElementMeta, TElement[]> = Scheme<TElement, TElementMeta, TElement[]>,
-> extends Scheme<TElement[], TElementMeta, TParent> {
-    createDefault(parent: TParent): TElement[] {
+    TElementScheme extends Scheme<TElement, TElementMeta> = Scheme<TElement, TElementMeta>,
+> extends Scheme<TElement[], TElementMeta> {
+    createDefault(): TElement[] {
         return [];
     }
     abstract elementScheme: TElementScheme;

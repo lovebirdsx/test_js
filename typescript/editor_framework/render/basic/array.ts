@@ -5,7 +5,7 @@ import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
 export function renderArray<TData, TScheme extends ArrayScheme<TData>>(
-    props: IProps<TData[], IArrayMeta, unknown, TScheme>,
+    props: IProps<TData[], IArrayMeta, TScheme>,
 ): JSXElement {
     const { prefix, scheme, value } = props;
     const { elementScheme, meta } = scheme;
@@ -22,8 +22,6 @@ export function renderArray<TData, TScheme extends ArrayScheme<TData>>(
         const elementRenderResult = elementRender({
             value: e,
             scheme: elementScheme,
-            parent: value,
-            parentScheme: scheme,
             onModify: () => {},
             prefix: `${childPrefix}${id} `,
         });
