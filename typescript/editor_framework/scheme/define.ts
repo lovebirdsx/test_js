@@ -1,16 +1,6 @@
 // T为Data类型, M为meta类型,PT为父节点类型
 export type TFixResult = number;
 
-export enum RenderType {
-    int = 'int',
-    float = 'float',
-    boolean = 'boolean',
-    string = 'string',
-    object = 'object',
-    array = 'array',
-    dynamic = 'dynamic',
-}
-
 export interface IMeta {
     hideName?: boolean,
     newLine?: boolean,
@@ -30,7 +20,11 @@ export abstract class Scheme<TData = unknown, TMeta extends IMeta = IMeta, TPare
     meta: TMeta = {} as TMeta;
 }
 
-export type SchemeClass = new() => Scheme;
+export type SchemeClass<TData = unknown, TMeta extends IMeta = IMeta, TParent = unknown> = new() => Scheme<TData, TMeta, TParent>;
+
+export function getSchemeClass(scheme: Scheme) {
+    return scheme.constructor as SchemeClass;
+}
 
 export type Obj = Record<string, unknown>;
 
@@ -51,10 +45,9 @@ export abstract class ObjectScheme<
     TParent = unknown
 > extends Scheme<TData, TMeta, TParent> {
     abstract fields: TFields<TData>;
-    abstract name: string;
     meta: TMeta = { filters: [Filter.normal] } as TMeta;
 
-    createDefault<TData>(): TData {
+    createDefault<TData>(parent: TParent): TData {
         const fieldArray = [];
         for (const key in this.fields) {
             const fieldScheme = this.fields[key];
@@ -64,7 +57,14 @@ export abstract class ObjectScheme<
     }
 }
 
-export type ObjectSchemeClass = new () => ObjectScheme;
+export abstract class ActionScheme<TData = unknown,
+    TMeta extends IObjMeta = IObjMeta,
+    TParent = unknown
+> extends ObjectScheme<TData, TMeta, TParent> {
+    abstract name: string;
+}
+
+export type ActionSchemeClass = new () => ActionScheme;
 
 export interface IArrayMeta {
     showName?: string,

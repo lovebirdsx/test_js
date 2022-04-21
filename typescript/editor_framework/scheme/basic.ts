@@ -1,7 +1,9 @@
 import {
  IDoCaculation, ILog, IShowMessage, Op,
 } from '../type/action';
-import { ObjectScheme, Scheme, TFields } from './define';
+import {
+ ActionScheme, Scheme, TFields,
+} from './define';
 
 export class IntScheme extends Scheme<number> {
     createDefault(parent: unknown): number {
@@ -33,21 +35,21 @@ export class OpScheme extends Scheme<Op> {
     }
 }
 
-export class LogScheme extends ObjectScheme<ILog> {
+export class LogScheme extends ActionScheme<ILog> {
     name: string = 'Log';
     fields: TFields<ILog> = {
         content: new StringScheme(),
     };
 }
 
-export class ShowMessageScheme extends ObjectScheme<IShowMessage> {
+export class ShowMessageScheme extends ActionScheme<IShowMessage> {
     name: string = 'ShowMessage';
     fields: TFields<IShowMessage> = {
         content: new StringScheme(),
     };
 }
 
-class CaculationScheme extends ObjectScheme<IDoCaculation> {
+export class DoCaculationScheme extends ActionScheme<IDoCaculation> {
     name: string = 'Caculation';
     fields: TFields<IDoCaculation> = {
         a: new IntScheme(),

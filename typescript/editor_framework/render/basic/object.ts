@@ -1,21 +1,20 @@
-import { Obj, IObjMeta, ObjectScheme } from '../../scheme/define';
-import { schemeRegistry } from '../../scheme/schemeRegistry';
+import { getSchemeClass, IObjMeta, ObjectScheme } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../renderRegistry';
 
-export function renderObject(props: IProps<Obj, IObjMeta, unknown, ObjectScheme<Obj, IObjMeta>>): JSXElement {
+export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, IObjMeta, unknown, TScheme>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 
     const lines: JSXElement[] = [];
-    const dataType = schemeRegistry.getSchemeType(scheme);
-    lines.push(`${prefix}${dataType}`);
+    lines.push(`${prefix}${scheme.constructor.name}`);
 
     const childPrefix = makeIndent(prefix);
     for (const fieldKey in fields) {
         const filedScheme = fields[fieldKey];
         const filedValue = value[fieldKey];
-        const render = renderRegistry.getRender(filedScheme.renderType);
+        const fieldSchemeClass = getSchemeClass(filedScheme);
+        const render = renderRegistry.getRender(fieldSchemeClass);
         const fieldRenderResult = render({
             value: filedValue,
             scheme: filedScheme,

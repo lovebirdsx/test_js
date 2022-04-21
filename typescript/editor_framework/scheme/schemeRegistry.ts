@@ -1,45 +1,72 @@
+import { DoCaculationScheme, LogScheme, ShowMessageScheme } from './basic';
 import {
- Filter, ObjectScheme as ObjScheme, ObjectSchemeClass as ObjSchemeClass, Scheme, SchemeClass,
+    ActionScheme,
+    ActionSchemeClass,
+    Filter,
 } from './define';
+import { ShowTalkScheme } from './showTalk';
 
-class SchemeRegistry {
-    private readonly objSchemeMap = new Map<ObjSchemeClass, ObjScheme>();
-    private readonly objSchemeClasses = [] as ObjSchemeClass[];
-    private readonly objSchemeClassFilterMap = new Map<Filter, ObjSchemeClass[]>();
+class ActionSchemeRegistry {
+    private readonly actionSchemeByClass = new Map<ActionSchemeClass, ActionScheme>();
+    private readonly actionSchemeByName = new Map<string, ActionScheme>();
+    private readonly actionSchemeClassByName = new Map<string, ActionSchemeClass>();
+    private readonly actionSchemes = [] as ActionScheme[];
+    private readonly actionSchemeClassFilterMap = new Map<Filter, string[]>();
 
-    regObjScheme(objSchemaClass: ObjSchemeClass) {
-        if (this.objSchemeClassFilterMap.size > 0) {
+    constructor() {
+        this.regActionScheme(LogScheme);
+        this.regActionScheme(ShowMessageScheme);
+        this.regActionScheme(ShowTalkScheme);
+        this.regActionScheme(DoCaculationScheme);
+    }
+
+    regActionScheme(actionSchemaClass: ActionSchemeClass) {
+        if (this.actionSchemeClassFilterMap.size > 0) {
             throw new Error(
-                `Can not reg objscheme for ${objSchemaClass.name} while parsed`,
+                `Can not reg action scheme for ${actionSchemaClass.name} while parsed`,
+            );
+        }
+
+        if (this.actionSchemeByClass.has(actionSchemaClass)) {
+            throw new Error(
+                `Can not reg action scheme for ${actionSchemaClass.name} again`,
             );
         }
 
         // eslint-disable-next-line new-cap
-        const objScheme = new objSchemaClass();
-        this.objSchemeClasses.push(objSchemaClass);
-        this.objSchemeMap.set(objSchemaClass, objScheme);
+        const actionScheme = new actionSchemaClass();
+        const actionName = actionScheme.name;
+        if (this.actionSchemeByName.has(actionName)) {
+            throw new Error(
+                `Reg duplicate action name ${actionName}[${actionSchemaClass.name}]`,
+            );
+        }
+
+        this.actionSchemes.push(actionScheme);
+        this.actionSchemeByClass.set(actionSchemaClass, actionScheme);
+        this.actionSchemeClassByName.set(actionName, actionSchemaClass);
+        this.actionSchemeByName.set(actionName, actionScheme);
     }
 
-    private parseAllObjSchemes() {
-        this.objSchemeClasses.forEach((schemeClass) => {
-            const scheme = this.getObjScheme(schemeClass);
+    private parseAllActionSchemes() {
+        this.actionSchemes.forEach((scheme) => {
             scheme.meta.filters.forEach((filter) => {
-                let schemas = this.objSchemeClassFilterMap.get(filter);
-                if (!schemas) {
-                    schemas = [];
-                    this.objSchemeClassFilterMap.set(filter, schemas);
+                let names = this.actionSchemeClassFilterMap.get(filter);
+                if (!names) {
+                    names = [];
+                    this.actionSchemeClassFilterMap.set(filter, names);
                 }
-                schemas.push(schemeClass);
+                names.push(scheme.name);
             });
         });
     }
 
-    getObjSchemClassesByFilter(filter: Filter): ObjSchemeClass[] {
-        if (this.objSchemeClassFilterMap.size <= 0) {
-            this.parseAllObjSchemes();
+    getActionNamesByFilter(filter: Filter): string[] {
+        if (this.actionSchemeClassFilterMap.size <= 0) {
+            this.parseAllActionSchemes();
         }
 
-        const result = this.objSchemeClassFilterMap.get(filter);
+        const result = this.actionSchemeClassFilterMap.get(filter);
         if (!result) {
             return [];
         }
@@ -47,14 +74,32 @@ class SchemeRegistry {
         return result;
     }
 
-    getObjScheme(schemeClass: ObjSchemeClass): ObjScheme {
-        const result = this.objSchemeMap.get(schemeClass);
+    getActionScheme(actionName: string): ActionScheme {
+        const result = this.actionSchemeByName.get(actionName);
         if (!result) {
-            throw new Error(`No sheme for type [${schemeClass.name}]`);
+            throw new Error(`No action sheme for type [${actionName}]`);
+        }
+
+        return result;
+    }
+
+    getActionSchemeByClass(actionSchemeClass: ActionSchemeClass): ActionScheme {
+        const result = this.actionSchemeByClass.get(actionSchemeClass);
+        if (!result) {
+            throw new Error(`No action sheme for type [${actionSchemeClass.name}]`);
+        }
+
+        return result;
+    }
+
+    getActionSchemeClass(actionName: string): ActionSchemeClass {
+        const result = this.actionSchemeClassByName.get(actionName);
+        if (!result) {
+            throw new Error(`No action sheme class for type [${actionName}]`);
         }
 
         return result;
     }
 }
 
-export const schemeRegistry = new SchemeRegistry();
+export const schemeRegistry = new ActionSchemeRegistry();

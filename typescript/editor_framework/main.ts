@@ -1,60 +1,68 @@
 import { renderRegistry } from './render/public';
-import { schemeRegistry } from './scheme/public';
+import { ActionSchemeClass, SchemeClass } from './scheme/define';
 import {
-    IDynamic,
+ BooleanScheme, DoCaculationScheme, ActionScheme, IntScheme, LogScheme, NormalActionScheme, schemeRegistry, ShowMessageScheme, ShowTalkScheme, StringScheme,
+} from './scheme/public';
+import {
     IDoCaculation,
     ILog,
     IShowMessage,
-    DataType,
     IShowTalk,
 } from './type/action';
 
-function createValue<T>(type: DataType, t: T) {
+interface TestSlot {
+    SchemeClass: SchemeClass;
+    value: unknown;
+}
+
+function createValue<T>(SchemeClass: SchemeClass<T>, t: T): TestSlot {
     return {
-        type,
+        SchemeClass,
         value: t,
     };
 }
 
-const values: { type: DataType; value: unknown }[] = [
-    createValue<boolean>(DataType.boolean, false),
-    createValue<string>(DataType.string, 'hello world'),
-    createValue<number>(DataType.int, 1),
-    createValue<IShowMessage>(DataType.showMessage, {
+function createAction<T>(ActionSchemeClass: ActionSchemeClass, t: T): TestSlot {
+    const actionScheme = schemeRegistry.getActionSchemeByClass(ActionSchemeClass);
+    return {
+        SchemeClass: NormalActionScheme,
+        value: ActionScheme.createAction(actionScheme.name, t),
+    };
+}
+
+const tests: TestSlot[] = [
+    createValue<boolean>(BooleanScheme, false),
+    createValue<string>(StringScheme, 'hello world'),
+    createValue<number>(IntScheme, 1),
+    createValue<IShowMessage>(ShowMessageScheme, {
         content: 'hello message',
     }),
-    createValue<ILog>(DataType.log, { content: 'hello log' }),
-    createValue<IDoCaculation>(DataType.doCaculation, {
+    createValue<ILog>(LogScheme, { content: 'hello log' }),
+    createValue<IDoCaculation>(DoCaculationScheme, {
         a: 1,
         b: 2,
         op: 'div',
     }),
-    createValue<IShowTalk>(DataType.showTalk, {
+    createValue<IShowTalk>(ShowTalkScheme, {
         resetCamera: false,
         items: [
             { who: 'lovebird1', content: 'hello 1' },
             { who: 'lovebird2', content: 'hello 2' },
         ],
     }),
-    createValue<IDynamic>(
-        DataType.dynamic,
-        createValue<ILog>(DataType.log, { content: 'hello log any' }),
-    ),
-    createValue<IDynamic>(
-        DataType.dynamic,
-        createValue<boolean>(DataType.boolean, true),
-    ),
+
+    createAction<ILog>(LogScheme, { content: 'hello log any' }),
+    createAction<IDoCaculation>(DoCaculationScheme, { a: 1, b: 2, op: 'div' }),
 ];
 
-values.forEach((value, id) => {
-    const scheme = schemeRegistry.getObjScheme(value.type);
-    const render = renderRegistry.getRender(scheme);
+tests.forEach((test, id) => {
+    const scheme = new test.SchemeClass();
+    const render = renderRegistry.getRender(test.SchemeClass);
     console.log(
         render({
-            value: value.value,
+            value: test.value,
             scheme,
             parent: undefined,
-            onModify: () => {},
             prefix: `${id} `,
         }),
     );

@@ -1,7 +1,11 @@
 import { IShowTalk, ITalkItem } from '../type/action';
 import { BooleanScheme, StringScheme } from './basic';
 import {
- ArrayScheme, IObjMeta, ObjectScheme, TFields,
+    ActionScheme,
+    ArrayScheme,
+    IObjMeta,
+    ObjectScheme,
+    TFields,
 } from './define';
 
 export class TalkItemSheme extends ObjectScheme<ITalkItem, IObjMeta> {
@@ -11,11 +15,16 @@ export class TalkItemSheme extends ObjectScheme<ITalkItem, IObjMeta> {
     };
 }
 
-class TalkItemArrayScheme extends ArrayScheme<ITalkItem, IObjMeta, IShowTalk> {
+export class TalkItemArrayScheme extends ArrayScheme<
+    ITalkItem,
+    IObjMeta,
+    IShowTalk
+> {
     elementScheme = new TalkItemSheme();
 }
 
-export class ShowTalkScheme extends ObjectScheme<IShowTalk, IObjMeta> {
+export class ShowTalkScheme extends ActionScheme<IShowTalk, IObjMeta> {
+    name: string = 'ShowTalk';
     fields: TFields<IShowTalk> = {
         resetCamera: new BooleanScheme(),
         items: new TalkItemArrayScheme(),

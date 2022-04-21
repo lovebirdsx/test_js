@@ -14,7 +14,7 @@ export interface IProps<
     scheme: TScheme;
     parent: TParent;
     parentScheme?: Scheme<TParent>;
-    onModify: (obj: TData) => void;
+    onModify?: (obj: TData) => void;
     prefix: string;
 }
 
@@ -22,7 +22,7 @@ export type JSXElement = string;
 
 export type Render<
     TData = unknown,
-    TMeta = unknown,
+    TMeta extends IMeta = IMeta,
     TParent = unknown,
     TScheme extends Scheme<TData, TMeta, TParent> = Scheme<
         TData,

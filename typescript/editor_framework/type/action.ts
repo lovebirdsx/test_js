@@ -1,17 +1,3 @@
-export enum DataType {
-    int = 'int',
-    float = 'float',
-    boolean = 'boolean',
-    string = 'string',
-    log = 'log',
-    showMessage = 'showMessage',
-    doCaculation = 'doCaculation',
-    dynamic = 'dynamic',
-    talkItem = 'talkItem',
-    showTalk = 'showTalk',
-    op = 'op',
-}
-
 export interface ILog {
     content: string;
 }
@@ -38,7 +24,7 @@ export interface IDoCaculation {
     op: Op;
 }
 
-export interface IDynamic {
-    type: DataType,
+export interface IAction {
+    name: string,
     value: unknown,
 }
