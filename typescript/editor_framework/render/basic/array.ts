@@ -1,6 +1,6 @@
 import { ArrayScheme, getSchemeClass } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
-import { renderRegistry } from '../renderRegistry';
+import { renderRegistry } from '../render_registry';
 
 export function renderArray<TData, TScheme extends ArrayScheme<TData>>(
     props: IProps<TData[], TScheme>,

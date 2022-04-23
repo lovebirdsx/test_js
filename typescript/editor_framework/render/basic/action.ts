@@ -1,7 +1,7 @@
 import { ActionScheme } from '../../scheme/define';
-import { schemeRegistry } from '../../scheme/schemeRegistry';
+import { schemeRegistry } from '../../scheme/scheme_registry';
 import { IAction } from '../../type/action';
-import { renderRegistry } from '../renderRegistry';
+import { renderRegistry } from '../render_registry';
 import { IProps, JSXElement, makeIndent } from '../define';
 
 export function renderAction(props: IProps<IAction>) {

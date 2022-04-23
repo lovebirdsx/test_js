@@ -1,6 +1,6 @@
 import { IAction } from '../type/action';
 import { Filter, Scheme } from './define';
-import { schemeRegistry } from './schemeRegistry';
+import { schemeRegistry } from './scheme_registry';
 
 export abstract class ActionScheme extends Scheme<IAction> {
     abstract filter: Filter;

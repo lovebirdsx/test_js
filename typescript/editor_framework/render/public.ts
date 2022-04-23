@@ -10,7 +10,7 @@ import { renderArray } from './basic/array';
 import { renderBasic } from './basic/basic';
 import { renderAction } from './basic/action';
 import { renderObject } from './basic/object';
-import { renderRegistry } from './renderRegistry';
+import { renderRegistry } from './render_registry';
 import { renderDoCalculate } from './extend/caculate';
 import { renderTalkItem } from './extend/showTalk';
 
@@ -29,4 +29,4 @@ renderRegistry.regObjRender<ILog>(LogScheme, renderObject);
 renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderDoCalculate);
 renderRegistry.regActionRender(NormalActionScheme, renderAction);
 
-export * from './renderRegistry';
+export * from './render_registry';

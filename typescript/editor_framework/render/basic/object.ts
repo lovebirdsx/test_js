@@ -2,7 +2,7 @@ import { getSchemeClass, ObjectScheme } from '../../scheme/define';
 import {
  getGlobalContexts, IProps, JSXElement, makeIndent,
 } from '../define';
-import { renderRegistry } from '../renderRegistry';
+import { renderRegistry } from '../render_registry';
 
 export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, TScheme>): JSXElement {
     const { prefix, scheme, value } = props;
