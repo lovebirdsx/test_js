@@ -1,4 +1,4 @@
-import { ArrayScheme, getSchemeClass } from '../../scheme/define';
+import { ArrayScheme } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../render_registry';
 

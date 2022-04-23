@@ -1,7 +1,5 @@
 import { renderRegistry } from './render/public';
-import {
- ActionScheme, getSchemeClass, Scheme,
-} from './scheme/define';
+import { ActionScheme, Scheme } from './scheme/define';
 import {
   DynamicActionScheme, boolScheme, doCaculationScheme, intScheme, logScheme, showMessageScheme, showTalkScheme, stringScheme, normalActionScheme,
 } from './scheme/public';
