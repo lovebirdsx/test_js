@@ -1,9 +1,9 @@
 import { IAction } from '../type/action';
-import { Filter, Scheme } from './define';
+import { createScheme, Filter, Scheme } from './define';
 import { schemeRegistry } from './scheme_registry';
 
-export abstract class ActionScheme extends Scheme<IAction> {
-    abstract filter: Filter;
+export class DynamicActionScheme extends Scheme<IAction> {
+    public filter: Filter = Filter.normal;
 
     static createAction<TAction>(actionName: string, action: TAction): IAction {
         return {
@@ -27,10 +27,14 @@ export abstract class ActionScheme extends Scheme<IAction> {
     }
 
     createDefault(): IAction {
-        return ActionScheme.createDefault(this.filter);
+        return DynamicActionScheme.createDefault(this.filter);
     }
 }
 
-export class NormalActionScheme extends ActionScheme {
-    filter: Filter = Filter.normal;
+export function createDynamicActionScheme(params: Partial<DynamicActionScheme>): DynamicActionScheme {
+    return createScheme(params, DynamicActionScheme);
 }
+
+export const normalActionScheme = createDynamicActionScheme({
+    filter: Filter.normal,
+});

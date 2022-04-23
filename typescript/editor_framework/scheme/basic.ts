@@ -2,58 +2,48 @@ import {
  IDoCaculation, ILog, IShowMessage, Op,
 } from '../type/action';
 import {
- ActionScheme, Scheme, TFields,
+ createActionScheme, createEnumScheme, createScheme,
 } from './define';
 
-export class IntScheme extends Scheme<number> {
-    createDefault(): number {
-        return 0;
-    }
-}
+export const intScheme = createScheme<number>({
+    createDefault: () => 0,
+});
 
-export class FloatScheme extends Scheme<number> {
-    createDefault(): number {
-        return 0;
-    }
-}
+export const floatScheme = createScheme<number>({
+    createDefault: () => 0,
+});
 
-export class BooleanScheme extends Scheme<boolean> {
-    createDefault(): boolean {
-        return false;
-    }
-}
+export const boolScheme = createScheme<boolean>({
+    createDefault: () => false,
+});
 
-export class StringScheme extends Scheme<string> {
-    createDefault(): string {
-        return '';
-    }
-}
+export const stringScheme = createScheme<string>({
+    createDefault: () => 'empty',
+});
 
-export class OpScheme extends Scheme<Op> {
-    createDefault(): Op {
-        return 'add';
-    }
-}
+export const opScheme = createEnumScheme<Op>({
+    createDefault: () => 'add',
+});
 
-export class LogScheme extends ActionScheme<ILog> {
-    name: string = 'Log';
-    fields: TFields<ILog> = {
-        content: new StringScheme(),
-    };
-}
+export const logScheme = createActionScheme<ILog>({
+    name: 'Log',
+    fields: {
+        content: stringScheme,
+    },
+});
 
-export class ShowMessageScheme extends ActionScheme<IShowMessage> {
-    name: string = 'ShowMessage';
-    fields: TFields<IShowMessage> = {
-        content: new StringScheme(),
-    };
-}
+export const showMessageScheme = createActionScheme<IShowMessage>({
+    name: 'ShowMessage',
+    fields: {
+        content: stringScheme,
+    },
+});
 
-export class DoCaculationScheme extends ActionScheme<IDoCaculation> {
-    name: string = 'Caculation';
-    fields: TFields<IDoCaculation> = {
-        a: new IntScheme(),
-        b: new IntScheme(),
-        op: new OpScheme(),
-    };
-}
+export const doCaculationScheme = createActionScheme<IDoCaculation>({
+    name: 'DoCaculation',
+    fields: {
+        a: intScheme,
+        b: intScheme,
+        op: opScheme,
+    },
+});

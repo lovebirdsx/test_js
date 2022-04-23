@@ -2,14 +2,12 @@ import { ArrayScheme, getSchemeClass } from '../../scheme/define';
 import { IProps, JSXElement, makeIndent } from '../define';
 import { renderRegistry } from '../render_registry';
 
-export function renderArray<TData, TScheme extends ArrayScheme<TData>>(
-    props: IProps<TData[], TScheme>,
-): JSXElement {
+export function renderArray(props: IProps<unknown[], ArrayScheme>): JSXElement {
     const { prefix, scheme, value } = props;
     const { elementScheme } = scheme;
 
     const result: JSXElement[] = [];
-    if (scheme.hideName) {
+    if (!scheme.hideName) {
         result.push(`${prefix}`);
     }
 

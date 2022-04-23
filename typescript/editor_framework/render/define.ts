@@ -1,38 +1,38 @@
-import { Scheme, SchemeClass } from '../scheme/define';
+import { Scheme } from '../scheme/define';
 
 type ContextHandler = number;
 
 interface IContextSlot {
     handle: ContextHandler,
-    SchemeClass: SchemeClass,
+    scheme: Scheme,
 }
 
 export class GlobalContexts {
-    contextMap = new Map<SchemeClass, unknown>();
+    contextMap = new Map<Scheme, unknown>();
     slots: IContextSlot[] = [];
     slotHandle = 0;
 
-    set<T>(SchemeClass: SchemeClass<T>, t: T): ContextHandler {
+    push<T>(scheme: Scheme<T>, t: T): ContextHandler {
         const slot: IContextSlot = {
             handle: this.slotHandle++,
-            SchemeClass,
+            scheme,
         };
-        this.contextMap.set(SchemeClass, t);
+        this.contextMap.set(scheme, t);
         this.slots.push(slot);
         return slot.handle;
     }
 
-    remove(handler: ContextHandler) {
+    pop(handler: ContextHandler) {
         const slotIndex = this.slots.findIndex((slot) => slot.handle === handler);
         if (slotIndex < 0) {
             throw new Error(`Remove unexist handle ${handler}`);
         }
 
         const [slot] = this.slots.splice(slotIndex, 1);
-        this.contextMap.delete(slot.SchemeClass);
+        this.contextMap.delete(slot.scheme);
     }
 
-    get<T>(scheme: SchemeClass<T>) {
+    get<T>(scheme: Scheme<T>) {
         return this.contextMap.get(scheme) as T;
     }
 }

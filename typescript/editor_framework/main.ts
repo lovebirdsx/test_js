@@ -1,7 +1,7 @@
 import { renderRegistry } from './render/public';
-import { ActionSchemeClass, SchemeClass } from './scheme/define';
+import { ActionScheme, getSchemeClass, Scheme } from './scheme/define';
 import {
- BooleanScheme, DoCaculationScheme, ActionScheme, IntScheme, LogScheme, NormalActionScheme, schemeRegistry, ShowMessageScheme, ShowTalkScheme, StringScheme,
+  DynamicActionScheme, boolScheme, doCaculationScheme, intScheme, logScheme, showMessageScheme, showTalkScheme, stringScheme, normalActionScheme,
 } from './scheme/public';
 import {
     IDoCaculation,
@@ -11,39 +11,38 @@ import {
 } from './type/action';
 
 interface TestSlot {
-    SchemeClass: SchemeClass;
+    scheme: Scheme;
     value: unknown;
 }
 
-function createValue<T>(SchemeClass: SchemeClass<T>, t: T): TestSlot {
+function createValue<T>(scheme: Scheme<T>, t: T): TestSlot {
     return {
-        SchemeClass,
+        scheme,
         value: t,
     };
 }
 
-function createAction<T>(ActionSchemeClass: ActionSchemeClass, t: T): TestSlot {
-    const actionScheme = schemeRegistry.getActionSchemeByClass(ActionSchemeClass);
+function createDynamicAction<T>(actionScheme: ActionScheme<T>, t: T): TestSlot {
     return {
-        SchemeClass: NormalActionScheme,
-        value: ActionScheme.createAction(actionScheme.name, t),
+        scheme: normalActionScheme,
+        value: DynamicActionScheme.createAction(actionScheme.name, t),
     };
 }
 
 const tests: TestSlot[] = [
-    createValue<boolean>(BooleanScheme, false),
-    createValue<string>(StringScheme, 'hello world'),
-    createValue<number>(IntScheme, 1),
-    createValue<IShowMessage>(ShowMessageScheme, {
+    createValue<boolean>(boolScheme, false),
+    createValue<string>(stringScheme, 'hello world'),
+    createValue<number>(intScheme, 1),
+    createValue<IShowMessage>(showMessageScheme, {
         content: 'hello message',
     }),
-    createValue<ILog>(LogScheme, { content: 'hello log' }),
-    createValue<IDoCaculation>(DoCaculationScheme, {
+    createValue<ILog>(logScheme, { content: 'hello log' }),
+    createValue<IDoCaculation>(doCaculationScheme, {
         a: 1,
         b: 2,
         op: 'div',
     }),
-    createValue<IShowTalk>(ShowTalkScheme, {
+    createValue<IShowTalk>(showTalkScheme, {
         resetCamera: false,
         items: [
             { who: 'lovebird1', content: 'hello 1' },
@@ -51,17 +50,18 @@ const tests: TestSlot[] = [
         ],
     }),
 
-    createAction<ILog>(LogScheme, { content: 'hello log any' }),
-    createAction<IDoCaculation>(DoCaculationScheme, { a: 1, b: 2, op: 'div' }),
+    createDynamicAction<ILog>(logScheme, { content: 'hello log any' }),
+
+    createDynamicAction<IDoCaculation>(doCaculationScheme, { a: 1, b: 2, op: 'div' }),
 ];
 
 tests.forEach((test, id) => {
-    const scheme = new test.SchemeClass();
-    const render = renderRegistry.getRender(test.SchemeClass);
+    const schemeClass = getSchemeClass(test.scheme);
+    const render = renderRegistry.getRender(schemeClass);
     console.log(
         render({
             value: test.value,
-            scheme,
+            scheme: test.scheme,
             prefix: `${id} `,
         }),
     );

@@ -1,2 +1,2 @@
-sh check_circular.sh
-node typescript_out/editor_framework/main.js
+sh tools/check_circular.sh
+ts-node typescript/editor_framework/main.ts

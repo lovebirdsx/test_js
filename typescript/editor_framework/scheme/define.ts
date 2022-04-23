@@ -1,19 +1,13 @@
 export type TFixResult = number;
 
-export abstract class Scheme<TData = unknown> {
-    abstract createDefault(): TData;
+export class Scheme<TData = unknown> {
+    createDefault(): TData {
+        return undefined as unknown as TData;
+    }
 
     hideName?: boolean;
 
     newLine?: boolean;
-
-    fix(value: TData): TFixResult {
-        return 0;
-    }
-
-    check(value: TData, messages: string[]): number {
-        return 0;
-    }
 }
 
 export type SchemeClass<TData = unknown> = new() => Scheme<TData>;
@@ -22,7 +16,27 @@ export function getSchemeClass(scheme: Scheme) {
     return scheme.constructor as SchemeClass;
 }
 
-export type Obj = Record<string, unknown>;
+export function createScheme<T, TScheme extends Scheme<T> = Scheme<T>>(
+    params: Partial<TScheme>,
+    SchemeClass: SchemeClass<T> = Scheme,
+): TScheme {
+    const scheme = new SchemeClass();
+    Object.assign(scheme, params);
+    return scheme as TScheme;
+}
+
+export class EnumScheme<T extends string> extends Scheme<T> {
+    createDefault(): T {
+        return this.Values[0];
+    }
+
+    Names: string[] = ['undefined'];
+    Values: T[] = ['undefined' as T];
+}
+
+export function createEnumScheme<T extends string>(params: Partial<EnumScheme<T>>): EnumScheme<T> {
+    return createScheme<T, EnumScheme<T>>(params);
+}
 
 export enum Filter {
     showTalk,
@@ -31,33 +45,45 @@ export enum Filter {
 
 export type TFields<TData> = { [K in keyof TData]: Scheme<TData[K]> };
 
-export abstract class ObjectScheme<TData=unknown> extends Scheme<TData> {
-    abstract fields: TFields<TData>;
+export type Obj = Record<string, unknown>;
 
+export class ObjectScheme<Obj> extends Scheme<Obj> {
+    fields: TFields<Obj> = {} as TFields<Obj>;
     filters: Filter[] = [Filter.normal];
-
-    createDefault<TData>(): TData {
+    createDefault<Obj>(): Obj {
         const fieldArray = [];
         for (const key in this.fields) {
             const fieldScheme = this.fields[key];
             fieldArray.push([key, fieldScheme.createDefault()]);
         }
-        return Object.fromEntries(fieldArray) as TData;
+        return Object.fromEntries(fieldArray) as Obj;
     }
 }
 
-export abstract class ActionScheme<TData = unknown> extends ObjectScheme<TData> {
-    abstract name: string;
+export function createObjectScheme<T>(params: Partial<ObjectScheme<T>>): ObjectScheme<T> {
+    return createScheme(params, ObjectScheme);
+}
+
+export class ActionScheme<T=Obj> extends ObjectScheme<T> {
+    name = 'unknown';
+}
+
+export function createActionScheme<T>(params: Partial<ActionScheme<T>>): ActionScheme<T> {
+    return createScheme(params, ActionScheme);
 }
 
 export type ActionSchemeClass = new () => ActionScheme;
 
-export abstract class ArrayScheme<
+export class ArrayScheme<
     TElement = unknown,
     TElementScheme extends Scheme<TElement> = Scheme<TElement>,
 > extends Scheme<TElement[]> {
     createDefault(): TElement[] {
         return [];
     }
-    abstract elementScheme: TElementScheme;
+    elementScheme: TElementScheme = undefined as unknown as TElementScheme;
+}
+
+export function createArrayScheme<TElement>(params: Partial<ArrayScheme<TElement>>): ArrayScheme<TElement> {
+    return createScheme(params, ArrayScheme);
 }

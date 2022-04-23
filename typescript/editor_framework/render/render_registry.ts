@@ -1,14 +1,14 @@
 import {
  Scheme, SchemeClass, ObjectScheme, ArrayScheme,
 } from '../scheme/define';
-import { ActionScheme } from '../scheme/dynamic';
+import { DynamicActionScheme } from '../scheme/dynamic_action';
 import { IAction } from '../type/action';
 import { Render } from './define';
 
 class RenderRegistry {
     private readonly renderClassMap = new Map<SchemeClass, Render>();
 
-    regRender<TData>(schemeClass: SchemeClass<TData>, render: Render<TData>) {
+    regRender<TData, TScheme extends Scheme<TData> = Scheme<TData>>(schemeClass: new() => TScheme, render: Render<TData, TScheme>) {
         this.renderClassMap.set(schemeClass, render as Render);
     }
 
@@ -20,7 +20,7 @@ class RenderRegistry {
         this.regRender(schemeClass, render as Render);
     }
 
-    regActionRender(schemeClass: new() => ActionScheme, render: Render<IAction, ActionScheme>) {
+    regDynamicActionRender(schemeClass: new() => DynamicActionScheme, render: Render<IAction, DynamicActionScheme>) {
         this.regRender(schemeClass, render as Render);
     }
 

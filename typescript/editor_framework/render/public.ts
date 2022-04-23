@@ -1,32 +1,20 @@
 import {
- BooleanScheme, DoCaculationScheme, FloatScheme, IntScheme, LogScheme, OpScheme, ShowMessageScheme, StringScheme,
 } from '../scheme/basic';
-import { NormalActionScheme } from '../scheme/dynamic';
-import { ShowTalkScheme, TalkItemArrayScheme, TalkItemSheme } from '../scheme/showTalk';
-import {
- IDoCaculation, ILog, IShowMessage, IShowTalk, ITalkItem, Op,
-} from '../type/action';
+import { DynamicActionScheme } from '../scheme/dynamic_action';
 import { renderArray } from './basic/array';
 import { renderBasic } from './basic/basic';
 import { renderAction } from './basic/action';
 import { renderObject } from './basic/object';
 import { renderRegistry } from './render_registry';
-import { renderDoCalculate } from './extend/caculate';
-import { renderTalkItem } from './extend/showTalk';
+import {
+ ActionScheme, ArrayScheme, ObjectScheme, Scheme,
+} from '../scheme/define';
+import { renderDynamicAction } from './basic/dymamic_action';
 
-renderRegistry.regRender<number>(IntScheme, renderBasic);
-renderRegistry.regRender<number>(FloatScheme, renderBasic);
-renderRegistry.regRender<boolean>(BooleanScheme, renderBasic);
-renderRegistry.regRender<string>(StringScheme, renderBasic);
-renderRegistry.regRender<Op>(OpScheme, renderBasic);
-
-renderRegistry.regObjRender<ITalkItem>(TalkItemSheme, renderTalkItem);
-renderRegistry.regArrayRender<ITalkItem>(TalkItemArrayScheme, renderArray);
-renderRegistry.regObjRender<IShowTalk>(ShowTalkScheme, renderObject);
-
-renderRegistry.regObjRender<IShowMessage>(ShowMessageScheme, renderObject);
-renderRegistry.regObjRender<ILog>(LogScheme, renderObject);
-renderRegistry.regObjRender<IDoCaculation>(DoCaculationScheme, renderDoCalculate);
-renderRegistry.regActionRender(NormalActionScheme, renderAction);
+renderRegistry.regRender(Scheme, renderBasic);
+renderRegistry.regRender(ObjectScheme, renderObject);
+renderRegistry.regRender(ArrayScheme, renderArray);
+renderRegistry.regRender(DynamicActionScheme, renderDynamicAction);
+renderRegistry.regRender(ActionScheme, renderAction);
 
 export * from './render_registry';

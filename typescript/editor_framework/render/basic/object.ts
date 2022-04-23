@@ -1,19 +1,19 @@
-import { getSchemeClass, ObjectScheme } from '../../scheme/define';
+import { getSchemeClass, Obj, ObjectScheme } from '../../scheme/define';
 import {
  getGlobalContexts, IProps, JSXElement, makeIndent,
 } from '../define';
 import { renderRegistry } from '../render_registry';
 
-export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: IProps<TData, TScheme>): JSXElement {
+export function renderObject(props: IProps<Obj, ObjectScheme<Obj>>): JSXElement {
     const { prefix, scheme, value } = props;
     const { fields } = scheme;
 
     const lines: JSXElement[] = [];
-    lines.push(`${prefix}${scheme.constructor.name}`);
+    lines.push(`${prefix}`);
 
     const globalContext = getGlobalContexts();
 
-    const handle = globalContext.set(getSchemeClass(scheme), value);
+    const handle = globalContext.push(scheme, value);
 
     const childPrefix = makeIndent(prefix);
     for (const fieldKey in fields) {
@@ -30,7 +30,7 @@ export function renderObject<TData, TScheme extends ObjectScheme<TData>>(props: 
         lines.push(fieldRenderResult);
     }
 
-    globalContext.remove(handle);
+    globalContext.pop(handle);
 
     return lines.join('\n');
 }

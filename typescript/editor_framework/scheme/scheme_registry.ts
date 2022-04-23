@@ -1,50 +1,34 @@
-import { DoCaculationScheme, LogScheme, ShowMessageScheme } from './basic';
-import {
-    ActionScheme,
-    ActionSchemeClass,
-    Filter,
-} from './define';
-import { ShowTalkScheme } from './showTalk';
+import { logScheme, showMessageScheme, doCaculationScheme } from './basic';
+import { ActionScheme, Filter } from './define';
+import { showTalkScheme } from './show_talk';
 
 class ActionSchemeRegistry {
-    private readonly actionSchemeByClass = new Map<ActionSchemeClass, ActionScheme>();
     private readonly actionSchemeByName = new Map<string, ActionScheme>();
-    private readonly actionSchemeClassByName = new Map<string, ActionSchemeClass>();
     private readonly actionSchemes = [] as ActionScheme[];
     private readonly actionSchemeClassFilterMap = new Map<Filter, string[]>();
 
     constructor() {
-        this.regActionScheme(LogScheme);
-        this.regActionScheme(ShowMessageScheme);
-        this.regActionScheme(ShowTalkScheme);
-        this.regActionScheme(DoCaculationScheme);
+        this.regActionScheme(logScheme);
+        this.regActionScheme(showMessageScheme);
+        this.regActionScheme(showTalkScheme);
+        this.regActionScheme(doCaculationScheme);
     }
 
-    regActionScheme(actionSchemeClass: ActionSchemeClass) {
+    regActionScheme(actionScheme: ActionScheme) {
         if (this.actionSchemeClassFilterMap.size > 0) {
             throw new Error(
-                `Can not reg action scheme for ${actionSchemeClass.name} while parsed`,
+                `Can not reg action scheme for ${actionScheme.name} while parsed`,
             );
         }
 
-        if (this.actionSchemeByClass.has(actionSchemeClass)) {
-            throw new Error(
-                `Can not reg action scheme for ${actionSchemeClass.name} again`,
-            );
-        }
-
-        // eslint-disable-next-line new-cap
-        const actionScheme = new actionSchemeClass();
         const actionName = actionScheme.name;
         if (this.actionSchemeByName.has(actionName)) {
             throw new Error(
-                `Reg duplicate action name ${actionName}[${actionSchemeClass.name}]`,
+                `Reg duplicate action name ${actionName}[${actionScheme.name}]`,
             );
         }
 
         this.actionSchemes.push(actionScheme);
-        this.actionSchemeByClass.set(actionSchemeClass, actionScheme);
-        this.actionSchemeClassByName.set(actionName, actionSchemeClass);
         this.actionSchemeByName.set(actionName, actionScheme);
     }
 
@@ -78,24 +62,6 @@ class ActionSchemeRegistry {
         const result = this.actionSchemeByName.get(actionName);
         if (!result) {
             throw new Error(`No action sheme for type [${actionName}]`);
-        }
-
-        return result;
-    }
-
-    getActionSchemeByClass(actionSchemeClass: ActionSchemeClass): ActionScheme {
-        const result = this.actionSchemeByClass.get(actionSchemeClass);
-        if (!result) {
-            throw new Error(`No action sheme for type [${actionSchemeClass.name}]`);
-        }
-
-        return result;
-    }
-
-    getActionSchemeClass(actionName: string): ActionSchemeClass {
-        const result = this.actionSchemeClassByName.get(actionName);
-        if (!result) {
-            throw new Error(`No action sheme class for type [${actionName}]`);
         }
 
         return result;
