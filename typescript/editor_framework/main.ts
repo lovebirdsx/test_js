@@ -1,5 +1,7 @@
 import { renderRegistry } from './render/public';
-import { ActionScheme, getSchemeClass, Scheme } from './scheme/define';
+import {
+ ActionScheme, getSchemeClass, Scheme,
+} from './scheme/define';
 import {
   DynamicActionScheme, boolScheme, doCaculationScheme, intScheme, logScheme, showMessageScheme, showTalkScheme, stringScheme, normalActionScheme,
 } from './scheme/public';
@@ -56,8 +58,7 @@ const tests: TestSlot[] = [
 ];
 
 tests.forEach((test, id) => {
-    const schemeClass = getSchemeClass(test.scheme);
-    const render = renderRegistry.getRender(schemeClass);
+    const render = renderRegistry.getRender(test.scheme);
     console.log(
         render({
             value: test.value,

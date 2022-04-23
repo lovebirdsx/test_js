@@ -65,7 +65,7 @@ export type Render<
 
 export function makeIndent(prefix: string): string {
     let indentCount = prefix.split('--').length - 1;
-    if (indentCount <= 0) {
+    if (indentCount < 0) {
         indentCount = 0;
     }
     return `${'--'.repeat(indentCount + 1)}`;

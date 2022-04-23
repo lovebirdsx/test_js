@@ -7,12 +7,9 @@ export function renderArray(props: IProps<unknown[], ArrayScheme>): JSXElement {
     const { elementScheme } = scheme;
 
     const result: JSXElement[] = [];
-    if (!scheme.hideName) {
-        result.push(`${prefix}`);
-    }
 
-    const elementSchemeClass = getSchemeClass(elementScheme);
-    const elementRender = renderRegistry.getRender<unknown>(elementSchemeClass);
+    result.push(`${prefix}`);
+    const elementRender = renderRegistry.getRender(elementScheme);
     const childPrefix = makeIndent(prefix);
     value.forEach((e, id) => {
         const elementRenderResult = elementRender({

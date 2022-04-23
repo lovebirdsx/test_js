@@ -7,8 +7,7 @@ import { IProps, JSXElement, makeIndent } from '../define';
 export function renderDynamicAction(props: IProps<IAction>) {
     const action = props.value;
     const actionScheme = schemeRegistry.getActionScheme(action.name);
-    const actionSchemeClass = getSchemeClass(actionScheme);
-    const render = renderRegistry.getRender(actionSchemeClass);
+    const render = renderRegistry.getRender(actionScheme);
     const lines: JSXElement[] = [];
     lines.push(`${props.prefix}dynamic`);
     const childPrefix = makeIndent(props.prefix);

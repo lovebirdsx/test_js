@@ -19,8 +19,7 @@ export function renderObject(props: IProps<Obj, ObjectScheme<Obj>>): JSXElement 
     for (const fieldKey in fields) {
         const filedScheme = fields[fieldKey];
         const filedValue = value[fieldKey];
-        const fieldSchemeClass = getSchemeClass(filedScheme);
-        const render = renderRegistry.getRender(fieldSchemeClass);
+        const render = renderRegistry.getRender(filedScheme);
         const fieldRenderResult = render({
             value: filedValue,
             scheme: filedScheme,

@@ -5,6 +5,8 @@ export class Scheme<TData = unknown> {
         return undefined as unknown as TData;
     }
 
+    name = 'unknown';
+
     hideName?: boolean;
 
     newLine?: boolean;
@@ -47,16 +49,15 @@ export type TFields<TData> = { [K in keyof TData]: Scheme<TData[K]> };
 
 export type Obj = Record<string, unknown>;
 
-export class ObjectScheme<Obj> extends Scheme<Obj> {
-    fields: TFields<Obj> = {} as TFields<Obj>;
-    filters: Filter[] = [Filter.normal];
-    createDefault<Obj>(): Obj {
+export class ObjectScheme<T=unknown> extends Scheme<T> {
+    fields: TFields<T> = {} as TFields<T>;
+    createDefault<T>(): T {
         const fieldArray = [];
         for (const key in this.fields) {
             const fieldScheme = this.fields[key];
             fieldArray.push([key, fieldScheme.createDefault()]);
         }
-        return Object.fromEntries(fieldArray) as Obj;
+        return Object.fromEntries(fieldArray) as T;
     }
 }
 
@@ -64,8 +65,8 @@ export function createObjectScheme<T>(params: Partial<ObjectScheme<T>>): ObjectS
     return createScheme(params, ObjectScheme);
 }
 
-export class ActionScheme<T=Obj> extends ObjectScheme<T> {
-    name = 'unknown';
+export class ActionScheme<T = unknown> extends ObjectScheme<T> {
+    filters: Filter[] = [Filter.normal];
 }
 
 export function createActionScheme<T>(params: Partial<ActionScheme<T>>): ActionScheme<T> {
