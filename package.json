@@ -26,7 +26,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "madge": "madge -c --extensions ts,tsx ./typescript"
+        "madge": "madge -c --extensions ts,tsx ./typescript",
+        "watch": "tsc-watch --onSuccess \"sh tools/on_watch_success.sh\""
     },
     "repository": {
         "type": "git",
