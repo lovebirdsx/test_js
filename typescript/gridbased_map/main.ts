@@ -20,6 +20,7 @@ function randomPos(): IPos {
 }
 
 function main() {
+    const entities: IEntity[] = [];
     for (let i = 0; i < entityCount; i++) {
         const entity: IEntity = {
             id: i.toString(),
@@ -27,8 +28,18 @@ function main() {
         };
 
         mananger.addEntity(entity);
+        entities.push(entity);
     }
 
+    console.log(mananger.toString());
+
+    const entity = entities[0];
+    const from = entity.pos;
+    const to = randomPos();
+    mananger.updateEntityPos(entities[0], to);
+
+    console.log();
+    console.log(`after move entity 0 from ${JSON.stringify(from)} to ${JSON.stringify(to)}`);
     console.log(mananger.toString());
 }
 

@@ -16,7 +16,7 @@ export class EntityStateManager {
         const hash = calGridHash(gridPos);
         let gem = this.manangerMap.get(hash);
         if (!gem) {
-            gem = new GridEntityManager({
+            gem = new GridEntityManager(hash, {
                 x: gridPos.x,
                 y: gridPos.y,
                 w: this.gridSize.w,
@@ -36,6 +36,10 @@ export class EntityStateManager {
             throw new Error(`Can not remove entity ${entity.id} while not add before`);
         }
         gem.container.remove(entity);
+
+        if (gem.container.isEmpty) {
+            this.manangerMap.delete(gem.id);
+        }
     }
 
     updateEntityPos(entity: IEntity, newPos: IPos) {
@@ -55,6 +59,7 @@ export class EntityStateManager {
         for (const [name, manager] of this.manangerMap) {
             result.push(`${name} ${manager.toString()}`);
         }
+        result.sort();
         return result.join('\n');
     }
 }

@@ -22,9 +22,11 @@ export class Grid implements IGrid {
 export class GridEntityManager {
     readonly grid: Grid;
     readonly container: EntityContainer;
+    readonly id: string;
 
-    constructor(grid: IGrid) {
+    constructor(id: string, grid: IGrid) {
         this.grid = new Grid(grid);
+        this.id = id;
         this.container = new EntityContainer(`${grid.x}-${grid.y}`);
     }
 

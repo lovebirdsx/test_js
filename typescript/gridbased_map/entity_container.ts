@@ -1,12 +1,16 @@
 import { IEntity } from './entity';
 
 export class EntityContainer {
-    entities: IEntity[] = [];
-    entityMap = new Map<string, IEntity>();
-    readonly name: string;
+    private entities: IEntity[] = [];
+    private entityMap = new Map<string, IEntity>();
+    private readonly name: string;
 
     constructor(name: string) {
         this.name = name;
+    }
+
+    get isEmpty() {
+        return this.entities.length <= 0;
     }
 
     add(entity: IEntity) {
@@ -21,6 +25,8 @@ export class EntityContainer {
         if (!this.entityMap.has(entity.id)) {
             throw new Error(`Entity ${entity.id} not in container ${this.name}`);
         }
+        this.entities.splice(this.entities.indexOf(entity), 1);
+        this.entityMap.delete(entity.id);
     }
 
     toString() {

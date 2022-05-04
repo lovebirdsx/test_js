@@ -1,0 +1,11 @@
+{
+  "name": "gridbased_map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc-watch --onSuccess \"sh on_watch_success.sh\""
+  },
+  "author": "",
+  "license": "ISC"
+}
