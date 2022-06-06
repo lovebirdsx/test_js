@@ -11,6 +11,7 @@
         "reflect-metadata": "^0.1.13",
         "thunkify": "^2.1.2",
         "ts-node": "^10.6.0",
+        "ts-proto": "^1.115.4",
         "typedjson": "^1.8.0",
         "xmlhttprequest": "^1.8.0"
     },

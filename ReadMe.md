@@ -20,3 +20,8 @@
     - <https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de>
     - <https://github.com/mweststrate/remmi/tree/master/src>
   - 个人认为最佳方案是通过循环引用检查工具来检查,避免这个情况的发生 `npm run madge`
+
+### protoc for ts
+
+- 下载protoc.exe到tools下，<https://github.com/protocolbuffers/protobuf/releases>
+- tools目录下执行gen_proto.bat(暂时没有找到git bash也支持的命令行指令)
