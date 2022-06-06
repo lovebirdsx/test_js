@@ -1,7 +1,4 @@
 /* eslint-disable */
-import * as Long from "long";
-import * as _m0 from "protobufjs/minimal";
-
 export const protobufPackage = "simple";
 
 /**
@@ -9,109 +6,158 @@ export const protobufPackage = "simple";
  * comment in the output source file.
  */
 
+export enum StateEnum {
+  UNKNOWN = 0,
+  ON = 2,
+  OFF = 3,
+  UNRECOGNIZED = -1,
+}
+
 /** Example comment on the Simple message */
-export interface Simple {
+export interface ISimple {
   /** Name field */
-  name: string;
+  Name: string;
   /** Age */
-  age: number;
+  Age: number;
+  state: StateEnum;
+  coins: number[];
+  snacks: string[];
+  oldStates: StateEnum[];
+  /** A thing (imported from thing) */
+  blobs: Uint8Array[];
+  blob: Uint8Array;
 }
 
-function createBaseSimple(): Simple {
-  return { name: "", age: 0 };
+export interface Child {
+  name: string;
+  type: Child_Type;
 }
 
-export const Simple = {
-  encode(
-    message: Simple,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.age !== 0) {
-      writer.uint32(16).int32(message.age);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimple();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.name = reader.string();
-          break;
-        case 2:
-          message.age = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Simple {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      age: isSet(object.age) ? Number(object.age) : 0,
-    };
-  },
-
-  toJSON(message: Simple): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = createBaseSimple();
-    message.name = object.name ?? "";
-    message.age = object.age ?? 0;
-    return message;
-  },
-};
-
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
-
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<
-        Exclude<keyof I, KeysOfUnion<P>>,
-        never
-      >;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+export enum Child_Type {
+  UNKNOWN = 0,
+  GOOD = 1,
+  BAD = 2,
+  UNRECOGNIZED = -1,
 }
 
-function isSet(value: any): boolean {
-  return value !== null && value !== undefined;
+export interface Nested {
+  name: string;
+  message: Nested_InnerMessage | undefined;
+  state: Nested_InnerEnum;
+}
+
+export enum Nested_InnerEnum {
+  UNKNOWN_INNER = 0,
+  GOOD = 100,
+  BAD = 1000,
+  UNRECOGNIZED = -1,
+}
+
+/** Comment for a nested message * / */
+export interface Nested_InnerMessage {
+  name: string;
+  deep: Nested_InnerMessage_DeepMessage | undefined;
+}
+
+export interface Nested_InnerMessage_DeepMessage {
+  name: string;
+}
+
+export interface OneOfMessage {
+  first: string | undefined;
+  last: string | undefined;
+}
+
+export interface Entity {
+  id: number;
+}
+
+export interface SimpleWithMap {
+  entitiesById: { [key: number]: Entity };
+  nameLookup: { [key: string]: string };
+  intLookup: { [key: number]: number };
+  mapOfBytes: { [key: string]: Uint8Array };
+  longLookup: { [key: number]: number };
+}
+
+export interface SimpleWithMap_EntitiesByIdEntry {
+  key: number;
+  value: Entity | undefined;
+}
+
+export interface SimpleWithMap_NameLookupEntry {
+  key: string;
+  value: string;
+}
+
+export interface SimpleWithMap_IntLookupEntry {
+  key: number;
+  value: number;
+}
+
+export interface SimpleWithMap_MapOfBytesEntry {
+  key: string;
+  value: Uint8Array;
+}
+
+export interface SimpleWithMap_LongLookupEntry {
+  key: number;
+  value: number;
+}
+
+export interface SimpleWithSnakeCaseMap {
+  entitiesById: { [key: number]: Entity };
+}
+
+export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
+  key: number;
+  value: Entity | undefined;
+}
+
+export interface SimpleWithMapOfEnums {
+  enumsById: { [key: number]: StateEnum };
+}
+
+export interface SimpleWithMapOfEnums_EnumsByIdEntry {
+  key: number;
+  value: StateEnum;
+}
+
+export interface PingRequest {
+  input: string;
+}
+
+export interface PingResponse {
+  output: string;
+}
+
+export interface Numbers {
+  double: number;
+  float: number;
+  int32: number;
+  int64: number;
+  uint32: number;
+  uint64: number;
+  sint32: number;
+  sint64: number;
+  fixed32: number;
+  fixed64: number;
+  sfixed32: number;
+  sfixed64: number;
+}
+
+/** For testing proto3's field presence feature. */
+export interface SimpleButOptional {
+  /** Name field */
+  name?: string | undefined;
+  /** Age */
+  age?: number | undefined;
+  child?: Child | undefined;
+  state?: StateEnum | undefined;
+}
+
+export interface Empty {}
+
+export interface PingService {
+  ping(request: PingRequest): Promise<PingResponse>;
 }

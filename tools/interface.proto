@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package interface;
+
+enum EActionId {
+    Activate = 0;
+    CallByCondition = 1;
+    CallFunction = 2;
+}
+
+message IActionInfo {
+    EActionId Id = 1;
+    string Name = 2;
+    bool Async = 3;
+    optional google.protobuf.Struct Params = 4;
+}
+
+message IShowMessage {
+    string Content = 1;
+}
+
+message IJumpTalk {
+    int32 TalkId = 1;
+}
+
+message IStateInfo {
+    int32 Id = 1;
+    string Name = 2;
+    repeated IActionInfo Actions = 3;
+}
+
+message IFlowInfo {
+    uint32 Id = 1;
+    string Name = 2;
+    repeated IStateInfo States = 3;
+}
+
+enum EComponentId {
+    ActorStateComponent = 0;
+    BehaviorFlowComponent = 1;
+    CalculateComponent = 2;
+    EntitySpawnerComponent = 3;
+    EventComponent = 4;
+    FlowComponent = 5;
+    GrabComponent = 6;
+    InteractiveComponent = 7;
+    LampComponent = 8;
+    MoveComponent = 9;
+    NpcComponent = 10;
+    RefreshEntityComponent = 11;
+    RefreshSingleComponent = 12;
+    RotatorComponent = 13;
+    SimpleComponent = 14;
+    SphereComponent = 15;
+    SphereFactoryComponent = 16;
+    SpringBoardComponent = 17;
+    SpringComponent = 18;
+    StateComponent = 19;
+    SwitcherComponent = 20;
+    TalkComponent = 21;
+    TrampleComponent = 22;
+    TriggerComponent = 23;
+    UndergroundComponent = 24;
+}
+
+message IBehaviorFlowComponent {
+    uint32 InitStateId = 1;
+    IFlowInfo FlowInfo = 2;
+}
