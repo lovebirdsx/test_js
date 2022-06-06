@@ -21,3 +21,8 @@ let exponent = 'second'
 console.log(`${value} by ${exponent} is ${value * value}`);
 
 console.log(exponent.includes('sec'))
+
+const foo = 'hello world hello you!';
+console.log(foo.replace('hello', 'Hi'));
+console.log(foo.replace(/hello/g, 'Hi'));
+console.log(foo.split('hello').join('Hi'));
