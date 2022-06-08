@@ -17,5 +17,5 @@
             "cmd": "protoc --plugin=protoc-gen-ts_proto=${workspaceRoot}\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --proto_path=${fileDirname} --ts_proto_opt=onlyTypes=true --ts_proto_out=${fileDirname} ${file}"
         }
     ],
-    "filewatcher.autoClearConsole": false
+    "filewatcher.autoClearConsole": true
 }
