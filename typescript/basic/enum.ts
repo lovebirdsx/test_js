@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
@@ -38,9 +39,20 @@ function TestEnum() {
         console.log(getEnumNames(A));
     }
 
+    function testName() {
+        enum Foo {
+            A = 'NameA',
+            B = 'NameB',
+        }
+
+        console.log(Foo['A']);
+        console.log(Foo['B']);
+    }
+
     testBasic();
     testConst();
     testMeta();
+    testName();
 }
 
 TestEnum();
