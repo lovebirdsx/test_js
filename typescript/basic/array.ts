@@ -74,7 +74,13 @@ function testArray() {
     function testIndex() {
         const a = [1, 2, 3, 4, 5];
         console.log(a[-1]);
-        console.log(a.at(-1));
+        // console.log(a.at(-1));
+    }
+
+    function testReverse() {
+        const a = [1, 2, 3];
+        a.reverse();
+        console.log(a);
     }
 
     testBasic();
@@ -84,6 +90,7 @@ function testArray() {
     testRemove();
     testRemove2();
     testIndex();
+    testReverse();
 }
 
 testArray();
