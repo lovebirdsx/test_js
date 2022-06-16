@@ -57,9 +57,14 @@ function TestClass() {
     }
 
     function testClassName() {
-        class Foo {}
+        class Foo {
+            public readonly id = 1;
+            public readonly name = 'hello';
+        }
         const obj = new Foo();
         console.log(obj.constructor.name);
+        // eslint-disable-next-line space-unary-ops
+        console.log(typeof(Foo), Foo.name);
     }
 
     testBasic();
