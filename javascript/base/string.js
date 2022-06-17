@@ -26,3 +26,6 @@ const foo = 'hello world hello you!';
 console.log(foo.replace('hello', 'Hi'));
 console.log(foo.replace(/hello/g, 'Hi'));
 console.log(foo.split('hello').join('Hi'));
+
+console.log('hello foo bar'.search('hello'))
+console.log('hello foo bar'.search('aa|bb|cc'))
