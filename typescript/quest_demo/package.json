@@ -1,0 +1,10 @@
+{
+  "name": "task",
+  "version": "1.0.0",
+  "description": "task system demo",
+  "scripts": {
+    "watch": "tsc-watch --onSuccess \"sh on_watch_success.sh\""
+  },
+  "author": "lovebird",
+  "license": "ISC"
+}

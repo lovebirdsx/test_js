@@ -1,0 +1,1 @@
+node typescript_out/main.js
