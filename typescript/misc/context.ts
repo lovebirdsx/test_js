@@ -2,15 +2,15 @@ type Context<T> = {
     value: T,
 }
 
-interface Foo {
+export interface Foo {
     name: string;
     id: number;
 }
 
 function createContext<T>(t: T): Context<T> {
-return {
-    value: t,
-};
+    return {
+        value: t,
+    };
 }
 
 const fooContext = createContext<Foo>(undefined as any);
