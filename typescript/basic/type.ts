@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-class TestType {
-    static testUnknown() {
+function TestType() {
+    function testUnknown() {
         let a: unknown;
         console.log(typeof a);
 
@@ -28,7 +28,7 @@ class TestType {
         console.log(typeof foo);
     }
 
-    static testAny() {
+    function testAny() {
         const a: unknown = 10;
         const b: any = 10;
         console.log(typeof a, typeof b);
@@ -44,12 +44,12 @@ class TestType {
         // a.method(); // 此句报错, unknown
     }
 
-    static testVoid() {
+    function testVoid() {
         let a: void;
         console.log(typeof a);
     }
 
-    static testNever() {
+    function testNever() {
         function error(message:string) : never {
             throw new Error(message);
         }
@@ -58,14 +58,14 @@ class TestType {
             return error('Something failed');
         }
 
-        function infiniteLoop() : never {
+        function infiniteLoop(): never {
             while (true) {
                 console.log('hello');
             }
         }
     }
 
-    static testObject() {
+    function testObject() {
         let a: object | null;
 
         // 下面3个都会报错
@@ -74,9 +74,10 @@ class TestType {
         // a = undefined;
         a = null;
         a = { prop: 0 };
+        console.log(a);
     }
 
-    static testPrimitives() {
+    function testPrimitives() {
         function reverse1(s:String) : String {
             return s.split('').reverse().join('');
         }
@@ -89,13 +90,30 @@ class TestType {
         console.log(reverse2('12345'));
     }
 
-    static Run() {
-        TestType.testUnknown();
-        TestType.testAny();
-        TestType.testVoid();
-        TestType.testObject();
-        TestType.testPrimitives();
+    // 结构化, 只要结构相同, 名称无所谓
+    function testStructable() {
+        interface IPoint {
+            x: number;
+            y: number;
+        }
+
+        class Point {
+            readonly name;
+            constructor(public x: number, public y: number) {
+                this.name = `${x}-${y}`;
+            }
+        }
+
+        const p: IPoint = new Point(100, 100);
+        console.log(p, p.x, p.y);
     }
+
+    testUnknown();
+    testAny();
+    testVoid();
+    testObject();
+    testPrimitives();
+    testStructable();
 }
 
-TestType.Run();
+TestType();

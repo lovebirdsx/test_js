@@ -16,7 +16,6 @@
         "strictBindCallApply": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
-        "noUnusedLocals": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
     },
