@@ -36,7 +36,17 @@ function TestEnum() {
 
     function testMeta() {
         enum A {Foo, Bar, Car}
+        enum B {Foo = 'Foo1', Bar = 'Bar1', Car = 'Car1'}
         console.log(getEnumNames(A));
+        console.log(getEnumNames(B));
+
+        const enumConfig = {
+            A: 'foo',
+            B: 'bar',
+        };
+
+        console.log(Array.from(Object.keys(enumConfig)));
+        console.log(Array.from(Object.values(enumConfig)));
     }
 
     function testName() {
@@ -49,10 +59,73 @@ function TestEnum() {
         console.log(Foo['B']);
     }
 
+    function testEnumValue() {
+        enum Foo {
+            A = 1,
+            B = 'hello',
+        }
+
+        const enum FooConst {
+            A = 1,
+            B = 'hello',
+        }
+
+        type FooConstKeys = keyof typeof FooConst;
+
+        const b: {[key in keyof typeof FooConst]: string} = {
+            A: 'Option A',
+            B: 'Option B',
+        };
+
+        interface IFoo<T extends Record<string, number | string>> {
+            names: {[K in keyof T]: string};
+            values: {[K in T[keyof T]]: string};
+        }
+
+        const foo: IFoo<typeof FooConst> = {
+            names: {
+                A: 'Option A',
+                B: 'Option B',
+            },
+            values: {
+                1: 'Option A',
+                hello: 'Option hello',
+            },
+        };
+
+        // 编译出来的js有差别
+        // 这里的Foo是一个对象
+        console.log(Foo.A, Foo.B);
+
+        // 这里的FooConst直接转译成对应的值 1 /* A */ 'hello' /* B */
+        console.log(FooConst.A, FooConst.B);
+    }
+
+    console.log('testBasic ==================');
     testBasic();
+    console.log('testConst ==================');
     testConst();
+    console.log('testMeta ==================');
     testMeta();
+    console.log('testName ==================');
     testName();
+    console.log('testEnumValue ==================');
+    testEnumValue();
 }
 
 TestEnum();
+
+class FooClass<T extends Record<string, number | string>> {
+    nameByValue: {
+        [K in T[keyof T]]: string;
+    } | undefined;
+
+    // 注意此处需要用 T[keyof T] 表示value的类型
+    // 如果使用 number | string, 编译器会报错
+    public getName(value: T[keyof T]): string {
+        if (!this.nameByValue) {
+            return 'unknown';
+        }
+        return this.nameByValue[value];
+    }
+}
