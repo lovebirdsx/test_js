@@ -10,16 +10,18 @@
         "strict": true,
         "skipLibCheck": true,
         "jsx": "react",
+        "lib": ["ESNext"], // 可以解决错误: typescript declarations of 'x' must have identical modifiers.
         "sourceMap": true,
         "noImplicitAny": true,
-        "strictFunctionTypes": true,
         "strictBindCallApply": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
+        // "noFallthroughCasesInSwitch": true,
     },
     "include": [
         "typescript/**/*",
+    ],
+    "exclude": [
+        "node_modules",
     ]
 }

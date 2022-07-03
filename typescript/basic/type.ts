@@ -91,7 +91,7 @@ function TestType() {
     }
 
     // 结构化, 只要结构相同, 名称无所谓
-    function testStructable() {
+    function testStructVariant() {
         interface IPoint {
             x: number;
             y: number;
@@ -108,12 +108,36 @@ function TestType() {
         console.log(p, p.x, p.y);
     }
 
+    // 类只比较实例化字段, 不比较构造函数和静态函数
+    function testClassVariant() {
+        class Foo {
+            size: number;
+            constructor(x: number, y: number) {
+                this.size = x + y;
+            }
+        }
+
+        class Car {
+            size: number;
+            constructor(name: string) {
+                this.size = 100;
+            }
+        }
+
+        let foo = new Foo(1, 1);
+        let car = new Car('hello');
+        foo = car;
+        car = foo;
+        console.log(foo, car);
+    }
+
     testUnknown();
     testAny();
     testVoid();
     testObject();
     testPrimitives();
-    testStructable();
+    testStructVariant();
+    testClassVariant();
 }
 
 TestType();
