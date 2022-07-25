@@ -30,8 +30,20 @@ function testMap() {
         console.log(typeof a, typeof {});
     }
 
+    function testItemrator() {
+        const a: Map<string, number> = new Map();
+        a.set('a', 8);
+        a.set('b', 3);
+        a.set('c', 4);
+        a.set('d', 2);
+        a.forEach((value) => {
+            console.log(value);
+        });
+    }
+
     testBase();
     testSet();
+    testItemrator();
 }
 
 testMap();
