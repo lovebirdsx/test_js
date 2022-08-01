@@ -143,3 +143,23 @@ namespace WeekDay {
 
 console.log(WeekDay.IsWeekEnd(WeekDay.Sat));
 console.log(WeekDay.IsWeekEnd(WeekDay.Mon));
+
+const enum ConstWeekDay {
+    Mon = 'Mon',
+    Tue = 'Tue',
+}
+
+export const weekDayConfig: {
+    [key in ConstWeekDay]: {
+        Type: string;
+    };
+} = {
+    Mon: { Type: '0' },
+    Tue: { Type: '1' },
+};
+
+function getWeekDayType(weekDay: ConstWeekDay): string {
+    return weekDayConfig[weekDay].Type;
+}
+
+console.log(ConstWeekDay.Mon, getWeekDayType(ConstWeekDay.Mon));
