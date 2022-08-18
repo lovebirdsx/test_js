@@ -83,6 +83,12 @@ function testArray() {
         console.log(a);
     }
 
+    function testReduce() {
+        const a = [1, 2, 3];
+        const total = a.reduce((total, current) => total + current);
+        console.log('reduce result is', total);
+    }
+
     testBasic();
     testInterface();
     testInterface2();
@@ -91,6 +97,7 @@ function testArray() {
     testRemove2();
     testIndex();
     testReverse();
+    testReduce();
 }
 
 testArray();
