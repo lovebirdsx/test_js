@@ -12,3 +12,9 @@ console.log(a.length, typeof a);
 
 let b = Array(9).fill(null);
 console.log(b, typeof(b), b.length)
+
+// 数组可以随便设定值?
+let c = [];
+c[1] = 'a';
+c[3] = 'c';
+console.log(c, c.length);
