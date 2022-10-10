@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import path = require('path');
 
 function TestFile() {
     function testBasic() {
@@ -20,9 +21,11 @@ function TestFile() {
     function testPath() {
         console.log('c:\\foo\\bar.txt', getDir('c:\\foo\\bar.txt'));
         console.log('c:/foo/bar.txt', getDir('c:/foo/bar.txt'));
+        console.log('c:\\foo\\bar.txt', path.normalize('c:\\foo\\bar.txt'));
+        console.log('c:/foo/../bar.txt', path.normalize('c:/foo/../bar.txt'));
     }
 
-    testBasic();
+    // testBasic();
     testPath();
 }
 

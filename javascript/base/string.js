@@ -29,3 +29,7 @@ console.log(foo.split('hello').join('Hi'));
 
 console.log('hello foo bar'.search('hello'));
 console.log('hello foo bar'.search('aa|bb|cc'));
+
+const path = 'F:/hello\\foo\\bar.txt';
+
+console.log(path.replaceAll(/:|\.|\\|\//g, '_'));
