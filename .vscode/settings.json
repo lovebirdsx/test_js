@@ -9,6 +9,7 @@
         {
             "match": "\\.ts",
             "event": "onFileChange",
+            "notMatch": "[typescript\\world_editor]",
             "cmd": "ts-node ${file}"
         },
         {
