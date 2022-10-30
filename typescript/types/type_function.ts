@@ -70,9 +70,11 @@ function testTypeFuction() {
     }
 
     function extract() {
-        type A = {a: string, b: boolean, c: number}
-        type B = {a: string, b: boolean}
-        type C = Extract<A, B>
+        type A = 'A' | 'B' | 'C' | 1 | 2 | 3
+        type B = Extract<A, string>
+        type C = Extract<A, number>
+
+        type D = Extract<[1, 2, 3] | 1 | 'hello', any[]>
     }
 
     function exclude() {
