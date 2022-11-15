@@ -26,9 +26,13 @@ app.get('/level/:levelId/entity/:entityId', (req, res) => {
         LevelId: Number.parseInt(req.params.levelId),
     }
     sendEditorCommand(cmd);
-    res.send(cmd)
+    res.send('<script>window.close();</script>');
 })
 
 app.listen(port, () => {
     console.log(`editor cmd bridge listening at http://localhost:${port}`);
 });
+
+// http://localhost:8886/level/8/entity/310000150
+// http://localhost:8886/level/37/entity/14000014
+// http://localhost:8886/level/37/entity/14000040
