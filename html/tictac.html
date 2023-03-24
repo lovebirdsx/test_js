@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>井字棋游戏</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 36px;
+        font-weight: bold;
+        border: 1px solid black;
+        cursor: pointer;
+      }
+      td:hover {
+        background-color: #eee;
+      }
+      .player1 {
+        color: blue;
+      }
+      .player2 {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td id="0"></td>
+        <td id="1"></td>
+        <td id="2"></td>
+      </tr>
+      <tr>
+        <td id="3"></td>
+        <td id="4"></td>
+        <td id="5"></td>
+      </tr>
+      <tr>
+        <td id="6"></td>
+        <td id="7"></td>
+        <td id="8"></td>
+      </tr>
+    </table>
+    <p>当前玩家: <span id="currentPlayer" class="player1">1</span></p>
+    <script>
+      var board = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // 0表示空位，1表示玩家1，2表示玩家2
+      var currentPlayer = 1;
+
+      function updateBoard(id) {
+        if (board[id] === 0) {
+          var cell = document.getElementById(id.toString());
+          cell.classList.add('player' + currentPlayer);
+          cell.innerHTML = currentPlayer === 1 ? 'X' : 'O';
+          board[id] = currentPlayer;
+          if (checkWin()) {
+            alert('玩家 ' + currentPlayer + ' 获胜！');
+            resetBoard();
+          } else if (board.indexOf(0) === -1) {
+            alert('平局！');
+            resetBoard();
+          } else {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            document.getElementById('currentPlayer').innerHTML = currentPlayer;
+            document.getElementById('currentPlayer').className = 'player' + currentPlayer;
+          }
+        }
+      }
+
+      function checkWin() {
+        var lines = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6]
+        ];
+        for (var i = 0; i < lines.length; i++) {
+          var [a, b, c] = lines[i];
+          if (board[a] === currentPlayer && board[b] === currentPlayer && board[c] === currentPlayer) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function resetBoard() {
+        board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+        currentPlayer = 1;
+        document.querySelectorAll('td').forEach(function(cell) {
+          cell.innerHTML = '';
+          cell.classList
+          cell.classList.remove('player1', 'player2');
+    });
+    document.getElementById('currentPlayer').innerHTML = currentPlayer;
+    document.getElementById('currentPlayer').className = 'player' + currentPlayer;
+  }
+
+  document.querySelectorAll('td').forEach(function(cell) {
+    cell.addEventListener('click', function() {
+      updateBoard(parseInt(cell.id));
+    });
+  });
+</script>
+</body>
+</html>
