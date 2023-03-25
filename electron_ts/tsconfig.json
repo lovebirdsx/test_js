@@ -16,7 +16,10 @@
     "paths": {
       "*": ["node_modules/*"]
     },
-    "typeRoots": ["node_modules/@types", "src/typing"]
+    "typeRoots": [
+      "node_modules/@types",
+      "src/typing"
+    ]
   },
   "include": ["src/**/*"]
 }

@@ -4,7 +4,7 @@ declare module 'electronAPI' {
     readFile(filePath: string): Promise<string>;
     add(a: number, b: number): Promise<number>;
     setTitle(title: string): Promise<void>;
-    showMessage(message: string): Promise<void>;
+    log(message: string): Promise<void>;
   }
 
   declare global {

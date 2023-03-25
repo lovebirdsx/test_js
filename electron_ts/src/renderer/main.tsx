@@ -61,10 +61,10 @@ export class Main extends React.Component<unknown, IMainState> {
           </button>
           <button
             onClick={async () => {
-              await window.electronAPI.showMessage('Hello World');
+              await window.electronAPI.log('Hello World');
             }}
           >
-            Show Message
+            Log
           </button>
         </p>
         <p>{this.state.fileContent}</p>

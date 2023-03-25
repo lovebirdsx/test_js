@@ -5,17 +5,24 @@ import { contextBridge, ipcRenderer } from 'electron';
 // eslint-disable-next-line import/no-unresolved
 import { IElectronAPI } from 'electronAPI';
 
+function invokeRender<T extends keyof IElectronAPI>(
+  channel: T,
+  ...args: Parameters<IElectronAPI[T]>
+): ReturnType<IElectronAPI[T]> {
+  return ipcRenderer.invoke(channel, ...args) as ReturnType<IElectronAPI[T]>;
+}
+
 const electronAPI: IElectronAPI = {
-  readFile: async (path: string) => {
-    const content = await ipcRenderer.invoke('read-file', path);
+  readFile: async (path) => {
+    const content = await invokeRender('readFile', path);
     return content;
   },
-  add: async (a: number, b: number) => a + b,
-  setTitle: async (title: string) => {
-    await ipcRenderer.invoke('set-title', title);
+  add: async (a, b) => a + b,
+  setTitle: async (title) => {
+    await invokeRender('setTitle', title);
   },
-  showMessage: async (message: string) => {
-    await ipcRenderer.invoke('show-message', message);
+  log: async (message) => {
+    await invokeRender('log', message);
   },
 };
 
