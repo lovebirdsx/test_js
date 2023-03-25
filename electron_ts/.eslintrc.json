@@ -10,12 +10,13 @@
     "plugin:import/typescript",
     "prettier"
   ],
-  "plugins": ["prettier"],
+  "plugins": [
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "rules": {
     "no-tabs": "error",
     "no-trailing-spaces": "error",
-    "indent": ["error", 2],
     "prettier/prettier": "error"
   }
 }
