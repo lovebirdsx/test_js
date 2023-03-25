@@ -29,7 +29,7 @@
 import React from 'react';
 import ReactDOMClient from 'react-dom/client';
 
-import './index.css';
+import '../main/index.css';
 import { Main } from './main';
 
 const root = ReactDOMClient.createRoot(document.getElementById('root'));
