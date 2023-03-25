@@ -51,6 +51,22 @@ export class Main extends React.Component<unknown, IMainState> {
           </button>
           <label>{`Result = ${this.state.r}`}</label>
         </p>
+        <p>
+          <button
+            onClick={async () => {
+              await window.electronAPI.setTitle('Wahaha');
+            }}
+          >
+            Set Title
+          </button>
+          <button
+            onClick={async () => {
+              await window.electronAPI.showMessage('Hello World');
+            }}
+          >
+            Show Message
+          </button>
+        </p>
         <p>{this.state.fileContent}</p>
       </div>
     );

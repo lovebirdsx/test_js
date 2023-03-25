@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
-export interface IElectronAPI {
-  readFile: (filePath: string) => Promise<string>;
-  add: (a: number, b: number) => Promise<number>;
-}
+declare module 'electronAPI' {
+  declare interface IElectronAPI {
+    readFile(filePath: string): Promise<string>;
+    add(a: number, b: number): Promise<number>;
+    setTitle(title: string): Promise<void>;
+    showMessage(message: string): Promise<void>;
+  }
 
-declare global {
-  interface Window {
-    electronAPI: IElectronAPI;
+  declare global {
+    interface Window {
+      electronAPI: IElectronAPI;
+    }
   }
 }
