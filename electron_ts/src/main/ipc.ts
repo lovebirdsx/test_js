@@ -1,5 +1,4 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainInvokeEvent } from 'electron';
-// eslint-disable-next-line import/no-unresolved
 import { IElectronAPI } from 'electronAPI';
 import * as fs from 'fs';
 

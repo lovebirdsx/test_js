@@ -4,6 +4,16 @@
     "es6": true,
     "node": true
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
+    "import/core-modules": [
+      "electronAPI" // 让eslint认识electronAPI, 避免报错
+    ]
+  },
   "extends": [
     "eslint:recommended",
     "plugin:import/electron",
@@ -17,6 +27,7 @@
   "rules": {
     "no-tabs": "error",
     "no-trailing-spaces": "error",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "import/no-unresolved": "error"
   }
 }

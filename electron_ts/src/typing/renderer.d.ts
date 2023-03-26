@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 declare module 'electronAPI' {
     declare interface IElectronAPI {
         getSavePath(relativePath): Promise<string>;

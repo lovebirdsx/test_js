@@ -2,7 +2,6 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from 'electron';
-// eslint-disable-next-line import/no-unresolved
 import { IElectronAPI } from 'electronAPI';
 
 function invokeRender<T extends keyof IElectronAPI>(
