@@ -24,7 +24,7 @@ export class JsonConfig<T> {
     // eslint-disable-next-line no-unused-vars
     constructor(public name: string, public defaultData: T) {}
 
-    async init() {
+    async load() {
         const path = await window.electronAPI.getSavePath(this.name);
         this.path = `${path}.json`;
         this.data = await readJsonObj(this.path, this.defaultData);

@@ -28,7 +28,7 @@ export class Main extends React.Component<unknown, IMainState> {
     }
 
     async componentDidMount() {
-        await this.saveData.init();
+        await this.saveData.load();
         this.setState({ isLoading: false });
         await this.readFile();
     }
