@@ -1,6 +1,6 @@
-import { aLog, cWait } from '../common/util';
+import { cWait, deepCopy } from '../common/util';
 import { ISmRunnerInfo } from '../interface/state_info';
-import { SmRunner, EUpdateResult } from '../operation/sm';
+import { testSm } from './common';
 
 const smRunnerInfo: ISmRunnerInfo = {
     root: 'root',
@@ -8,52 +8,38 @@ const smRunnerInfo: ISmRunnerInfo = {
         {
             id: 'root',
             states: [
-                {
-                    id: '开始',
-                    enterActions: [aLog('状态机开始')],
-                    transitions: [{ condition: cWait(1), target: '运行' }],
-                },
-                {
-                    id: '运行',
-                    transitions: [{ condition: cWait(2), target: '结束' }],
-                    innerSm: { id: 'inner', pending: false },
-                },
-                {
-                    id: '结束',
-                    exitActions: [aLog('状态机结束')],
-                    transitions: [{ condition: cWait(1) }],
-                },
+                { id: '开始', transitions: [{ condition: cWait(1), target: '运行' }] },
+                { id: '运行', transitions: [{ condition: cWait(2), target: '结束' }], innerSm: { id: 'inner', pending: false } },
+                { id: '结束', transitions: [{ condition: cWait(1) }] },
             ],
         },
         {
             id: 'inner',
             states: [
-                {
-                    id: '开始',
-                    transitions: [{ condition: cWait(1), target: '运行' }],
-                },
-                {
-                    id: '运行',
-                    transitions: [{ condition: cWait(1), target: '结束' }],
-                },
-                {
-                    id: '结束',
-                    transitions: [{ condition: cWait(1) }],
-                },
+                { id: '开始', transitions: [{ condition: cWait(1), target: '运行' }] },
+                { id: '运行', transitions: [{ condition: cWait(1), target: '结束' }] },
+                { id: '结束', transitions: [{ condition: cWait(1) }] },
             ],
         },
     ],
 };
 
-export async function testInnerSm() {
-    return new Promise<void>((resolve) => {
-        const runner = new SmRunner(smRunnerInfo);
-        const handler = setInterval(() => {
-            const result = runner.update();
-            if (result === EUpdateResult.Finished) {
-                clearInterval(handler);
-                resolve();
+function changePending(smRunnerInfo: ISmRunnerInfo, pending: boolean) {
+    const result = deepCopy(smRunnerInfo);
+    result.sms.forEach((sm) => {
+        sm.states.forEach((state) => {
+            if (state.innerSm) {
+                state.innerSm.pending = pending;
             }
-        }, 1000 / 50);
+        });
     });
+    return result;
+}
+
+export async function testInnerSmPending() {
+    await testSm(changePending(smRunnerInfo, true));
+}
+
+export async function testInnerSmNoPending() {
+    await testSm(changePending(smRunnerInfo, false));
 }

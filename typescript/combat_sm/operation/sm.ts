@@ -1,8 +1,8 @@
-import { log } from 'console';
+import { log } from '../common/log';
 import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/state_info';
 import { excuteAction } from './action';
 import { Transition } from './transition';
-import { green, yellow } from '../common/color';
+import { green, red, yellow } from '../common/color';
 
 export const enum EUpdateResult {
     Running,
@@ -10,20 +10,21 @@ export const enum EUpdateResult {
 }
 
 interface ISm {
+    id: string;
     update(): EUpdateResult;
 }
 
 interface ISmRunner {
-    spawn(smId: string): ISm;
+    spawn(smId: string, parent?: ISm): ISm;
 }
 
 export class State {
     private readonly sm?: ISm;
     private transitions: Transition[] = [];
 
-    constructor(public config: IStateInfo, public runner: ISmRunner) {
+    constructor(public config: IStateInfo, public runner: ISmRunner, public parent?: ISm) {
         if (config.innerSm) {
-            this.sm = this.runner.spawn(config.innerSm.id);
+            this.sm = this.runner.spawn(config.innerSm.id, parent);
         }
     }
 
@@ -45,15 +46,19 @@ export class State {
     }
 
     update(): [EUpdateResult, string?] {
+        let smResult: EUpdateResult | undefined;
         if (this.sm) {
-            const result = this.sm.update();
-            if (result === EUpdateResult.Running && this.config.innerSm?.pending) {
+            smResult = this.sm.update();
+            if (smResult === EUpdateResult.Running && this.config.innerSm?.pending) {
                 return [EUpdateResult.Running];
             }
         }
 
         for (const transition of this.transitions) {
             if (transition.isOk()) {
+                if (this.sm && smResult !== EUpdateResult.Finished) {
+                    log(`${red('中断')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
+                }
                 return [EUpdateResult.Finished, transition.target];
             }
         }
@@ -66,17 +71,21 @@ export class Sm implements ISm {
     private currentState: State | undefined = undefined;
     private updateCount = 0;
 
-    constructor(public config: ISmInfo, public runner: ISmRunner) {
+    constructor(public config: ISmInfo, public runner: ISmRunner, public parent?: ISm) {
         this.config.states.forEach((state) => {
-            this.addState(new State(state, runner));
+            this.addState(new State(state, runner, this));
         });
+    }
+
+    get id() {
+        return this.parent ? `${this.parent.id}.${this.config.id}` : this.config.id;
     }
 
     private addState(state: State) {
         this.states.set(state.id, state);
     }
 
-    setState(stateName?: string) {
+    private setState(stateName?: string) {
         if (this.currentState) {
             this.currentState.exit();
         }
@@ -89,7 +98,7 @@ export class Sm implements ISm {
         this.currentState = this.states.get(stateName);
         if (this.currentState) {
             this.currentState.enter();
-            log(`Enter: ${green(this.config.id)} - ${yellow(this.currentState.id)}`);
+            log(`进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
         }
     }
 
@@ -121,12 +130,12 @@ export class SmRunner implements ISmRunner {
         this.rootSm = this.spawn(this.config.root);
     }
 
-    spawn(smId: string): ISm {
+    spawn(smId: string, parent?: ISm): ISm {
         const stateMachinConfig = this.config.sms.find((stateMachine) => stateMachine.id === smId);
         if (!stateMachinConfig) {
             throw new Error('state machine not found');
         }
-        return new Sm(stateMachinConfig, this);
+        return new Sm(stateMachinConfig, this, parent);
     }
 
     update(): EUpdateResult {

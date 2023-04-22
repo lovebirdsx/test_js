@@ -8,20 +8,9 @@ const smRunnerInfo: ISmRunnerInfo = {
         {
             id: 'root',
             states: [
-                {
-                    id: '开始',
-                    enterActions: [aLog('状态机开始')],
-                    transitions: [{ condition: cWait(1), target: '运行' }],
-                },
-                {
-                    id: '运行',
-                    transitions: [{ condition: cWait(1), target: '结束' }],
-                },
-                {
-                    id: '结束',
-                    exitActions: [aLog('状态机结束')],
-                    transitions: [{ condition: cWait(1) }],
-                },
+                { id: '开始', transitions: [{ condition: cWait(1), target: '运行' }] },
+                { id: '运行', transitions: [{ condition: cWait(1), target: '结束' }] },
+                { id: '结束', transitions: [{ condition: cWait(1) }] },
             ],
         },
     ],

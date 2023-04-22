@@ -1,5 +1,6 @@
 import { ECondition, IConditionInfo } from '../interface/condition_info';
 import { ITransitionInfo } from '../interface/state_info';
+import { getTime } from '../common/time';
 
 export interface ICondition {
     isOk(): boolean;
@@ -8,11 +9,11 @@ export interface ICondition {
 class WaitCondition implements ICondition {
     startTime: number;
     constructor(private readonly duration: number) {
-        this.startTime = Date.now();
+        this.startTime = getTime();
     }
 
     isOk() {
-        return Date.now() - this.startTime >= this.duration * 1000;
+        return getTime() - this.startTime >= this.duration;
     }
 }
 
@@ -20,12 +21,12 @@ class SkillFinishedCondition implements ICondition {
     startTime: number;
     duration: number;
     constructor(private readonly skill: string) {
-        this.startTime = Date.now();
-        this.duration = (0.5 + Math.random() * 0.5) * 1000;
+        this.startTime = getTime();
+        this.duration = 0.5 + Math.random() * 0.5;
     }
 
     isOk() {
-        return Date.now() - this.startTime >= this.duration;
+        return getTime() - this.startTime >= this.duration;
     }
 }
 
