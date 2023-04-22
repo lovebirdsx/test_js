@@ -1,6 +1,6 @@
-import { aLog, cWait } from '../common/util';
+import { cWait } from '../common/util';
 import { ISmRunnerInfo } from '../interface/state_info';
-import { SmRunner, EUpdateResult } from '../operation/sm';
+import { testSm } from './common';
 
 const smRunnerInfo: ISmRunnerInfo = {
     root: 'root',
@@ -17,14 +17,5 @@ const smRunnerInfo: ISmRunnerInfo = {
 };
 
 export async function testSmBasic() {
-    return new Promise<void>((resolve) => {
-        const runner = new SmRunner(smRunnerInfo);
-        const handler = setInterval(() => {
-            const result = runner.update();
-            if (result === EUpdateResult.Finished) {
-                clearInterval(handler);
-                resolve();
-            }
-        }, 1000 / 50);
-    });
+    return testSm(smRunnerInfo);
 }

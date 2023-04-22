@@ -1,4 +1,4 @@
-import { log } from '../common/log';
+import { logT } from '../common/log';
 import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/state_info';
 import { excuteAction } from './action';
 import { Transition } from './transition';
@@ -57,7 +57,7 @@ export class State {
         for (const transition of this.transitions) {
             if (transition.isOk()) {
                 if (this.sm && smResult !== EUpdateResult.Finished) {
-                    log(`${red('中断')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
+                    logT(`${red('中断')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
                 }
                 return [EUpdateResult.Finished, transition.target];
             }
@@ -98,7 +98,7 @@ export class Sm implements ISm {
         this.currentState = this.states.get(stateName);
         if (this.currentState) {
             this.currentState.enter();
-            log(`进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
+            logT(`进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
         }
     }
 

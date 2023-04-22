@@ -4,19 +4,23 @@ import { testSmBasic } from './test/test_sm_basic';
 import { testInnerSmNoPending, testInnerSmPending } from './test/test_inner_sm';
 import { cyan } from './common/color';
 import { startTimeSerivce, stopTimeService } from './common/time';
+import { logT } from './common/log';
+import { testBossSm } from './test/test_boss_sm';
 
 const tests: { enable: boolean, func: () => Promise<void> }[] = [
     { enable: false, func: testSmBasic },
-    { enable: true, func: testInnerSmPending },
-    { enable: true, func: testInnerSmNoPending },
+    { enable: false, func: testInnerSmPending },
+    { enable: false, func: testInnerSmNoPending },
+    { enable: true, func: testBossSm },
 ];
 
 async function runTests() {
     for (const test of tests) {
         if (test.enable) {
-            log(`${cyan(test.func.name)} ------------------------`);
+            logT(`${cyan(test.func.name).padEnd(80, '-')}`);
             // eslint-disable-next-line no-await-in-loop
             await test.func();
+            log();
         }
     }
 }
@@ -41,6 +45,7 @@ async function main() {
         await runTests();
     }
     stopTimeService();
+    logT('main finished');
 }
 
 main();

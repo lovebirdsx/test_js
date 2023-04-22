@@ -10,6 +10,6 @@ export async function testSm(smRunnerInfo: ISmRunnerInfo) {
                 clearInterval(handler);
                 resolve();
             }
-        }, 1000 / 50);
+        }, 1);
     });
 }
