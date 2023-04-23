@@ -1,8 +1,10 @@
+import { logT } from '../common/log';
 import { ERoleState } from '../interface/buff_info';
 import { IRoleInfo } from '../interface/role_info';
 import { BuffManager } from './buff';
+import { GameLoop } from './game_loop';
 import {
- IBuffManager, IRole, ISkillMananger, IStateManager,
+ IBuffManager, IRole, ISkillMananger, IStateManager, IWorld,
 } from './interface';
 import { SkillManager } from './skill';
 
@@ -30,9 +32,15 @@ export class Role implements IRole {
     public readonly skillManager: ISkillMananger = new SkillManager(this);
     public readonly stateManager: IStateManager = new StateManager(this);
 
-    public constructor(public config: IRoleInfo) {
+    public constructor(public config: IRoleInfo, public world: IWorld) {
         this.mHp = config.maxHp;
         this.maxHp = config.maxHp;
+
+        GameLoop.instance.addObj(this);
+    }
+
+    public get name() {
+        return this.config.id;
     }
 
     public get id() {
@@ -43,11 +51,22 @@ export class Role implements IRole {
         return this.mHp;
     }
 
-    public takeDamage(damage: number) {
+    public get camp() {
+        return this.config.camp;
+    }
+
+    public takeDamage(who: IRole, damage: number) {
+        logT(`${this.id} take damage ${damage} from ${who.id}`);
         this.mHp -= damage;
     }
 
     public isDead() {
         return this.mHp <= 0;
+    }
+
+    public update() {
+        this.buffManager.update();
+        this.skillManager.update();
+        return false;
     }
 }

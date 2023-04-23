@@ -1,12 +1,15 @@
+import { log } from 'console';
 import { logT } from '../common/log';
 import {
- ESkillAction, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
+ ESkillAction, ESkillTarget, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
 } from '../interface/skill_info';
 import { GameLoop } from './game_loop';
-import { IRole, ISkill, ISkillMananger } from './interface';
+import {
+ IRole, ISkill, ISkillMananger, IWorld,
+} from './interface';
 
 interface ISkillAction {
-    execute(target: IRole): void;
+    execute(target?: IRole): void;
     update(): boolean;
 }
 
@@ -65,7 +68,7 @@ export class DamageSkillAciton extends SkillActionBase {
     }
 
     public execute(target: IRole) {
-        target.takeDamage(this.config.damage);
+        target.takeDamage(this.role, this.config.damage);
     }
 }
 
@@ -86,20 +89,81 @@ export class SkillActionFactory {
     }
 }
 
+function getTarget(skill: ISkill): IRole | undefined {
+    switch (skill.target) {
+        case ESkillTarget.自己:
+            return skill.owner;
+        case ESkillTarget.敌方:
+            return skill.owner.world.findTarget(skill.owner);
+        default:
+            throw new Error(`Unknown target type: ${skill.target}`);
+    }
+}
+
 export class Skill implements ISkill {
-    private actions: ISkillAction[];
+    private readonly actions: ISkillAction[];
+    private currentActionIndex: number = -1;
+    private targetRole?: IRole;
+
     public constructor(public config: ISkillInfo, public owner: IRole) {
         this.actions = config.actions.map((action) => SkillActionFactory.create(action, owner));
+        this.targetRole = getTarget(this);
     }
 
-    public cast() {
+    public get target() {
+        return this.config.target;
+    }
+
+    public get finished() {
+        return this.currentActionIndex >= this.actions.length;
+    }
+
+    public update() {
+        if (this.actions.length <= 0) {
+            return true;
+        }
+
+        if (this.currentActionIndex < 0) {
+            this.currentActionIndex = 0;
+            this.actions[this.currentActionIndex].execute(this.targetRole);
+        }
+
+        while (this.currentActionIndex < this.actions.length) {
+            const action = this.actions[this.currentActionIndex];
+            if (action.update()) {
+                this.currentActionIndex++;
+                if (this.currentActionIndex < this.actions.length) {
+                    this.actions[this.currentActionIndex].execute(this.targetRole);
+                }
+            } else {
+                break;
+            }
+        }
+
+        return this.currentActionIndex >= this.actions.length;
     }
 }
 
 export class SkillManager implements ISkillMananger {
+    private readonly skills: ISkill[] = [];
+
     public constructor(public role: IRole) {}
 
     cast(skill: ISkill): void {
+        this.skills.push(skill);
+    }
 
+    get isCasting() {
+        return this.skills.length > 0;
+    }
+
+    update() {
+        for (let i = this.skills.length - 1; i >= 0; i--) {
+            if (this.skills[i].update()) {
+                this.skills.splice(i, 1);
+            }
+        }
+
+        return false;
     }
 }

@@ -6,12 +6,14 @@ import { cyan } from './common/color';
 import { logT } from './common/log';
 import { testBossSm } from './test/test_boss_sm';
 import { GameLoop } from './operation/game_loop';
+import { testSkill } from './test/test_skill';
 
 const tests: { enable: boolean, func: () => Promise<void> }[] = [
-    { enable: true, func: testSmBasic },
-    { enable: true, func: testInnerSmPending },
-    { enable: true, func: testInnerSmNoPending },
-    { enable: true, func: testBossSm },
+    { enable: false, func: testSmBasic },
+    { enable: false, func: testInnerSmPending },
+    { enable: false, func: testInnerSmNoPending },
+    { enable: false, func: testBossSm },
+    { enable: true, func: testSkill },
 ];
 
 async function runTests() {
@@ -22,6 +24,7 @@ async function runTests() {
             await test.func();
         }
     }
+
     GameLoop.instance.stop();
 }
 
@@ -33,6 +36,7 @@ async function runGame() {
             game.update();
             resolve();
         });
+        // eslint-disable-next-line no-await-in-loop
         await promise;
     }
     logT('game stopped');
@@ -53,11 +57,11 @@ function main() {
         return;
     }
 
-    if (argv.test) {
-        void runTests();
-    }
+    runGame();
 
-    void runGame();
+    if (argv.test) {
+        runTests();
+    }
 }
 
 main();

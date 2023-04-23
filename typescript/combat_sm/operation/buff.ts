@@ -88,6 +88,8 @@ export class BuffManager implements IBuffManager {
             }
             this.buffToAdd = [];
         }
+
+        return false;
     }
 
     private addBuffInternal(buffId: string) {

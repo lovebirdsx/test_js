@@ -1,7 +1,6 @@
 export const enum ESkillTarget {
     自己,
-    敌方单体,
-    敌方全体,
+    敌方,
 }
 
 export const enum ESkillAction {

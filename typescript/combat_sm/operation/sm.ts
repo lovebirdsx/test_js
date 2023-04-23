@@ -3,7 +3,7 @@ import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/state_info';
 import { excuteAction } from './action';
 import { Transition } from './transition';
 import { green, red, yellow } from '../common/color';
-import { IGameObj } from './game_loop';
+import { IGameObj } from './interface';
 
 export const enum EUpdateResult {
     Running,
@@ -129,6 +129,10 @@ export class SmRunner implements ISmRunner, IGameObj {
 
     constructor(public config: ISmRunnerInfo) {
         this.rootSm = this.spawn(this.config.root);
+    }
+
+    get name() {
+        return 'SmRunner';
     }
 
     spawn(smId: string, parent?: ISm): ISm {
