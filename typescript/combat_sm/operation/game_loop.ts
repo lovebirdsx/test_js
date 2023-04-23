@@ -85,7 +85,7 @@ export class GameLoop extends EventDispatcher<typeof eventDefine> {
     }
 
     async waitCondition(condition: () => boolean) {
-        const promise = new Promise<void>((resolve) => {
+        return new Promise<void>((resolve) => {
             const obj = {
                 name: 'wait condition',
                 update: () => {
@@ -98,7 +98,6 @@ export class GameLoop extends EventDispatcher<typeof eventDefine> {
             };
             this.addObj(obj);
         });
-        await promise;
     }
 
     update() {

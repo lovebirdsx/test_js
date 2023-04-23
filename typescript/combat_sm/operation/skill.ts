@@ -1,7 +1,7 @@
 import { yellow } from '../common/color';
 import { logT } from '../common/log';
 import {
- ESkillAction, ESkillTarget, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
+ ESkillAction, ESkillTarget, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRecoverHpActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
 } from '../interface/skill_info';
 import { GameLoop } from './game_loop';
 import {
@@ -71,6 +71,16 @@ export class DamageSkillAciton extends SkillActionBase {
     }
 }
 
+export class RecoverHpSkillAction extends SkillActionBase {
+    constructor(public config: IRecoverHpActionInfo, public owner: IRole) {
+        super();
+    }
+
+    execute(target: IRole) {
+        target.recoverHp(this.config.hpRate * target.maxHp);
+    }
+}
+
 export class SkillActionFactory {
     static create(config: ISkillActionInfo, role: IRole): ISkillAction {
         switch (config.type) {
@@ -82,6 +92,8 @@ export class SkillActionFactory {
                 return new PlayAnimationSkillAction(config, role);
             case ESkillAction.造成伤害:
                 return new DamageSkillAciton(config, role);
+            case ESkillAction.回复生命:
+                return new RecoverHpSkillAction(config, role);
             default:
                 throw new Error(`Unknown skill action type: ${config}`);
         }
@@ -89,13 +101,13 @@ export class SkillActionFactory {
 }
 
 function getTarget(skill: ISkill): IRole | undefined {
-    switch (skill.target) {
+    switch (skill.targetType) {
         case ESkillTarget.自己:
             return skill.owner;
         case ESkillTarget.敌方:
             return skill.owner.world.findTarget(skill.owner);
         default:
-            throw new Error(`Unknown target type: ${skill.target}`);
+            throw new Error(`Unknown target type: ${skill.targetType}`);
     }
 }
 
@@ -112,7 +124,7 @@ export class Skill implements ISkill {
         return this.config.id;
     }
 
-    get target() {
+    get targetType() {
         return this.config.target;
     }
 
@@ -127,9 +139,11 @@ export class Skill implements ISkill {
     cast(): void {
         this.targetRole = getTarget(this);
         if (!this.targetRole) {
-            logT(`${yellow(this.owner.id)} Cast Skill ${this.config.id} has no target`);
+            logT(`${yellow(this.owner.id)} 使用技能 ${yellow(this.config.id)} 但找不到目标`);
+        } else if (this.owner === this.targetRole) {
+            logT(`${yellow(this.owner.id)} 对自己使用技能 ${yellow(this.config.id)} `);
         } else {
-            logT(`${yellow(this.owner.id)} Cast Skill ${this.config.id} to ${yellow(this.targetRole.id)}`);
+            logT(`${yellow(this.owner.id)} 朝 ${yellow(this.targetRole.id)} 使用技能 ${yellow(this.config.id)} `);
         }
     }
 

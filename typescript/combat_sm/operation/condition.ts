@@ -1,5 +1,5 @@
 import {
-    IConditionInfo, ECondition, ITimePassedCondition, ISkillFinishedCondition, IHasNoEnemyCondition, IHasEnemyCondition,
+    IConditionInfo, ECondition, ITimePassedCondition, ISkillFinishedCondition, IHasNoEnemyCondition, IHasEnemyCondition, ICompareHpCondition, ECompare,
 } from '../interface/condition_info';
 import { GameLoop } from './game_loop';
 import { IRole } from './interface';
@@ -43,6 +43,25 @@ class HasNoEnemyCondition implements ICondition {
     }
 }
 
+class CompareHpCondition implements ICondition {
+    constructor(private readonly config: ICompareHpCondition) {}
+
+    isOk(role?: IRole | undefined): boolean {
+        if (!role) {
+            return true;
+        }
+        const rate = role.hp / role.maxHp;
+        switch (this.config.compare) {
+            case ECompare.大于: return rate > this.config.hpRate;
+            case ECompare.等于: return Math.abs(rate - this.config.hpRate) < 0.0001;
+            case ECompare.小于: return rate < this.config.hpRate;
+            case ECompare.大于等于: return rate >= this.config.hpRate;
+            case ECompare.小于等于: return rate <= this.config.hpRate;
+            default: throw new Error(`unknown compare: ${this.config.compare}`);
+        }
+    }
+}
+
 class HasEnemyCondition implements ICondition {
     constructor(private readonly config: IHasEnemyCondition) {
     }
@@ -65,7 +84,9 @@ export function createCondition(condition: IConditionInfo): ICondition {
             return new HasNoEnemyCondition(condition);
         case ECondition.找到敌人:
             return new HasEnemyCondition(condition);
+        case ECondition.比较血量:
+            return new CompareHpCondition(condition);
         default:
-            throw new Error(`unknown condition: ${condition}`);
+            throw new Error(`Unknown condition type: ${condition}`);
     }
 }

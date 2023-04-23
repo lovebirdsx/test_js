@@ -1,6 +1,6 @@
 import { logT } from '../common/log';
 import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/sm_info';
-import { excuteSmAction } from './sm_action';
+import { excuteSmAction as executeSmAction, isSmActionFinished } from './sm_action';
 import { Transition } from './transition';
 import { green, red, yellow } from '../common/color';
 import {
@@ -10,6 +10,8 @@ import {
 export class State {
     private readonly sm?: ISm;
     private transitions: Transition[] = [];
+    private currentEnterActionIndex = -1;
+    private isEnterActionFinished = false;
 
     constructor(public config: IStateInfo, public runner: ISmRunner, public parent?: ISm) {
         if (config.innerSm) {
@@ -21,20 +23,55 @@ export class State {
         return this.config.id;
     }
 
+    private updateEnterActions() {
+        if (this.isEnterActionFinished || !this.config.enterActions) {
+            return;
+        }
+
+        if (this.currentEnterActionIndex < 0 && this.config.enterActions) {
+            this.currentEnterActionIndex = 0;
+            executeSmAction(this.config.enterActions[0], this.runner.role);
+        }
+
+        while (!this.isEnterActionFinished) {
+            const action = this.config.enterActions[this.currentEnterActionIndex];
+            if (isSmActionFinished(action, this.runner.role)) {
+                this.currentEnterActionIndex++;
+                if (this.currentEnterActionIndex >= this.config.enterActions.length) {
+                    this.isEnterActionFinished = true;
+                    break;
+                }
+
+                const nextAction = this.config.enterActions[this.currentEnterActionIndex];
+                executeSmAction(nextAction, this.runner.role);
+            } else {
+                break;
+            }
+        }
+    }
+
     enter() {
         this.transitions = this.config.transitions.map((transition) => new Transition(transition));
-        this.config.enterActions?.forEach((action) => {
-            excuteSmAction(action, this.runner.role);
-        });
+
+        this.currentEnterActionIndex = -1;
+        if (!this.config.enterActions || this.config.enterActions.length <= 0) {
+            this.isEnterActionFinished = true;
+        } else {
+            this.isEnterActionFinished = false;
+        }
+
+        this.updateEnterActions();
     }
 
     exit() {
         this.config.exitActions?.forEach((action) => {
-            excuteSmAction(action, this.runner.role);
+            executeSmAction(action, this.runner.role);
         });
     }
 
     update(): [EUpdateResult, string?] {
+        this.updateEnterActions();
+
         let smResult: EUpdateResult | undefined;
         if (this.sm) {
             smResult = this.sm.update();
@@ -43,15 +80,20 @@ export class State {
             }
         }
 
+        if (!this.isEnterActionFinished) {
+            return [EUpdateResult.Running];
+        }
+
         for (const transition of this.transitions) {
             if (transition.isOk(this.runner.role)) {
                 if (this.sm && smResult !== EUpdateResult.Finished) {
-                    logT(`${red('中断状态')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
+                    logT(`${yellow(this.runner.role?.id || '')} ${red('中断状态')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
                 }
                 return [EUpdateResult.Finished, transition.target];
             }
         }
-        return [EUpdateResult.Running];
+
+        return this.transitions.length <= 0 ? [EUpdateResult.Finished] : [EUpdateResult.Running];
     }
 }
 
@@ -85,10 +127,12 @@ export class Sm implements ISm {
         }
 
         this.currentState = this.states.get(stateName);
-        if (this.currentState) {
-            this.currentState.enter();
-            logT(`${yellow(this.runner.role?.id || '')} 进入状态: ${green(this.id)} - ${yellow(this.currentState.id)}`);
+        if (!this.currentState) {
+            throw new Error(`${this.id} 不存在状态 ${stateName}`);
         }
+
+        logT(`${yellow(this.runner.role?.id || '')} 进入状态: ${green(this.id)} ${green(this.currentState.id)}`);
+        this.currentState.enter();
     }
 
     update() {

@@ -3,10 +3,12 @@ import { ICondition, createCondition } from './condition';
 import { IRole } from './interface';
 
 export class Transition {
-    private readonly condition: ICondition;
+    private readonly condition?: ICondition;
 
     constructor(private config: ITransitionInfo) {
-        this.condition = createCondition(config.condition);
+        if (config.condition) {
+            this.condition = createCondition(config.condition);
+        }
     }
 
     get target() {
@@ -14,6 +16,9 @@ export class Transition {
     }
 
     isOk(role?: IRole) {
+        if (!this.condition) {
+            return true;
+        }
         return this.condition.isOk(role);
     }
 }

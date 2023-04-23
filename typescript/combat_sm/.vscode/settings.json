@@ -1,3 +1,13 @@
 {
-    "terminal.integrated.defaultProfile.windows":"Windows PowerShell"
+    "terminal.integrated.defaultProfile.windows":"Windows PowerShell",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/node_modules": true,
+        "**/typescript_out": true
+    }
 }

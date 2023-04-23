@@ -19,7 +19,7 @@ export interface IBuffManager {
 }
 
 export interface ISkill {
-    target: ESkillTarget;
+    targetType: ESkillTarget;
     owner: IRole;
     id: string;
     finished: boolean;
@@ -61,6 +61,7 @@ export interface ISmRunner {
 export interface IRole extends IGameObj {
     id: string;
     maxHp: number;
+    hp: number;
     attack: number;
     camp: ECamp;
     world: IWorld;
@@ -69,6 +70,7 @@ export interface IRole extends IGameObj {
     stateManager: IStateManager;
     smRunner: ISmRunner;
     takeDamage(who: IRole, damage: number): void;
+    recoverHp(hp: number): void;
     isDead(): boolean;
     castSkill(skillId: string): ISkill;
 }

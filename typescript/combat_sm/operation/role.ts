@@ -1,4 +1,4 @@
-import { blue, red, yellow } from '../common/color';
+import { green, red, yellow } from '../common/color';
 import { logT } from '../common/log';
 import { ERoleState } from '../interface/buff_info';
 import { IRoleInfo, getRoleInfo } from '../interface/role_info';
@@ -74,12 +74,21 @@ export class Role implements IRole {
             this.mHp = 0;
         }
 
-        logT(`${yellow(this.id)} hp -= ${red(damage.toString())} by ${yellow(who.id)}`);
+        logT(`${yellow(this.id)} HP-${red(damage.toString())} [${this.mHp}/${this.maxHp}] by ${yellow(who.id)}`);
 
         if (this.isDead()) {
-            logT(`${yellow(this.id)} is ${red('dead')}`);
+            logT(`${yellow(this.id)} ${red('死亡')}`);
             this.world.removeRole(this);
         }
+    }
+
+    recoverHp(hp: number) {
+        this.mHp += hp;
+        if (this.mHp > this.maxHp) {
+            this.mHp = this.maxHp;
+        }
+
+        logT(`${yellow(this.id)} HP+${green(hp.toString())} [${this.mHp}/${this.maxHp}]`);
     }
 
     isDead() {

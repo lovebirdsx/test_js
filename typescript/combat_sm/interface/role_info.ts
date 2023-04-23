@@ -18,7 +18,7 @@ export interface IRoleInfo {
 const roleInfos: IRoleInfo[] = [
     { id: '玩家', maxHp: 100, attack: 20, camp: ECamp.Player, sm: '简单AI', buffs: [] },
     { id: '玩家-简单AI', maxHp: 100, attack: 20, camp: ECamp.Player, sm: '简单AI', buffs: [] },
-    { id: '小怪', maxHp: 50, attack: 10, camp: ECamp.Enemy, sm: '简单AI', buffs: [] },
+    { id: '小怪', maxHp: 80, attack: 10, camp: ECamp.Enemy, sm: '普通AI', buffs: [] },
     { id: 'Boss', maxHp: 100, attack: 10, camp: ECamp.Enemy, sm: '简单AI', buffs: [] },
 ];
 
