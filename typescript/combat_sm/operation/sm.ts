@@ -46,7 +46,7 @@ export class State {
         for (const transition of this.transitions) {
             if (transition.isOk(this.runner.role)) {
                 if (this.sm && smResult !== EUpdateResult.Finished) {
-                    logT(`${red('中断')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
+                    logT(`${red('中断状态')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
                 }
                 return [EUpdateResult.Finished, transition.target];
             }
@@ -87,7 +87,7 @@ export class Sm implements ISm {
         this.currentState = this.states.get(stateName);
         if (this.currentState) {
             this.currentState.enter();
-            logT(`${yellow(this.runner.role?.id || '')} 进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
+            logT(`${yellow(this.runner.role?.id || '')} 进入状态: ${green(this.id)} - ${yellow(this.currentState.id)}`);
         }
     }
 

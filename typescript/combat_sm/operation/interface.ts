@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { ERoleState } from '../interface/buff_info';
 import { ECamp } from '../interface/role_info';
 import { ESkillTarget } from '../interface/skill_info';
@@ -19,7 +20,6 @@ export interface IBuffManager {
 
 export interface ISkill {
     target: ESkillTarget;
-    // eslint-disable-next-line no-use-before-define
     owner: IRole;
     id: string;
     finished: boolean;
@@ -52,7 +52,6 @@ export interface ISm {
 }
 
 export interface ISmRunner {
-    // eslint-disable-next-line no-use-before-define
     role?: IRole;
     paused: boolean;
     spawn(smId: string, parent?: ISm): ISm;
@@ -64,7 +63,6 @@ export interface IRole extends IGameObj {
     maxHp: number;
     attack: number;
     camp: ECamp;
-    // eslint-disable-next-line no-use-before-define
     world: IWorld;
     buffManager: IBuffManager;
     skillManager: ISkillMananger;

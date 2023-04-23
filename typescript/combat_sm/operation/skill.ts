@@ -127,9 +127,9 @@ export class Skill implements ISkill {
     cast(): void {
         this.targetRole = getTarget(this);
         if (!this.targetRole) {
-            logT(`${yellow(this.owner.id)}: Cast Skill ${this.config.id} has no target`);
+            logT(`${yellow(this.owner.id)} Cast Skill ${this.config.id} has no target`);
         } else {
-            logT(`${yellow(this.owner.id)}: Cast Skill ${this.config.id} to ${yellow(this.targetRole.id)}`);
+            logT(`${yellow(this.owner.id)} Cast Skill ${this.config.id} to ${yellow(this.targetRole.id)}`);
         }
     }
 
