@@ -1,15 +1,15 @@
 import { ISmRunnerInfo } from '../interface/state_info';
-import { EUpdateResult, SmRunner } from '../operation/sm';
+import { GameLoop } from '../operation/game_loop';
+import { SmRunner } from '../operation/sm';
 
 export async function testSm(smRunnerInfo: ISmRunnerInfo) {
-    return new Promise<void>((resolve) => {
+    await new Promise<void>((resolve) => {
         const runner = new SmRunner(smRunnerInfo);
-        const handler = setInterval(() => {
-            const result = runner.update();
-            if (result === EUpdateResult.Finished) {
-                clearInterval(handler);
+        GameLoop.instance.addObj(runner);
+        GameLoop.instance.reg('objRemoved', (obj) => {
+            if (obj === runner) {
                 resolve();
             }
-        }, 1);
+        })
     });
 }

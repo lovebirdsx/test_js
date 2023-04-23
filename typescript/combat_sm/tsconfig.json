@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "ESNext",
         "module": "commonjs",
         "outDir": "typescript_out",
-        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
+        "sourceMap": true,
         "skipLibCheck": true
-    }
+    },
+    "include": ["./**/*"]
 }

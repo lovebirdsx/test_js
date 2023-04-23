@@ -1,7 +1,7 @@
 import { error } from 'console';
-import { getTime } from '../common/time';
 import { IBuffInfo, getBuffInfo } from '../interface/buff_info';
 import { IBuff, IBuffManager, IRole } from './interface';
+import { GameLoop } from './game_loop';
 
 export class Buff implements IBuff {
     private mDuration: number = 0;
@@ -23,7 +23,7 @@ export class Buff implements IBuff {
     }
 
     onAdd() {
-        this.startTime = getTime();
+        this.startTime = GameLoop.instance.time;
         this.mDuration = 0;
         for (const state of this.config.states) {
             this.role.stateManager.add(state);
@@ -37,7 +37,7 @@ export class Buff implements IBuff {
     }
 
     update() {
-        this.mDuration = getTime() - this.startTime;
+        this.mDuration = GameLoop.instance.time - this.startTime;
         return this.mDuration >= this.maxDuration;
     }
 }

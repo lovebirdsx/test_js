@@ -1,8 +1,8 @@
 import { logT } from '../common/log';
-import { getTime } from '../common/time';
 import {
  ESkillAction, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
 } from '../interface/skill_info';
+import { GameLoop } from './game_loop';
 import { IRole, ISkill, ISkillMananger } from './interface';
 
 interface ISkillAction {
@@ -51,11 +51,11 @@ export class PlayAnimationSkillAction extends SkillActionBase {
 
     public execute(target: IRole) {
         logT(`Play animation: ${this.config.animationId}`);
-        this.startTime = getTime();
+        this.startTime = GameLoop.instance.time;
     }
 
     public update(): boolean {
-        return getTime() - this.startTime >= this.config.duration;
+        return GameLoop.instance.time - this.startTime >= this.config.duration;
     }
 }
 

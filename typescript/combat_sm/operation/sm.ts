@@ -3,6 +3,7 @@ import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/state_info';
 import { excuteAction } from './action';
 import { Transition } from './transition';
 import { green, red, yellow } from '../common/color';
+import { IGameObj } from './game_loop';
 
 export const enum EUpdateResult {
     Running,
@@ -123,7 +124,7 @@ export class Sm implements ISm {
     }
 }
 
-export class SmRunner implements ISmRunner {
+export class SmRunner implements ISmRunner, IGameObj {
     private readonly rootSm: ISm;
 
     constructor(public config: ISmRunnerInfo) {
@@ -138,7 +139,7 @@ export class SmRunner implements ISmRunner {
         return new Sm(stateMachinConfig, this, parent);
     }
 
-    update(): EUpdateResult {
-        return this.rootSm.update();
+    update(): boolean {
+        return this.rootSm.update() === EUpdateResult.Finished;
     }
 }

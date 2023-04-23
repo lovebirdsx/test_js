@@ -17,5 +17,5 @@ const smRunnerInfo: ISmRunnerInfo = {
 };
 
 export async function testSmBasic() {
-    return testSm(smRunnerInfo);
+    await testSm(smRunnerInfo);
 }
