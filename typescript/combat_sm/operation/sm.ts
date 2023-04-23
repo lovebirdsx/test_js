@@ -1,23 +1,11 @@
 import { logT } from '../common/log';
-import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/state_info';
-import { excuteAction } from './action';
+import { IStateInfo, ISmInfo, ISmRunnerInfo } from '../interface/sm_info';
+import { excuteSmAction } from './sm_action';
 import { Transition } from './transition';
 import { green, red, yellow } from '../common/color';
-import { IGameObj } from './interface';
-
-export const enum EUpdateResult {
-    Running,
-    Finished,
-}
-
-interface ISm {
-    id: string;
-    update(): EUpdateResult;
-}
-
-interface ISmRunner {
-    spawn(smId: string, parent?: ISm): ISm;
-}
+import {
+ EUpdateResult, IGameObj, IRole, ISm, ISmRunner,
+} from './interface';
 
 export class State {
     private readonly sm?: ISm;
@@ -36,13 +24,13 @@ export class State {
     enter() {
         this.transitions = this.config.transitions.map((transition) => new Transition(transition));
         this.config.enterActions?.forEach((action) => {
-            excuteAction(action);
+            excuteSmAction(action, this.runner.role);
         });
     }
 
     exit() {
         this.config.exitActions?.forEach((action) => {
-            excuteAction(action);
+            excuteSmAction(action, this.runner.role);
         });
     }
 
@@ -56,7 +44,7 @@ export class State {
         }
 
         for (const transition of this.transitions) {
-            if (transition.isOk()) {
+            if (transition.isOk(this.runner.role)) {
                 if (this.sm && smResult !== EUpdateResult.Finished) {
                     logT(`${red('中断')}: ${green(this.sm?.id ?? '')} - ${yellow(this.id)}`);
                 }
@@ -99,7 +87,7 @@ export class Sm implements ISm {
         this.currentState = this.states.get(stateName);
         if (this.currentState) {
             this.currentState.enter();
-            logT(`进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
+            logT(`${yellow(this.runner.role?.id || '')} 进入: ${green(this.id)} - ${yellow(this.currentState.id)}`);
         }
     }
 
@@ -126,6 +114,8 @@ export class Sm implements ISm {
 
 export class SmRunner implements ISmRunner, IGameObj {
     private readonly rootSm: ISm;
+    private mRole?: IRole;
+    private mPaused: boolean = false;
 
     constructor(public config: ISmRunnerInfo) {
         this.rootSm = this.spawn(this.config.root);
@@ -135,15 +125,34 @@ export class SmRunner implements ISmRunner, IGameObj {
         return 'SmRunner';
     }
 
+    get role() {
+        return this.mRole;
+    }
+
+    set role(role: IRole | undefined) {
+        this.mRole = role;
+    }
+
+    get paused() {
+        return this.mPaused;
+    }
+
+    set paused(paused: boolean) {
+        this.mPaused = paused;
+    }
+
     spawn(smId: string, parent?: ISm): ISm {
         const stateMachinConfig = this.config.sms.find((stateMachine) => stateMachine.id === smId);
         if (!stateMachinConfig) {
-            throw new Error('state machine not found');
+            throw new Error(`state machine ${smId} not found`);
         }
         return new Sm(stateMachinConfig, this, parent);
     }
 
     update(): boolean {
+        if (this.paused) {
+            return false;
+        }
         return this.rootSm.update() === EUpdateResult.Finished;
     }
 }

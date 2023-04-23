@@ -52,12 +52,12 @@ export class GameLoop extends EventDispatcher<typeof eventDefine> {
     }
 
     addObj(obj: IGameObj) {
-        logT(`add obj: ${obj.name}`);
+        // logT(`add obj: ${obj.name}`);
         this.objsToAdd.push(obj);
     }
 
     removeObj(obj: IGameObj) {
-        logT(`remove obj: ${obj.name}`);
+        // logT(`remove obj: ${obj.name}`);
         this.objsToRemove.push(obj);
     }
 

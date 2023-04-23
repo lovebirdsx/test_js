@@ -1,8 +1,10 @@
-import { cWait, deepCopy } from '../common/util';
-import { ISmRunnerInfo } from '../interface/state_info';
+import { deepCopy } from '../common/util';
+import { cWait } from '../interface/condition_info';
+import { ISmRunnerInfo } from '../interface/sm_info';
 import { testSm } from './common';
 
 const smRunnerInfo: ISmRunnerInfo = {
+    id: 'innerSm',
     root: 'root',
     sms: [
         {

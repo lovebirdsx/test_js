@@ -7,7 +7,7 @@ export class Buff implements IBuff {
     private mDuration: number = 0;
     private startTime: number = 0;
 
-    public constructor(public config: IBuffInfo, public role: IRole) {
+    constructor(public config: IBuffInfo, public role: IRole) {
     }
 
     get id(): string {
@@ -47,17 +47,17 @@ export class BuffManager implements IBuffManager {
     private buffToAdd: string[] = [];
     private buffToRemove: string[] = [];
 
-    public constructor(public role: IRole) {}
+    constructor(public role: IRole) {}
 
-    public addBuff(buffId: string) {
+    addBuff(buffId: string) {
         this.buffToAdd.push(buffId);
     }
 
-    public removeBuff(buffId: string) {
+    removeBuff(buffId: string) {
         this.buffToRemove.push(buffId);
     }
 
-    public removeBuffInternal(buffId: string) {
+    removeBuffInternal(buffId: string) {
         const buff = this.buffMap.get(buffId);
         if (!buff) {
             error(`remove buff ${buffId} failed, buff not found`);
@@ -68,7 +68,7 @@ export class BuffManager implements IBuffManager {
         buff.onRemove();
     }
 
-    public update() {
+    update() {
         for (const buff of this.buffMap.values()) {
             if (buff.update()) {
                 this.removeBuff(buff.id);

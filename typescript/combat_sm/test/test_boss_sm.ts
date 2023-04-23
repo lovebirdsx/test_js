@@ -1,8 +1,9 @@
-import { cWait } from '../common/util';
-import { ISmRunnerInfo } from '../interface/state_info';
+import { cWait } from '../interface/condition_info';
+import { ISmRunnerInfo } from '../interface/sm_info';
 import { testSm } from './common';
 
 const smRunnerInfo: ISmRunnerInfo = {
+    id: 'boss',
     root: '主状态',
     sms: [
         {

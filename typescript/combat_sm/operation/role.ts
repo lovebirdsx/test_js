@@ -1,17 +1,20 @@
 import { logT } from '../common/log';
 import { ERoleState } from '../interface/buff_info';
-import { IRoleInfo } from '../interface/role_info';
+import { IRoleInfo, getRoleInfo } from '../interface/role_info';
+import { getSkillInfo } from '../interface/skill_info';
+import { getSmRunnerInfo } from '../interface/sm_info';
 import { BuffManager } from './buff';
 import { GameLoop } from './game_loop';
 import {
- IBuffManager, IRole, ISkillMananger, IStateManager, IWorld,
+ IBuffManager, IRole, ISkill, ISkillMananger, ISmRunner, IStateManager, IWorld,
 } from './interface';
-import { SkillManager } from './skill';
+import { Skill, SkillManager } from './skill';
+import { SmRunner } from './sm';
 
 class StateManager implements IStateManager {
     private states: Set<ERoleState> = new Set();
 
-    public constructor(public role: IRole) {}
+    constructor(public role: IRole) {}
 
     add(state: ERoleState): void {
         this.states.add(state);
@@ -27,46 +30,78 @@ class StateManager implements IStateManager {
 export class Role implements IRole {
     private mHp: number;
 
-    public readonly maxHp: number;
-    public readonly buffManager: IBuffManager = new BuffManager(this);
-    public readonly skillManager: ISkillMananger = new SkillManager(this);
-    public readonly stateManager: IStateManager = new StateManager(this);
+    readonly maxHp: number;
+    readonly buffManager: IBuffManager = new BuffManager(this);
+    readonly skillManager: ISkillMananger = new SkillManager(this);
+    readonly stateManager: IStateManager = new StateManager(this);
+    readonly smRunner: ISmRunner;
 
-    public constructor(public config: IRoleInfo, public world: IWorld) {
+    constructor(public config: IRoleInfo, public world: IWorld) {
         this.mHp = config.maxHp;
         this.maxHp = config.maxHp;
+        const smRunnerInfo = getSmRunnerInfo(config.sm);
+        this.smRunner = new SmRunner(smRunnerInfo);
+        this.smRunner.role = this;
 
         GameLoop.instance.addObj(this);
+        world.addRole(this);
     }
 
-    public get name() {
+    get name() {
         return this.config.id;
     }
 
-    public get id() {
+    get attack() {
+        return this.config.attack;
+    }
+
+    get id() {
         return this.config.id;
     }
 
-    public get hp() {
+    get hp() {
         return this.mHp;
     }
 
-    public get camp() {
+    get camp() {
         return this.config.camp;
     }
 
-    public takeDamage(who: IRole, damage: number) {
-        logT(`${this.id} take damage ${damage} from ${who.id}`);
+    takeDamage(who: IRole, damage: number) {
         this.mHp -= damage;
+        logT(`${this.id} hp -= ${damage} by ${who.id}`);
+
+        if (this.isDead()) {
+            logT(`${this.id} is dead`);
+            this.world.removeRole(this);
+        }
     }
 
-    public isDead() {
+    isDead() {
         return this.mHp <= 0;
     }
 
-    public update() {
-        this.buffManager.update();
-        this.skillManager.update();
-        return false;
+    castSkill(skillId: string): ISkill {
+        const skillInfo = getSkillInfo(skillId);
+        const skill = new Skill(skillInfo, this);
+        this.skillManager.cast(skill);
+        return skill;
     }
+
+    update() {
+        if (!this.isDead()) {
+            this.buffManager.update();
+            this.skillManager.update();
+            this.smRunner.update();
+        }
+
+        return this.isDead();
+    }
+}
+
+export function createRole(roleId: string, world: IWorld, pauseAi?: boolean) {
+    const roleInfo = getRoleInfo(roleId);
+    const role = new Role(roleInfo, world);
+    role.smRunner.paused = pauseAi || false;
+    return role;
 }

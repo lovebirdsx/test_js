@@ -1,11 +1,11 @@
-import { log } from 'console';
+import { yellow } from '../common/color';
 import { logT } from '../common/log';
 import {
  ESkillAction, ESkillTarget, IAddBuffActionInfo, IDamageActionInfo, IPlayAnimationActionInfo, IRemoveBuffActionInfo, ISkillActionInfo, ISkillInfo,
 } from '../interface/skill_info';
 import { GameLoop } from './game_loop';
 import {
- IRole, ISkill, ISkillMananger, IWorld,
+ IRole, ISkill, ISkillMananger,
 } from './interface';
 
 interface ISkillAction {
@@ -14,19 +14,19 @@ interface ISkillAction {
 }
 
 abstract class SkillActionBase implements ISkillAction {
-    public abstract execute(target: IRole): void;
+    abstract execute(target: IRole): void;
 
-    public update(): boolean {
+    update(): boolean {
         return true;
     }
 }
 
 export class AddBuffSkillAction extends SkillActionBase {
-    public constructor(public config: IAddBuffActionInfo, public owner: IRole) {
+    constructor(public config: IAddBuffActionInfo, public owner: IRole) {
         super();
     }
 
-    public execute(target: IRole) {
+    execute(target: IRole) {
         this.config.buffIds.forEach((buffId) => {
             target.buffManager.addBuff(buffId);
         });
@@ -34,7 +34,7 @@ export class AddBuffSkillAction extends SkillActionBase {
 }
 
 export class RemoveBuffSkillAction extends SkillActionBase {
-    public constructor(public config: IRemoveBuffActionInfo, public owner: IRole) {
+    constructor(public config: IRemoveBuffActionInfo, public owner: IRole) {
         super();
     }
 
@@ -48,32 +48,31 @@ export class RemoveBuffSkillAction extends SkillActionBase {
 export class PlayAnimationSkillAction extends SkillActionBase {
     private startTime: number = 0;
 
-    public constructor(public config: IPlayAnimationActionInfo, public owner: IRole) {
+    constructor(public config: IPlayAnimationActionInfo, public owner: IRole) {
         super();
     }
 
-    public execute(target: IRole) {
-        logT(`Play animation: ${this.config.animationId}`);
+    execute(target: IRole) {
         this.startTime = GameLoop.instance.time;
     }
 
-    public update(): boolean {
+    update(): boolean {
         return GameLoop.instance.time - this.startTime >= this.config.duration;
     }
 }
 
 export class DamageSkillAciton extends SkillActionBase {
-    public constructor(public config: IDamageActionInfo, public role: IRole) {
+    constructor(public config: IDamageActionInfo, public role: IRole) {
         super();
     }
 
-    public execute(target: IRole) {
-        target.takeDamage(this.role, this.config.damage);
+    execute(target: IRole) {
+        target.takeDamage(this.role, this.config.damageRate * this.role.attack);
     }
 }
 
 export class SkillActionFactory {
-    public static create(config: ISkillActionInfo, role: IRole): ISkillAction {
+    static create(config: ISkillActionInfo, role: IRole): ISkillAction {
         switch (config.type) {
             case ESkillAction.加Buff:
                 return new AddBuffSkillAction(config, role);
@@ -105,21 +104,41 @@ export class Skill implements ISkill {
     private currentActionIndex: number = -1;
     private targetRole?: IRole;
 
-    public constructor(public config: ISkillInfo, public owner: IRole) {
+    constructor(public config: ISkillInfo, public owner: IRole) {
         this.actions = config.actions.map((action) => SkillActionFactory.create(action, owner));
-        this.targetRole = getTarget(this);
     }
 
-    public get target() {
+    get id() {
+        return this.config.id;
+    }
+
+    get target() {
         return this.config.target;
     }
 
-    public get finished() {
+    get finished() {
         return this.currentActionIndex >= this.actions.length;
     }
 
-    public update() {
+    async waitFinished() {
+        await GameLoop.instance.waitCondition(() => this.finished);
+    }
+
+    cast(): void {
+        this.targetRole = getTarget(this);
+        if (!this.targetRole) {
+            logT(`${yellow(this.owner.id)}: Cast Skill ${this.config.id} has no target`);
+        } else {
+            logT(`${yellow(this.owner.id)}: Cast Skill ${this.config.id} to ${yellow(this.targetRole.id)}`);
+        }
+    }
+
+    update() {
         if (this.actions.length <= 0) {
+            return true;
+        }
+
+        if (!this.targetRole) {
             return true;
         }
 
@@ -147,14 +166,24 @@ export class Skill implements ISkill {
 export class SkillManager implements ISkillMananger {
     private readonly skills: ISkill[] = [];
 
-    public constructor(public role: IRole) {}
+    constructor(public role: IRole) {}
 
     cast(skill: ISkill): void {
+        if (this.isCasting) {
+            throw new Error(`Role ${this.role.id} is casting skill ${this.skills[0].id}`);
+        }
+
         this.skills.push(skill);
+        skill.cast();
     }
 
     get isCasting() {
         return this.skills.length > 0;
+    }
+
+    isFinished(skillId: string) {
+        const skill = this.skills.find((s) => s.id === skillId);
+        return skill ? skill.finished : true;
     }
 
     update() {

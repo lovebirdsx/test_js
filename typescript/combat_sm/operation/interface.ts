@@ -21,11 +21,15 @@ export interface ISkill {
     target: ESkillTarget;
     // eslint-disable-next-line no-use-before-define
     owner: IRole;
+    id: string;
     finished: boolean;
+    cast(): void;
     update(): boolean;
+    waitFinished(): Promise<void>;
 }
 
 export interface ISkillMananger {
+    isFinished(skill: string): boolean;
     cast(skill: ISkill): void;
     isCasting: boolean;
     update(): void;
@@ -37,17 +41,38 @@ export interface IStateManager {
     has(state: ERoleState): boolean;
 }
 
+export const enum EUpdateResult {
+    Running,
+    Finished,
+}
+
+export interface ISm {
+    id: string;
+    update(): EUpdateResult;
+}
+
+export interface ISmRunner {
+    // eslint-disable-next-line no-use-before-define
+    role?: IRole;
+    paused: boolean;
+    spawn(smId: string, parent?: ISm): ISm;
+    update(): boolean;
+}
+
 export interface IRole extends IGameObj {
     id: string;
     maxHp: number;
+    attack: number;
     camp: ECamp;
     // eslint-disable-next-line no-use-before-define
     world: IWorld;
     buffManager: IBuffManager;
     skillManager: ISkillMananger;
     stateManager: IStateManager;
+    smRunner: ISmRunner;
     takeDamage(who: IRole, damage: number): void;
     isDead(): boolean;
+    castSkill(skillId: string): ISkill;
 }
 
 export interface IWorld {
