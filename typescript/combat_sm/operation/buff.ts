@@ -1,7 +1,8 @@
 import { error } from 'console';
-import { IBuffInfo, getBuffInfo } from '../interface/buff_info';
+import { IBuffInfo } from '../interface/buff_info';
 import { IBuff, IBuffManager, IRole } from './interface';
 import { GameLoop } from './game_loop';
+import { getBuffInfo } from '../config/buff_cfg';
 
 export class Buff implements IBuff {
     private mDuration: number = 0;
@@ -15,7 +16,7 @@ export class Buff implements IBuff {
     }
 
     get maxDuration(): number {
-        return this.config.maxDuration;
+        return this.config.duration;
     }
 
     get duration(): number {

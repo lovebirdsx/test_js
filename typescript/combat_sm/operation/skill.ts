@@ -132,6 +132,10 @@ export class Skill implements ISkill {
         return this.currentActionIndex >= this.actions.length;
     }
 
+    get force() {
+        return this.config.force || false;
+    }
+
     async waitFinished() {
         await GameLoop.instance.waitCondition(() => this.finished);
     }
@@ -183,8 +187,12 @@ export class SkillManager implements ISkillMananger {
     constructor(public role: IRole) {}
 
     cast(skill: ISkill): void {
-        if (this.isCasting) {
-            throw new Error(`Role ${this.role.id} is casting skill ${this.skills[0].id}`);
+        if (skill.force) {
+            if (this.isCasting) {
+                this.skills.splice(0);
+            }
+        } else if (this.isCasting) {
+            throw new Error(`${this.role.id} 正在释放技能 ${this.skills[0].id}`);
         }
 
         this.skills.push(skill);

@@ -1,17 +1,19 @@
 export const enum ECompare {
-    大于,
-    等于,
-    小于,
-    大于等于,
-    小于等于,
+    大于 = '大于',
+    等于 = '等于',
+    小于 = '小于',
+    大于等于 = '大于等于',
+    小于等于 = '小于等于',
 }
 
 export const enum ECondition {
-    技能结束,
-    等待时间,
-    找不到敌人,
-    找到敌人,
-    比较血量,
+    技能结束 = '技能结束',
+    找不到敌人 = '找不到敌人',
+    找到敌人 = '找到敌人',
+    比较血量 = '比较血量',
+    比较白条 = '比较白条',
+    死亡 = '死亡',
+    比较变量 = '比较变量',
 }
 
 interface IConditionBase<T extends ECondition> {
@@ -20,10 +22,6 @@ interface IConditionBase<T extends ECondition> {
 
 export interface ISkillFinishedCondition extends IConditionBase<ECondition.技能结束> {
     skill: string;
-}
-
-export interface ITimePassedCondition extends IConditionBase<ECondition.等待时间> {
-    duration: number;
 }
 
 export interface IHasNoEnemyCondition extends IConditionBase<ECondition.找不到敌人> {
@@ -37,18 +35,27 @@ export interface ICompareHpCondition extends IConditionBase<ECondition.比较血
     hpRate: number;
 }
 
+export interface ICompareWhiteBarCondition extends IConditionBase<ECondition.比较白条> {
+    compare: ECompare;
+    value: number;
+}
+
+export interface ICompareVarCondition extends IConditionBase<ECondition.比较变量> {
+    varId: string;
+    compare: ECompare;
+    value: number;
+}
+
+export interface IDeadCondition extends IConditionBase<ECondition.死亡> {
+}
+
 export type IConditionInfo = ISkillFinishedCondition
-    | ITimePassedCondition
     | IHasNoEnemyCondition
     | ICompareHpCondition
+    | ICompareWhiteBarCondition
+    | ICompareVarCondition
+    | IDeadCondition
     | IHasEnemyCondition;
-
-export function cWait(duration: number): ITimePassedCondition {
-    return {
-        type: ECondition.等待时间,
-        duration,
-    };
-}
 
 export function cNoEnemy(): IHasNoEnemyCondition {
     return {
@@ -74,5 +81,28 @@ export function cHp(compare: ECompare, hpRate: number): ICompareHpCondition {
         type: ECondition.比较血量,
         compare,
         hpRate,
+    };
+}
+
+export function cWhiteBar(compare: ECompare, value: number): ICompareWhiteBarCondition {
+    return {
+        type: ECondition.比较白条,
+        compare,
+        value,
+    };
+}
+
+export function cVar(varId: string, compare: ECompare, value: number): ICompareVarCondition {
+    return {
+        type: ECondition.比较变量,
+        varId,
+        compare,
+        value,
+    };
+}
+
+export function cDead(): IDeadCondition {
+    return {
+        type: ECondition.死亡,
     };
 }

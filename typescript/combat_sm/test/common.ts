@@ -8,6 +8,7 @@ export async function testSm(smRunnerInfo: ISmRunnerInfo, condition?: () => bool
         GameLoop.instance.addObj(runner);
         if (condition) {
             GameLoop.instance.waitCondition(condition).then(() => {
+                GameLoop.instance.removeObj(runner);
                 resolve();
             });
         } else {

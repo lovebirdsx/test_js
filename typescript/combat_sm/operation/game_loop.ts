@@ -1,6 +1,5 @@
 import { EventDispatcher } from './event_dispatcher';
 import { IGameObj } from './interface';
-import { logT } from '../common/log';
 
 export interface IGameLoopInfo {
     fps: number;
@@ -33,6 +32,10 @@ export class GameLoop extends EventDispatcher<typeof eventDefine> {
 
     constructor(private config: IGameLoopInfo) {
         super();
+    }
+
+    get fixedTime() {
+        return 1 / this.config.fps;
     }
 
     get time() {

@@ -1,24 +1,23 @@
 import { ITransitionInfo } from '../interface/sm_info';
-import { ICondition, createCondition } from './condition';
+import { isConditionOk } from './condition';
 import { IRole } from './interface';
 
 export class Transition {
-    private readonly condition?: ICondition;
-
     constructor(private config: ITransitionInfo) {
-        if (config.condition) {
-            this.condition = createCondition(config.condition);
-        }
     }
 
     get target() {
         return this.config.target;
     }
 
+    get isForce() {
+        return this.config.force ?? false;
+    }
+
     isOk(role?: IRole) {
-        if (!this.condition) {
+        if (!this.config.condition || !role) {
             return true;
         }
-        return this.condition.isOk(role);
+        return isConditionOk(this.config.condition, role);
     }
 }

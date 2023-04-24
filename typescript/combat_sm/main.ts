@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import yargs from 'yargs';
 import { testSmBasic, testSmLoop } from './test/test_sm_basic';
-import { testInnerSmNoPending, testInnerSmPending } from './test/test_inner_sm';
+import { testInnerSmPending } from './test/test_inner_sm';
 import { cyan, green, red } from './common/color';
 import { logT } from './common/log';
 import { testBossSm } from './test/test_boss_sm';
@@ -9,16 +9,17 @@ import { GameLoop } from './operation/game_loop';
 import { testSkill } from './test/test_skill';
 import { testTakeDamage } from './test/test_take_damage';
 import { testSimpleAI } from './test/test_simple_ai';
+import { testBossAI } from './test/test_boss_ai';
 
 const tests: { enable: boolean, func: () => Promise<void> }[] = [
     { enable: false, func: testSmBasic },
     { enable: false, func: testSmLoop },
     { enable: false, func: testInnerSmPending },
-    { enable: false, func: testInnerSmNoPending },
     { enable: false, func: testBossSm },
     { enable: false, func: testSkill },
     { enable: false, func: testTakeDamage },
-    { enable: true, func: testSimpleAI },
+    { enable: false, func: testSimpleAI },
+    { enable: true, func: testBossAI },
 ];
 
 async function runTests() {
