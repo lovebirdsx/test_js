@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "console.log('Hello Nodejs world!');"
+            ],
+            "outputs": []
+        }
+    ]
+}
