@@ -1,0 +1,11 @@
+{
+  "name": "combat_sm",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "watch": "tsc-watch --onSuccess \"node typescript_out/main.js -test\"",
+    "start": "ts-node main.ts -test"
+  },
+  "author": "",
+  "license": "ISC"
+}
