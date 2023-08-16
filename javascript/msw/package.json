@@ -1,0 +1,19 @@
+{
+  "name": "test_msw",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "watch": "nodemon src/main.js",
+    "start": "node src/main.js",
+    "test": "jest --watchAll"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "babel-jest": "^29.6.2",
+    "msw": "^1.2.3"
+  }
+}

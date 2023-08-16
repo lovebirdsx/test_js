@@ -4,3 +4,4 @@ generator
 iterator
 promise
 typescript/tsc/**/*.js
+javascript
