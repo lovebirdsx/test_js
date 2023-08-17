@@ -1,17 +1,14 @@
-import { log } from 'console';
 import { rest } from 'msw';
 
 export const handlers = [
-    rest.post('/login', (req, res, ctx) => {
-        log('login handler');
+    rest.post('http://localhost/login', (req, res, ctx) => {
         sessionStorage.setItem('is-authenticated', 'true');
         return res(
             ctx.status(200),
         );
     }),
 
-    rest.get('/user', (req, res, ctx) => {
-        log('user handler');
+    rest.get('http://localhost/user', (req, res, ctx) => {
         const isAuthenticated = sessionStorage.getItem('is-authenticated');
         if (!isAuthenticated) {
             return res(

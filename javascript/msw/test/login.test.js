@@ -12,9 +12,9 @@ test('allow user to log in', async () => {
 
 test('fetch user information for authenticated user', async () => {
     // Setting the session as authenticated for this test
-    sessionStorage.setItem('http://localhost/is-authenticated', 'true');
+    sessionStorage.setItem('is-authenticated', 'true');
     
-    const response = await fetch('/user');
+    const response = await fetch('http://localhost/user');
     const data = await response.json();
     
     expect(response.status).toBe(200);

@@ -1,1 +1,1 @@
-import './src/mocks/setupTest';
+import './src/setupTest';
