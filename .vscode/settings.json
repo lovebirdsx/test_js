@@ -1,15 +1,3 @@
 {
-    "emeraldwalk.runonsave": {
-        "autoClearConsole": true,
-        "commands": [
-            {
-                "match": "\\.js",
-                "cmd": "node ${file}"
-            },
-            {
-                "match": "\\.ts",
-                "cmd": "ts-node ${file}"
-            }
-        ]
-    }
+    // "terminal.integrated.defaultProfile.windows": "Command Prompt",
 }
