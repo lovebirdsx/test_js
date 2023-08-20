@@ -1,4 +1,6 @@
-import { describe, it } from '@jest/globals';
+import {
+    describe, it, jest, afterAll, beforeEach, expect, beforeAll, afterEach,
+} from '@jest/globals';
 
 type TAction = 'Incement' | 'Decrement' | 'Set' | 'Error';
 
@@ -8,8 +10,8 @@ interface IAction {
 }
 
 function createStore() {
-    let state = {
-        count: 0
+    const state = {
+        count: 0,
     };
 
     function dispatch(action: IAction) {
@@ -33,11 +35,12 @@ function createStore() {
 
     return {
         dispatch,
-        state
-    }
+        state,
+    };
 }
 
 const store = createStore();
+type TStore = typeof store;
 jest.mock('console');
 console.log = jest.fn();
 const logSpy = jest.spyOn(console, 'log');
@@ -47,9 +50,10 @@ afterAll(() => {
 });
 
 beforeEach(() => {
+    logSpy.mockClear();
     store.dispatch({
         type: 'Set',
-        count: 0
+        count: 0,
     });
 });
 
@@ -57,7 +61,7 @@ describe('redux origin', () => {
     it('should increment', () => {
         const action: IAction = {
             type: 'Incement',
-            count: 1
+            count: 1,
         };
         store.dispatch(action);
         expect(store.state.count).toBe(1);
@@ -66,7 +70,7 @@ describe('redux origin', () => {
     it('should decrement', () => {
         const action: IAction = {
             type: 'Decrement',
-            count: 1
+            count: 1,
         };
         store.dispatch(action);
         expect(store.state.count).toBe(-1);
@@ -74,6 +78,7 @@ describe('redux origin', () => {
 });
 
 // 封装 dispatch 函数
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#尝试-2-封装-dispatch
 describe('redux middleware 1', () => {
     function dispatchAndLog(action: IAction) {
         console.log('dispatching', action);
@@ -81,14 +86,10 @@ describe('redux middleware 1', () => {
         console.log('next state', store.state);
     }
 
-    beforeEach(() => {
-        logSpy.mockClear();
-    });
-    
     it('log should be called', () => {
         const action: IAction = {
             type: 'Incement',
-            count: 1
+            count: 1,
         };
         dispatchAndLog(action);
         expect(logSpy).toHaveBeenCalledWith('dispatching', action);
@@ -96,8 +97,8 @@ describe('redux middleware 1', () => {
     });
 });
 
-
 // 给 dispatch做Monkeypatch
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#尝试-3-给-dispatch-做猴子补丁monkeypatch
 describe('redux middleware 2', () => {
     const next = store.dispatch;
 
@@ -107,22 +108,17 @@ describe('redux middleware 2', () => {
             const result = next(action);
             console.log('next state', store.state);
             return result;
-        }
+        };
     });
-    
+
     afterAll(() => {
         store.dispatch = next;
     });
 
-    beforeEach(() => {
-        logSpy.mockClear();
-    });
-
-    
     it('log should be called', () => {
         const action: IAction = {
             type: 'Incement',
-            count: 1
+            count: 1,
         };
         store.dispatch(action);
         expect(logSpy).toHaveBeenCalledWith('dispatching', action);
@@ -131,6 +127,7 @@ describe('redux middleware 2', () => {
 });
 
 // 异常监控
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#问题-异常监控
 describe('redux middleware 3', () => {
     const next = store.dispatch;
 
@@ -141,7 +138,7 @@ describe('redux middleware 3', () => {
             const result = next(action);
             console.log('next state', store.state);
             return result;
-        }
+        };
     }
 
     function patchStoreToAddCrashReporting() {
@@ -153,11 +150,10 @@ describe('redux middleware 3', () => {
                 console.log('Caught an exception!');
                 throw err;
             }
-        }
+        };
     }
 
     beforeEach(() => {
-        logSpy.mockClear();
         patchStoreToAddLoggin();
         patchStoreToAddCrashReporting();
     });
@@ -169,7 +165,7 @@ describe('redux middleware 3', () => {
     it('log and exception should be called', () => {
         const action: IAction = {
             type: 'Error',
-            count: 1
+            count: 1,
         };
         expect(() => {
             store.dispatch(action);
@@ -180,6 +176,7 @@ describe('redux middleware 3', () => {
 });
 
 // 隐藏 Monkeypatch
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#尝试-4-隐藏猴子补丁
 describe('redux middleware 4', () => {
     function logger() {
         const next = store.dispatch;
@@ -188,7 +185,7 @@ describe('redux middleware 4', () => {
             const result = next(action);
             console.log('next state', store.state);
             return result;
-        }
+        };
     }
 
     function crashReporter() {
@@ -200,19 +197,18 @@ describe('redux middleware 4', () => {
                 console.log('Caught an exception!');
                 throw err;
             }
-        }
+        };
     }
 
     function applyMiddlewareByMonkeypatching(store: any, middlewares: ((action: IAction) => void)[]) {
-        middlewares = middlewares.slice();
-        middlewares.reverse();
-        middlewares.forEach(middleware => {
+        const middlewares1 = middlewares.slice();
+        middlewares1.reverse();
+        middlewares1.forEach((middleware) => {
             store.dispatch = middleware(store);
         });
     }
 
     beforeEach(() => {
-        logSpy.mockClear();
         applyMiddlewareByMonkeypatching(store, [logger, crashReporter]);
     });
 
@@ -224,7 +220,109 @@ describe('redux middleware 4', () => {
     it('log and exception should be called', () => {
         const action: IAction = {
             type: 'Error',
-            count: 1
+            count: 1,
+        };
+        expect(() => {
+            store.dispatch(action);
+        }).toThrowError('Error');
+        expect(logSpy).toHaveBeenCalledWith('dispatching', action);
+        expect(logSpy).toHaveBeenCalledWith('Caught an exception!');
+    });
+});
+
+// 移除 Monkeypatch
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#尝试-5-移除猴子补丁
+describe('redux middleware 5', () => {
+    function logger(store: TStore) {
+        return function wrapDispatchToAddLogging(next: (action: IAction) => void) {
+            return function dispatchAndLog(action: IAction) {
+                console.log('dispatching', action);
+                const result = next(action);
+                console.log('next state', store.state);
+                return result;
+            };
+        };
+    }
+
+    function crashReporter(store: TStore) {
+        return function wrapDispatchToAddCrashReporting(next: (action: IAction) => void) {
+            return function dispatchAndReportErrors(action: IAction) {
+                try {
+                    return next(action);
+                } catch (err) {
+                    console.log('Caught an exception!');
+                    throw err;
+                }
+            };
+        };
+    }
+
+    function applyMiddleware(store: TStore, middlewares: ((store: TStore) => (next: (action: IAction) => void) => (action: IAction) => void)[]) {
+        middlewares.slice().reverse().forEach((middleware) => {
+            store.dispatch = middleware(store)(store.dispatch);
+        });
+    }
+
+    beforeEach(() => {
+        applyMiddleware(store, [logger, crashReporter]);
+    });
+
+    const next = store.dispatch;
+    afterEach(() => {
+        store.dispatch = next;
+    });
+
+    it('log and exception should be called', () => {
+        const action: IAction = {
+            type: 'Error',
+            count: 1,
+        };
+        expect(() => {
+            store.dispatch(action);
+        }).toThrowError('Error');
+        expect(logSpy).toHaveBeenCalledWith('dispatching', action);
+        expect(logSpy).toHaveBeenCalledWith('Caught an exception!');
+    });
+});
+
+// 最后的实现
+// https://www.reduxjs.cn/understanding/history-and-design/middleware#最后的实现
+describe('redux middleware 6', () => {
+    const logger = (store: TStore) => (next: (action: IAction) => void) => (action: IAction) => {
+        console.log('dispatching', action);
+        const result = next(action);
+        console.log('next state', store.state);
+        return result;
+    };
+
+    const crashReporter = (store: TStore) => (next: (action: IAction) => void) => (action: IAction) => {
+        try {
+            return next(action);
+        } catch (err) {
+            console.log('Caught an exception!');
+            throw err;
+        }
+    };
+
+    function applyMiddleware(store: TStore, middlewares: ((store: TStore) => (next: (action: IAction) => void) => (action: IAction) => void)[]) {
+        middlewares.slice().reverse().forEach((middleware) => {
+            store.dispatch = middleware(store)(store.dispatch);
+        });
+    }
+
+    beforeEach(() => {
+        applyMiddleware(store, [logger, crashReporter]);
+    });
+
+    const next = store.dispatch;
+    afterEach(() => {
+        store.dispatch = next;
+    });
+
+    it('log and exception should be called', () => {
+        const action: IAction = {
+            type: 'Error',
+            count: 1,
         };
         expect(() => {
             store.dispatch(action);
