@@ -14,5 +14,8 @@
     "@jest/globals": "^29.6.2",
     "babel-jest": "^29.6.2",
     "ts-jest": "^29.1.1"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5"
   }
 }
