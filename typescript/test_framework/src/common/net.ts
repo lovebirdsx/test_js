@@ -1,40 +1,47 @@
-import { EventDispatcher } from './event_dispatcher';
+export interface IPackage {
+    srcPort: number;
+    destPort: number;
+    message: string;
+}
 
-const eventDefine = {
-    OnCommand: (cmd: string) => { },
-};
+export class CommandService {
+    private sendQueue: IPackage[] = [];
+    private recvQueue: IPackage[] = [];
 
-class CommandServiceManager {
-    private static instance: CommandServiceManager;
-
-    static getInstance() {
-        if (!CommandServiceManager.instance) {
-            CommandServiceManager.instance = new CommandServiceManager();
-        }
-        return CommandServiceManager.instance;
+    constructor(public port: number) {
     }
 
-    private constructor() { }
-
-    private services: CommandService[] = [];
-
-    registerService(service: CommandService) {
-        this.services.push(service);
+    send(port: number, message: string) {
+        this.sendQueue.push({ srcPort: this.port, destPort: port, message});
     }
 
-    async start() {
-        for (let i = 0; i < this.services.length; i += 1) {
-            await this.services[i].start();
-        }
+    recv() {
+        return this.recvQueue.shift();
+    }
+
+    push(pkg: IPackage) {
+        this.recvQueue.push(pkg);
+    }
+
+    pull() {
+        return this.sendQueue.shift();
     }
 }
 
-export class CommandService extends EventDispatcher<typeof eventDefine> {
-    constructor(public port: number) {
-        super();
+export class CommandServiceManager {
+    private _serviceMap = new Map<number, CommandService>();
+
+    register(service: CommandService) {
+        this._serviceMap.set(service.port, service);
     }
 
-    async start() {
-
+    update() {
+        this._serviceMap.forEach((service) => {
+            let pkg: IPackage | undefined;
+            while (pkg = service.pull()) {
+                const destService = this._serviceMap.get(pkg.destPort);
+                destService?.push(pkg);
+            }
+        });
     }
 }

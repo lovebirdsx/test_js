@@ -2,9 +2,21 @@
   "name": "test_framework",
   "version": "1.0.0",
   "description": "Prototype of universe editor's test framework",
-  "scripts": {
-    "start": "tsc-watch --onSuccess \"node typescript_out/src/main.js\""
-  },
   "author": "lovebird",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "start": "tsc-watch --onSuccess \"node typescript_out/src/main.js\"",
+    "test": "jest --watchAll"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/typescript_out/"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.10",
+    "babel-jest": "^29.6.3",
+    "ts-jest": "^29.1.1"
+  }
 }
