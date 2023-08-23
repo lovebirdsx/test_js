@@ -8,5 +8,5 @@
         "sourceMap": true,
         "skipLibCheck": true
     },
-    "include": ["./**/*"]
+    "include": ["./**/*", ".eslintrc.js"]
 }

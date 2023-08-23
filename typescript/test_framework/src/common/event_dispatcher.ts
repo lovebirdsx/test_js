@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TEventHandle = (...args: any[]) => void;
 
 export type TEventHandleParams<T> = T extends (...args: infer U) => void ? U : never;
