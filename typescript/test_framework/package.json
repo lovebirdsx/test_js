@@ -1,0 +1,10 @@
+{
+  "name": "test_framework",
+  "version": "1.0.0",
+  "description": "Prototype of universe editor's test framework",
+  "scripts": {
+    "start": "tsc-watch --onSuccess \"node typescript_out/src/main.js\""
+  },
+  "author": "lovebird",
+  "license": "ISC"
+}
