@@ -21,6 +21,6 @@ it('message should be received', async () => {
     expect(pkg3?.message).toEqual(message);
     expect(pkg3?.srcPort).toEqual(port2);
 
-    service1.stop();
-    service2.stop();
+    service1.close();
+    service2.close();
 });

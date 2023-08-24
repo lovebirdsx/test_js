@@ -21,18 +21,21 @@ const service: typeof serviceConfig = {
 describe('rpc test', () => {
     let sv: RpcServer<typeof serviceConfig>;
     let cl: RpcClient<typeof serviceConfig>;
+    let clTran: STcp;
+    let svTran: STcp;
 
     beforeEach(() => {
-        const tranServer = new STcp(6804, 6805);
-        const tranClient = new STcp(6805, 6804);
-        sv = new RpcServer(tranServer, service);
-        cl = new RpcClient(tranClient);
+        svTran = new STcp(6804, 6805);
+        clTran = new STcp(6805, 6804);
+        sv = new RpcServer(svTran, service);
+        cl = new RpcClient(clTran);
         sv.start();
     });
 
     afterEach(() => {
         sv.stop();
-        cl.stop();
+        svTran.close();
+        clTran.close();
     });
 
     it('rpc test', async () => {

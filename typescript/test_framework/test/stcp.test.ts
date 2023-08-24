@@ -21,8 +21,8 @@ describe('reliable command service', () => {
     });
 
     afterEach(() => {
-        service1.stop();
-        service2.stop();
+        service1.close();
+        service2.close();
     });
 
     // 发字符串

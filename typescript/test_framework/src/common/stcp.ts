@@ -1,5 +1,6 @@
 import { log, warn } from 'console';
 import { SUdp } from './sudp';
+import { ITran } from './interface';
 
 const MAGIC = '##';
 const MAX_MESSAGE_LENGTH = 1024;
@@ -27,7 +28,7 @@ function decode(str: string) {
     }
 }
 
-export class STcp {
+export class STcp implements ITran {
     // 最大的消息序号，超过后从0开始
     public static MAX_SEQ_ID = 10000;
 
@@ -188,8 +189,8 @@ export class STcp {
         });
     }
 
-    stop() {
-        this.commandService.stop();
+    close() {
+        this.commandService.close();
         clearInterval(this.timer);
     }
 }

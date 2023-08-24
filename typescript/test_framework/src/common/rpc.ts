@@ -21,10 +21,11 @@ export class RpcServer<T extends TService> {
             if (data) {
                 const req = data as IFunction;
                 const func = this.service[req.name];
-                if (func) {
-                    const result = func(...req.args);
-                    this.tran.send(result);
+                if (!func) {
+                    throw new Error(`RpcServer: function ${req.name} not found`);
                 }
+                const result = func(...req.args);
+                this.tran.send(result);
             }
         }, 1);
     }
@@ -33,7 +34,6 @@ export class RpcServer<T extends TService> {
         if (this.timer) {
             clearInterval(this.timer);
         }
-        this.tran.stop();
     }
 }
 
@@ -46,12 +46,8 @@ export class RpcClient<T extends TService> {
         this.tran.send(req);
         const res = await this.tran.recvAsync(3000);
         if (res === undefined) {
-            throw new Error(`call ${name as string} timeout`);
+            throw new Error(`RpcClient: call ${name as string} timeout`);
         }
         return res as ReturnType<T[K]>;
-    }
-
-    stop() {
-        this.tran.stop();
     }
 }

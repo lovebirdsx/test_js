@@ -29,7 +29,7 @@ export class SUdp {
         return this.myIsRunning;
     }
 
-    stop() {
+    close() {
         this.socket.close();
         this.myIsRunning = false;
     }
