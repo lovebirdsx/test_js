@@ -1,6 +1,5 @@
-// 提供类似jest中的测试接口，实现一个简单的测试框架
-
-import { ITestSuite, ITestCase } from './manager';
+import { testContext } from './context';
+import { ITestSuite, ITestCase } from './test_op';
 
 class Expect<T> {
     constructor(private value: T) {
@@ -19,21 +18,49 @@ class Expect<T> {
     }
 }
 
-export function describe(name: string, func: () => Promise<void>): ITestSuite {
-    const suite: ITestSuite = {
-        name,
-        cases: [],
-    };
-    return suite;
+export function beforeEach(func: () => Promise<void>) {
+    const suite = testContext.currentSuite;
+    suite.beforeEach = func;
 }
 
-export function it(name: string, func: () => Promise<void>): ITestCase {
+export function afterEach(func: () => Promise<void>) {
+    const suite = testContext.currentSuite;
+    suite.afterEach = func;
+}
+
+export function beforeAll(func: () => Promise<void>) {
+    const suite = testContext.currentSuite;
+    suite.beforeAll = func;
+}
+
+export function afterAll(func: () => Promise<void>) {
+    const suite = testContext.currentSuite;
+    suite.afterAll = func;
+}
+
+export function describe(name: string, func: () => void) {
+    const suite: ITestSuite = {
+        type: 'suite',
+        name,
+        cases: [],
+        isSelect: true,
+        run: func,
+    };
+
+    testContext.pushSuite(suite);
+    func();
+    testContext.popSuite();
+}
+
+export function it(name: string, func: () => Promise<void>, timeOut?: number) {
     const testCase: ITestCase = {
+        type: 'case',
         name,
         run: func,
         result: false,
+        isSelect: true,
     };
-    return testCase;
+    testContext.currentSuite.cases.push(testCase);
 }
 
 export function expect<T>(value: T): Expect<T> {
