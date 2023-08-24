@@ -1,5 +1,5 @@
 import { log, warn } from 'console';
-import { CommandService } from './command_service';
+import { SUdp } from './sudp';
 
 const MAGIC = '##';
 const MAX_MESSAGE_LENGTH = 1024;
@@ -27,7 +27,7 @@ function decode(str: string) {
     }
 }
 
-export class ReliableCommandService {
+export class STcp {
     // 最大的消息序号，超过后从0开始
     public static MAX_SEQ_ID = 10000;
 
@@ -37,7 +37,7 @@ export class ReliableCommandService {
     // 模拟的掉包率
     public static DROP_RATE = 0;
 
-    private commandService: CommandService;
+    private commandService: SUdp;
 
     // 需要重传的消息队列
     private sendQueue: IMessage[] = [];
@@ -59,11 +59,15 @@ export class ReliableCommandService {
 
     constructor(public port: number, public destPort: number) {
         this.port = port;
-        this.commandService = new CommandService(port);
+        this.commandService = new SUdp(port);
         this.timer = setInterval(() => {
             this.pull();
             this.sendImpl();
-        }, ReliableCommandService.REFRESH_INTERVAL);
+        }, STcp.REFRESH_INTERVAL);
+    }
+
+    get isRunning() {
+        return this.commandService.isRunning;
     }
 
     private generatePackage() {
@@ -90,7 +94,7 @@ export class ReliableCommandService {
     }
 
     send(obj: unknown) {
-        if (this.sendQueue.length >= ReliableCommandService.MAX_SEQ_ID) {
+        if (this.sendQueue.length >= STcp.MAX_SEQ_ID) {
             throw new Error('sendQueue.length >= ReliableCommandService.MAX_SEQ_ID');
         }
 
@@ -98,13 +102,13 @@ export class ReliableCommandService {
             seq: this.sendSeq,
             payload: obj,
         });
-        this.sendSeq = (this.sendSeq + 1) % ReliableCommandService.MAX_SEQ_ID;
+        this.sendSeq = (this.sendSeq + 1) % STcp.MAX_SEQ_ID;
         this.sendImpl();
     }
 
     private pullOne() {
         // 缓冲区满了，不再接收
-        if (this.recvQueue.length >= ReliableCommandService.MAX_SEQ_ID) {
+        if (this.recvQueue.length >= STcp.MAX_SEQ_ID) {
             return false;
         }
 
@@ -141,7 +145,7 @@ export class ReliableCommandService {
         pkg.msgs.forEach((msg) => {
             if (msg.seq === this.recvSeq) {
                 this.recvQueue.push(msg);
-                this.recvSeq = (this.recvSeq + 1) % ReliableCommandService.MAX_SEQ_ID;
+                this.recvSeq = (this.recvSeq + 1) % STcp.MAX_SEQ_ID;
             }
         });
 

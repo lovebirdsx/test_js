@@ -1,11 +1,11 @@
 import { it, expect } from '@jest/globals';
-import { CommandService } from '../src/common/command_service';
+import { SUdp } from '../src/common/sudp';
 
 it('message should be received', async () => {
     const port1 = 6800;
     const port2 = 6801;
-    const service1 = new CommandService(port1);
-    const service2 = new CommandService(port2);
+    const service1 = new SUdp(port1);
+    const service2 = new SUdp(port2);
 
     const message = 'hello';
     service1.send(port2, message);

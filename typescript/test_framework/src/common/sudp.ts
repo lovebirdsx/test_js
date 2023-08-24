@@ -6,9 +6,10 @@ export interface IDgram {
     message: string;
 }
 
-export class CommandService {
+export class SUdp {
     private socket: Socket;
     private recvQueue: IDgram[] = [];
+    private myIsRunning = false;
 
     constructor(public port: number) {
         this.port = port;
@@ -24,8 +25,13 @@ export class CommandService {
         });
     }
 
+    get isRunning() {
+        return this.myIsRunning;
+    }
+
     stop() {
         this.socket.close();
+        this.myIsRunning = false;
     }
 
     send(port: number, message: string) {

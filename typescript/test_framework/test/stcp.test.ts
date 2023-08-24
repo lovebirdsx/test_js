@@ -1,7 +1,7 @@
 import {
     it, beforeEach, afterEach, expect, describe,
 } from '@jest/globals';
-import { ReliableCommandService } from '../src/common/reliable_command_service';
+import { STcp } from '../src/common/stcp';
 
 // 测试中接收消息的超时时间
 const TIMEOUT = 100;
@@ -10,14 +10,14 @@ const TIMEOUT = 100;
 const REFRESH_INTERVAL = 1;
 
 describe('reliable command service', () => {
-    ReliableCommandService.REFRESH_INTERVAL = REFRESH_INTERVAL;
+    STcp.REFRESH_INTERVAL = REFRESH_INTERVAL;
 
-    let service1: ReliableCommandService;
-    let service2: ReliableCommandService;
+    let service1: STcp;
+    let service2: STcp;
 
     beforeEach(() => {
-        service1 = new ReliableCommandService(6802, 6803);
-        service2 = new ReliableCommandService(6803, 6802);
+        service1 = new STcp(6802, 6803);
+        service2 = new STcp(6803, 6802);
     });
 
     afterEach(() => {
@@ -70,14 +70,11 @@ describe('reliable command service', () => {
                 service1.send(obj);
                 sendCount += 1;
             } else {
-                // eslint-disable-next-line no-lonely-if
                 if (recvCount < sendCount) {
                     const recvObj = await service2.recvAsync(TIMEOUT);
-                    if (recvObj) {
-                        obj.id = recvCount;
-                        expect(recvObj).toEqual(recvObj);
-                        recvCount += 1;
-                    }
+                    obj.id = recvCount;
+                    expect(recvObj).toEqual(recvObj);
+                    recvCount += 1;
                 } else {
                     service2.recv();
                     sendCount += 1;
