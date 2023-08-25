@@ -5,8 +5,8 @@
   "author": "lovebird",
   "license": "ISC",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node typescript_out/src/main.js\"",
-    "test": "tsc-watch --onSuccess \"node typescript_out/src/test.js\""
+    "start": "tsc-watch --onSuccess \"ts-node src/main.ts\"",
+    "test": "tsc-watch --onSuccess \"ts-node src/test.ts\""
   },
   "dependencies": {
     "@types/node": "^20.5.6"

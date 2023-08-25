@@ -1,5 +1,5 @@
 import {
-    it, beforeEach, afterEach, expect, describe,
+    it, beforeEach, afterEach, expect, describe, beforeAll, afterAll,
 } from '../src/test/test';
 import { RpcClient, RpcServer } from '../src/common/rpc';
 import { STcp } from '../src/common/stcp';
@@ -18,11 +18,19 @@ const service: typeof serviceConfig = {
     div: (a: number, b: number) => a / b,
 };
 
-describe('rpc test', () => {
+describe('rpc', () => {
     let sv: RpcServer<typeof serviceConfig>;
     let cl: RpcClient<typeof serviceConfig>;
     let clTran: STcp;
     let svTran: STcp;
+
+    beforeAll(() => {
+        STcp.REFRESH_INTERVAL = 1;
+    });
+
+    afterAll(() => {
+        STcp.REFRESH_INTERVAL = 100;
+    });
 
     beforeEach(() => {
         svTran = new STcp(6804, 6805);

@@ -1,7 +1,9 @@
 import { TestManager } from './test/manager';
 
-function test() {
-    TestManager.instance.runTests();
+async function test() {
+    console.log('');
+    await TestManager.instance.runTests();
+    console.log('');
 }
 
 test();

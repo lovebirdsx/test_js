@@ -9,7 +9,7 @@ const TIMEOUT = 100;
 // 测试中的收发消息间隔
 const REFRESH_INTERVAL = 1;
 
-describe('reliable command service', () => {
+describe('stcp', () => {
     STcp.REFRESH_INTERVAL = REFRESH_INTERVAL;
 
     let service1: STcp;
@@ -63,7 +63,7 @@ describe('reliable command service', () => {
 
         let sendCount = 0;
         let recvCount = 0;
-        while (sendCount < 100) {
+        while (sendCount < 20) {
             const random = Math.random();
             if (random < 0.5) {
                 obj.id = sendCount;

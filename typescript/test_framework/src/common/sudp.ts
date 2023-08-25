@@ -12,7 +12,6 @@ export class SUdp {
     private myIsRunning = false;
 
     constructor(public port: number) {
-        this.port = port;
         this.socket = createSocket('udp4');
         this.socket.bind(port);
         this.socket.on('message', (msg, rinfo) => {

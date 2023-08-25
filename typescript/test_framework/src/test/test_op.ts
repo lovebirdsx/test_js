@@ -1,7 +1,11 @@
-export type TestFunc = (() => Promise<void>) | (() => void);
+import {
+ blue, cyan, green, red,
+} from '../common/color';
 
 // 测试用例的默认超时时间
 const DEFAULT_TIMEOUT = 3000;
+
+export type TestFunc = (() => Promise<void>) | (() => void);
 
 // 测试用例
 export interface ITestCase {
@@ -11,8 +15,9 @@ export interface ITestCase {
     result: boolean;
     isSelect: boolean;
     runTime: number;
+    fileLocation: string;
     timeOut?: number;
-    error?: unknown;
+    error?: Error;
 }
 
 // 测试套件
@@ -30,6 +35,65 @@ export interface ITestSuite {
 
 type TTestNode = ITestSuite | ITestCase;
 
+export class TestContext {
+    private suiteStack: ITestSuite[] = [];
+    private currentCase: ITestCase | undefined;
+
+    public readonly rootSuite: ITestSuite = {
+        type: 'suite',
+        name: 'root',
+        cases: [],
+        isSelect: true,
+        run: async () => {},
+    };
+
+    constructor() {
+        this.suiteStack.push(this.rootSuite);
+    }
+
+    get currentSuite(): ITestSuite {
+        return this.suiteStack[this.suiteStack.length - 1];
+    }
+
+    get currentTest(): ITestCase {
+        if (!this.currentCase) {
+            throw new Error('current test case is undefined');
+        }
+        return this.currentCase;
+    }
+
+    set currentTest(testCase: ITestCase) {
+        this.currentCase = testCase;
+    }
+
+    pushSuite(suite: ITestSuite) {
+        if (this.suiteStack.length === 0) {
+            throw new Error('suite stack is empty');
+        }
+
+        const parentSuite = this.suiteStack[this.suiteStack.length - 1];
+        parentSuite.cases.push(suite);
+        this.suiteStack.push(suite);
+    }
+
+    popSuite() {
+        if (this.suiteStack.length === 0) {
+            throw new Error('suite stack is empty');
+        }
+
+        this.suiteStack.pop();
+        this.currentCase = undefined;
+    }
+}
+
+function beatifyError(error: Error, prefix: string): string {
+    const lines = error.message?.split('\n') ?? [];
+    const newLines = lines.map((l) => `${prefix}${l}`);
+    return newLines.join('\n');
+}
+
+export const testContext = new TestContext();
+
 export class TestOp {
     static select(node: TTestNode, isSelect: boolean = true) {
         node.isSelect = isSelect;
@@ -42,13 +106,13 @@ export class TestOp {
 
     static output(node: TTestNode, prefix: string = '') {
         if (node.type === 'case') {
-            console.log(`${prefix}${node.name} ${node.result ? 'OK' : 'FAIL'} ${node.runTime}ms`);
-            if (!node.result) {
-                console.log(node.error);
+            console.log(`${prefix}[${blue(node.name)}] ${node.result ? green('OK') : red('FAIL')} ${node.runTime}ms ${node.fileLocation}`);
+            if (!node.result && node.error) {
+                console.log(beatifyError(node.error, `${prefix}  `));
             }
             return;
         }
-        console.log(`${prefix}${node.name}`);
+        console.log(`${prefix}# ${cyan(node.name)}`);
         node.cases.forEach((c) => {
             TestOp.output(c, `${prefix}  `);
         });
@@ -83,7 +147,7 @@ export class TestOp {
             await suite.afterEach?.();
             testCase.result = true;
             testCase.runTime = Date.now() - startTime;
-        } catch (e) {
+        } catch (e: any) {
             testCase.result = false;
             testCase.error = e;
         }
@@ -91,9 +155,11 @@ export class TestOp {
 
     static async runCase(suite: ITestSuite, testCase: ITestCase): Promise<void> {
         return new Promise((resolve) => {
+            testContext.currentTest = testCase;
+            const timeOut = testCase.timeOut ?? DEFAULT_TIMEOUT;
             const timer = setTimeout(() => {
                 testCase.result = false;
-                testCase.error = new Error(`Test case ${testCase.name} timeout`);
+                testCase.error = new Error(`Reason: timeout for ${timeOut} ms\nFile  : ${testCase.fileLocation}`);
                 resolve();
             }, testCase.timeOut ?? DEFAULT_TIMEOUT);
 

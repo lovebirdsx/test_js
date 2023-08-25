@@ -1,4 +1,4 @@
-import { log, warn } from 'console';
+import { warn } from 'console';
 import { SUdp } from './sudp';
 import { ITran } from './interface';
 

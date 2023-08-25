@@ -3,8 +3,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { testContext } from './context';
-import { TestOp } from './test_op';
+import { TestOp, testContext } from './test_op';
 
 async function scanFiles(directory: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
@@ -13,14 +12,10 @@ async function scanFiles(directory: string): Promise<string[]> {
                 reject(err);
                 return;
             }
-            const testFiles = (files as string[]).filter((f) => f.endsWith('.test.js'));
+            const testFiles = (files as string[]).filter((f) => f.endsWith('.test.ts'));
             resolve(testFiles);
         });
     });
-}
-
-function getTestRootDir() {
-    return path.join(__dirname, '..', '..');
 }
 
 export class TestManager {
@@ -28,14 +23,14 @@ export class TestManager {
 
     static get instance() {
         if (!TestManager.myInstance) {
-            TestManager.myInstance = new TestManager(getTestRootDir());
+            TestManager.myInstance = new TestManager();
         }
         return TestManager.myInstance;
     }
 
     private isTestImported = false;
 
-    private constructor(public dir: string) {
+    private constructor() {
     }
 
     private async importTests() {
@@ -43,13 +38,13 @@ export class TestManager {
             return;
         }
 
-        const files = await scanFiles(this.dir);
+        const files = await scanFiles('.');
         for (const f of files) {
-            const fullPath = `${this.dir}/${f}`;
+            const relativePath = path.relative(__dirname, f);
             try {
-                require(fullPath);
+                import(relativePath.replace('.ts', ''));
             } catch (e) {
-                console.error(`import test file ${fullPath} failed: ${e}`);
+                console.error(`import test file ${relativePath} failed: ${e}`);
             }
         }
         this.isTestImported = true;
