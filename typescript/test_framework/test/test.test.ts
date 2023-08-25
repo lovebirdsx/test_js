@@ -8,27 +8,27 @@ describe('test framework', () => {
         expect(errorFunc).toThrowError();
     });
 
-    it('error for toBe', () => {
+    it('toBe', () => {
         expect(1).toBe(1);
     });
 
-    it('error for toEqual', () => {
+    it('toEqual', () => {
         expect({ foo: 'bar' }).toEqual({ foo: 'bar' });
     });
 
-    it('error for toBeTruthy', () => {
+    it('toBeTruthy', () => {
         expect(1).toBeTruthy();
     });
 
-    it('error for toBeUndefined', () => {
+    it('toBeUndefined', () => {
         expect(undefined).toBeUndefined();
     });
 
-    it('error for toThrowError', () => {
+    it('toThrowError', () => {
         expect(() => { throw new Error(); }).toThrowError();
     });
 
-    it('error for timeout', async () => {
+    it('timeout', async () => {
         expect(1).toBe(1);
     }, 1000);
 });
