@@ -1,6 +1,6 @@
 import {
     it, beforeEach, afterEach, expect, describe,
-} from '@jest/globals';
+} from '../src/test/test';
 import { RpcClient, RpcServer } from '../src/common/rpc';
 import { STcp } from '../src/common/stcp';
 

@@ -1,6 +1,6 @@
 import {
     it, beforeEach, afterEach, expect, describe,
-} from '@jest/globals';
+} from '../src/test/test';
 import { STcp } from '../src/common/stcp';
 
 // 测试中接收消息的超时时间

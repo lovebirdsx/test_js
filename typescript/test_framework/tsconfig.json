@@ -7,6 +7,5 @@
         "strict": true,
         "sourceMap": true,
         "skipLibCheck": true
-    },
-    "include": ["./**/*", ".eslintrc.js"]
+    }
 }

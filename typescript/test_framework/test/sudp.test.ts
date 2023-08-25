@@ -1,4 +1,4 @@
-import { it, expect } from '@jest/globals';
+import { it, expect } from '../src/test/test';
 import { SUdp } from '../src/common/sudp';
 
 it('message should be received', async () => {

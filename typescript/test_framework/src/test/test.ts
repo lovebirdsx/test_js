@@ -1,5 +1,5 @@
 import { testContext } from './context';
-import { ITestSuite, ITestCase } from './test_op';
+import { ITestSuite, ITestCase, TestFunc } from './test_op';
 
 class Expect<T> {
     constructor(private value: T) {
@@ -11,29 +11,39 @@ class Expect<T> {
         }
     }
 
+    toEqual(expected: T) {
+        return JSON.stringify(this.value) === JSON.stringify(expected);
+    }
+
     toBeTruthy(): void {
         if (!this.value) {
             throw new Error(`Expect: ${this.value} is not truthy`);
         }
     }
+
+    toBeUndefined(): void {
+        if (this.value !== undefined) {
+            throw new Error(`Expect: ${this.value} is not undefined`);
+        }
+    }
 }
 
-export function beforeEach(func: () => Promise<void>) {
+export function beforeEach(func: TestFunc) {
     const suite = testContext.currentSuite;
     suite.beforeEach = func;
 }
 
-export function afterEach(func: () => Promise<void>) {
+export function afterEach(func: TestFunc) {
     const suite = testContext.currentSuite;
     suite.afterEach = func;
 }
 
-export function beforeAll(func: () => Promise<void>) {
+export function beforeAll(func: TestFunc) {
     const suite = testContext.currentSuite;
     suite.beforeAll = func;
 }
 
-export function afterAll(func: () => Promise<void>) {
+export function afterAll(func: TestFunc) {
     const suite = testContext.currentSuite;
     suite.afterAll = func;
 }
@@ -52,11 +62,12 @@ export function describe(name: string, func: () => void) {
     testContext.popSuite();
 }
 
-export function it(name: string, func: () => Promise<void>, timeOut?: number) {
+export function it(name: string, func: TestFunc, timeOut?: number) {
     const testCase: ITestCase = {
         type: 'case',
         name,
         run: func,
+        runTime: 0,
         result: false,
         isSelect: true,
     };
