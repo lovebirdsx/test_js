@@ -3,7 +3,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { TestOp, testContext } from './test_op';
+import { log } from 'console';
+import { ITestSuite, TestOp, testContext } from './test_op';
 
 async function scanFiles(directory: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
@@ -12,10 +13,14 @@ async function scanFiles(directory: string): Promise<string[]> {
                 reject(err);
                 return;
             }
-            const testFiles = (files as string[]).filter((f) => f.endsWith('.test.ts'));
+            const testFiles = (files as string[]).filter((f) => f.endsWith('.test.js'));
             resolve(testFiles);
         });
     });
+}
+
+export interface ITestConfig {
+    filter?: string;
 }
 
 export class TestManager {
@@ -38,11 +43,12 @@ export class TestManager {
             return;
         }
 
-        const files = await scanFiles('.');
+        const dir = path.join(__dirname, '..', '..', 'test');
+        const files = await scanFiles(dir);
         for (const f of files) {
-            const relativePath = path.relative(__dirname, f);
+            const relativePath = path.relative(__dirname, path.join(dir, f));
             try {
-                import(relativePath.replace('.ts', ''));
+                import(relativePath.replace('.js', ''));
             } catch (e) {
                 console.error(`import test file ${relativePath} failed: ${e}`);
             }
@@ -50,10 +56,29 @@ export class TestManager {
         this.isTestImported = true;
     }
 
-    async runTests() {
+    private allpyFilter(suite: ITestSuite, filter: string) {
+        TestOp.selectByFilter(suite, filter);
+    }
+
+    private applyConfig(suite: ITestSuite, config?: ITestConfig) {
+        if (config?.filter) {
+            this.allpyFilter(suite, `root ${config.filter}`);
+        }
+    }
+
+    async runTests(config?: ITestConfig) {
+        log('config = ', config);
         await this.importTests();
+
         const { rootSuite } = testContext;
+        this.applyConfig(rootSuite, config);
         await TestOp.runSuite(rootSuite);
-        await TestOp.output(rootSuite);
+    }
+
+    outputTestResult() {
+        const { rootSuite } = testContext;
+        log('');
+        TestOp.output(rootSuite);
+        log('');
     }
 }

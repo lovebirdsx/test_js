@@ -1,4 +1,4 @@
-import { warn } from 'console';
+import { log, warn } from 'console';
 import { SUdp } from './sudp';
 import { ITran } from './interface';
 
@@ -29,16 +29,13 @@ function decode(str: string) {
 }
 
 export class STcp implements ITran {
-    // 最大的消息序号，超过后从0开始
-    public static MAX_SEQ_ID = 10000;
-
     // 处理收发的间隔
     public static REFRESH_INTERVAL = 1000 / 50;
 
-    // 模拟的掉包率
-    public static DROP_RATE = 0;
+    // 缓冲区大小
+    public static MAX_SEQ_ID = 256;
 
-    private commandService: SUdp;
+    private sUdp: SUdp;
 
     // 需要重传的消息队列
     private sendQueue: IMessage[] = [];
@@ -58,9 +55,15 @@ export class STcp implements ITran {
     // eslint-disable-next-line no-undef
     private timer: NodeJS.Timeout;
 
+    // 接下来的消息会被丢弃的次数
+    private dropPackageCount = 0;
+
+    // 需要发送回应
+    private needAck = false;
+
     constructor(public port: number, public destPort: number) {
         this.port = port;
-        this.commandService = new SUdp(port);
+        this.sUdp = new SUdp(port);
         this.timer = setInterval(() => {
             this.pull();
             this.sendImpl();
@@ -68,7 +71,7 @@ export class STcp implements ITran {
     }
 
     get isRunning() {
-        return this.commandService.isRunning;
+        return this.sUdp.isRunning;
     }
 
     private generatePackage() {
@@ -89,21 +92,36 @@ export class STcp implements ITran {
     }
 
     private sendImpl() {
+        // 没有消息需要发送，且没有需要确认的消息，不发送
+        if (this.sendQueue.length === 0 && !this.needAck) {
+            return;
+        }
+
         const pck = this.generatePackage();
-        this.commandService.send(this.destPort, encode(pck));
+        this.sUdp.send(this.destPort, encode(pck));
+
+        if (this.sendQueue.length === 0) {
+            this.needAck = false;
+        }
+
         // log(`${this.port} send ack ${pck.ack} m ${pck.msgs.length} q ${this.sendQueue.length} [${pck.msgs.map((m) => m.seq).join(',')}]`);
+    }
+
+    // 用于测试，模拟丢包
+    public simDropPackage(count: number) {
+        this.dropPackageCount = count;
     }
 
     send(obj: unknown) {
         if (this.sendQueue.length >= STcp.MAX_SEQ_ID) {
-            throw new Error('sendQueue.length >= ReliableCommandService.MAX_SEQ_ID');
+            throw new Error('sendQueue.length >= Stcp.MAX_SEQ_ID');
         }
 
         this.sendQueue.push({
             seq: this.sendSeq,
             payload: obj,
         });
-        this.sendSeq = (this.sendSeq + 1) % STcp.MAX_SEQ_ID;
+        this.sendSeq++;
         this.sendImpl();
     }
 
@@ -114,7 +132,7 @@ export class STcp implements ITran {
         }
 
         // 从commandService中获取数据，如果数据取完了，返回false
-        const d = this.commandService.recv();
+        const d = this.sUdp.recv();
         if (!d) {
             return false;
         }
@@ -135,6 +153,16 @@ export class STcp implements ITran {
             return true;
         }
 
+        if (this.dropPackageCount > 0) {
+            this.dropPackageCount--;
+            return true;
+        }
+
+        if (pkg.msgs.length > 0) {
+            this.needAck = true;
+        }
+
+        // 更新接收方已经确认收到的消息序号
         if (pkg.ack > this.sendSeqAck) {
             this.sendSeqAck = pkg.ack;
             while (this.sendQueue.length > 0 && this.sendQueue[0].seq < this.sendSeqAck) {
@@ -142,11 +170,11 @@ export class STcp implements ITran {
             }
         }
 
-        // log(`${this.port} recv ack ${pkg.ack} m ${pkg.msgs.length} [${pkg.msgs.map((m) => m.seq).join(',')}]`);
+        // log(`${this.port} recv ack ${pkg.ack} ackS ${pkg.ackS} m ${pkg.msgs.length} [${pkg.msgs.map((m) => m.seq).join(',')}]`);
         pkg.msgs.forEach((msg) => {
             if (msg.seq === this.recvSeq) {
                 this.recvQueue.push(msg);
-                this.recvSeq = (this.recvSeq + 1) % STcp.MAX_SEQ_ID;
+                this.recvSeq++;
             }
         });
 
@@ -169,7 +197,6 @@ export class STcp implements ITran {
             // eslint-disable-next-line no-undef
             let timer: NodeJS.Timeout | undefined;
             const interval = setInterval(() => {
-                this.pull();
                 const pkg = this.recvQueue.shift();
                 if (pkg?.payload) {
                     if (timer) {
@@ -190,7 +217,7 @@ export class STcp implements ITran {
     }
 
     close() {
-        this.commandService.close();
+        this.sUdp.close();
         clearInterval(this.timer);
     }
 }

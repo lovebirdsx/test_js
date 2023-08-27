@@ -1,7 +1,8 @@
 import {
-    it, beforeEach, afterEach, expect, describe,
+    it, beforeEach, afterEach, expect, describe, beforeAll, afterAll,
 } from '../src/test/test';
 import { STcp } from '../src/common/stcp';
+import { wait } from '../src/common/misc';
 
 // 测试中接收消息的超时时间
 const TIMEOUT = 100;
@@ -10,10 +11,17 @@ const TIMEOUT = 100;
 const REFRESH_INTERVAL = 1;
 
 describe('stcp', () => {
-    STcp.REFRESH_INTERVAL = REFRESH_INTERVAL;
-
+    const originalRefreshInterval = STcp.REFRESH_INTERVAL;
     let service1: STcp;
     let service2: STcp;
+
+    beforeAll(() => {
+        STcp.REFRESH_INTERVAL = REFRESH_INTERVAL;
+    });
+
+    afterAll(() => {
+        STcp.REFRESH_INTERVAL = originalRefreshInterval;
+    });
 
     beforeEach(() => {
         service1 = new STcp(6802, 6803);
@@ -47,6 +55,7 @@ describe('stcp', () => {
             },
         };
         service1.send(obj);
+        service2.simDropPackage(1);
         expect(await service2.recvAsync(TIMEOUT)).toEqual(obj);
     });
 
@@ -68,6 +77,7 @@ describe('stcp', () => {
             if (random < 0.5) {
                 obj.id = sendCount;
                 service1.send(obj);
+                service2.simDropPackage(1);
                 sendCount += 1;
             } else {
                 if (recvCount < sendCount) {

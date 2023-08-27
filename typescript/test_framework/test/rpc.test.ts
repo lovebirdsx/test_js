@@ -19,6 +19,7 @@ const service: typeof serviceConfig = {
 };
 
 describe('rpc', () => {
+    const originalRefreshInterval = STcp.REFRESH_INTERVAL;
     let sv: RpcServer<typeof serviceConfig>;
     let cl: RpcClient<typeof serviceConfig>;
     let clTran: STcp;
@@ -29,7 +30,7 @@ describe('rpc', () => {
     });
 
     afterAll(() => {
-        STcp.REFRESH_INTERVAL = 100;
+        STcp.REFRESH_INTERVAL = originalRefreshInterval;
     });
 
     beforeEach(() => {

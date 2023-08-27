@@ -1,5 +1,8 @@
 {
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  // 如果使用jestrunner插件，则需要开启下面的配置
+  // "jestrunner.jestCommand": "node typescript_out/src/test.js",
+  // "jestrunner.jestPath": "typescript_out/src/test.js",
+
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,

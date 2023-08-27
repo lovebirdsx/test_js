@@ -82,6 +82,7 @@ export function describe(name: string, func: () => void) {
         cases: [],
         isSelect: true,
         run: func,
+        runTime: 0,
     };
 
     testContext.pushSuite(suite);

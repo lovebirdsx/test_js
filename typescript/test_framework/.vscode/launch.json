@@ -15,6 +15,12 @@
             "name": "Run npm test",
             "request": "launch",
             "type": "node-terminal"
+        },
+        {
+            "command": "npm run case",
+            "name": "Run npm test case",
+            "request": "launch",
+            "type": "node-terminal"
         }
     ]
 }

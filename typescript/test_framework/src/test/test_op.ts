@@ -27,6 +27,7 @@ export interface ITestSuite {
     isSelect: boolean;
     cases: TTestNode[];
     run: TestFunc;
+    runTime: number;
     beforeAll?: TestFunc;
     afterAll?: TestFunc;
     beforeEach?: TestFunc;
@@ -44,6 +45,7 @@ export class TestContext {
         name: 'root',
         cases: [],
         isSelect: true,
+        runTime: 0,
         run: async () => {},
     };
 
@@ -104,7 +106,27 @@ export class TestOp {
         }
     }
 
+    static selectByFilter(node: TTestNode, filter: string) {
+        if (node.type === 'case') {
+            TestOp.select(node, filter.includes(node.name));
+            return;
+        }
+
+        if (filter.includes(node.name)) {
+            node.isSelect = true;
+            node.cases.forEach((c) => {
+                TestOp.selectByFilter(c, filter);
+            });
+        } else {
+            TestOp.select(node, false);
+        }
+    }
+
     static output(node: TTestNode, prefix: string = '') {
+        if (!node.isSelect) {
+            return;
+        }
+
         if (node.type === 'case') {
             console.log(`${prefix}[${blue(node.name)}] ${node.result ? green('OK') : red('FAIL')} ${node.runTime}ms ${node.fileLocation}`);
             if (!node.result && node.error) {
@@ -112,7 +134,7 @@ export class TestOp {
             }
             return;
         }
-        console.log(`${prefix}# ${cyan(node.name)}`);
+        console.log(`${prefix}# ${cyan(node.name)} ${node.runTime}ms`);
         node.cases.forEach((c) => {
             TestOp.output(c, `${prefix}  `);
         });
@@ -123,6 +145,7 @@ export class TestOp {
             return;
         }
 
+        const startTime = Date.now();
         await suite.beforeAll?.();
         for (const c of suite.cases) {
             if (c.type === 'suite') {
@@ -133,6 +156,7 @@ export class TestOp {
             await this.runCase(suite, c);
         }
         await suite.afterAll?.();
+        suite.runTime = Date.now() - startTime;
     }
 
     private static async runCaseAsync(suite: ITestSuite, testCase: ITestCase): Promise<void> {
@@ -140,16 +164,24 @@ export class TestOp {
             return;
         }
 
+        let beforeEachCalled = false;
+        let afterEachCalled = false;
+        const startTime = Date.now();
         try {
-            const startTime = Date.now();
             await suite.beforeEach?.();
+            beforeEachCalled = true;
             await testCase.run();
             await suite.afterEach?.();
+            afterEachCalled = true;
             testCase.result = true;
             testCase.runTime = Date.now() - startTime;
         } catch (e: any) {
+            testCase.runTime = Date.now() - startTime;
             testCase.result = false;
             testCase.error = e;
+            if (beforeEachCalled && !afterEachCalled) {
+                await suite.afterEach?.();
+            }
         }
     }
 

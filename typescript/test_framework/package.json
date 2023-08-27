@@ -5,10 +5,12 @@
   "author": "lovebird",
   "license": "ISC",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"ts-node src/main.ts\"",
-    "test": "tsc-watch --onSuccess \"ts-node src/test.ts\""
+    "start": "rm -rf typescript_out && tsc-watch --onSuccess \"node typescript_out/src/main.js\"",
+    "test": "rm -rf typescript_out && tsc-watch --onSuccess \"node typescript_out/src/test.js\"",
+    "case": "rm -rf typescript_out && tsc-watch --onSuccess \"node typescript_out/src/test.js -t 'stcp send obj'\""
   },
   "dependencies": {
-    "@types/node": "^20.5.6"
+    "@types/node": "^20.5.6",
+    "source-map": "^0.6.1"
   }
 }
