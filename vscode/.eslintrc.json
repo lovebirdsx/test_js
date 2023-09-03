@@ -1,0 +1,6 @@
+{
+  "rules": {
+    // 下划线开头的变量不会报错
+    "no-underscore-dangle":"off"
+  }
+}

@@ -42,6 +42,7 @@
         "no-plusplus": "off",
         "no-console": "off",
         "no-shadow": "off",
+        "no-redeclare": "off",
         "no-param-reassign": ["error", { "props": false }],
         "indent": "off",
         "import/prefer-default-export": "off",
