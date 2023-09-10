@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 /* eslint-disable max-classes-per-file */
 function TestClass() {
     function testBasic() {
@@ -67,9 +68,34 @@ function TestClass() {
         console.log(typeof(Foo), Foo.name);
     }
 
+    function testOperatorOverload() {
+        class Foo {
+            bar(id: number): void;
+            bar(id: string): void;
+            bar(id: boolean): void;
+            bar(id: any): void {
+                if (typeof id === 'number') {
+                    console.log('id is number');
+                } else if (typeof id === 'string') {
+                    console.log('id is string');
+                } else if (typeof id === 'boolean') {
+                    console.log('id is boolean');
+                } else {
+                    console.log('id is unknown');
+                }
+            }
+        }
+
+        const foo = new Foo();
+        foo.bar(1);
+        foo.bar('1');
+        foo.bar(true);
+    }
+
     testBasic();
     testAbstract();
     testClassName();
+    testOperatorOverload();
 }
 
 TestClass();
