@@ -1,4 +1,7 @@
 {
+  "files.exclude": {
+    "**/node_modules": true
+  },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#184630",
     "activityBar.background": "#184630",

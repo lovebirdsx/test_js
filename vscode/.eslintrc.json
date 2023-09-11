@@ -1,6 +1,26 @@
 {
+  "env": {
+    "jest": true
+  },
   "rules": {
+    "no-use-before-define": 0,
+    "no-constant-condition": 0,
+
+    // 允许;在下一行，类似于：
+    // const _enableAllTracing = false
+    // || 'TRUE' // DO NOT CHECK IN!
+    // ;
+    "semi-style": 0,
+
     // 下划线开头的变量不会报错
-    "no-underscore-dangle":"off"
+    "no-underscore-dangle": 0,
+
+    // import无需换行
+    "object-curly-newline": [
+      "error",
+      {
+        "ImportDeclaration": "never"
+      }
+    ]
   }
 }
