@@ -1,6 +1,6 @@
 {
   "env": {
-    "jest": true
+    "mocha": true
   },
   "rules": {
     "no-use-before-define": 0,

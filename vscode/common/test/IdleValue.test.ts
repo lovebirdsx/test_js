@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import { IdleValue, wait } from '../async';
 
 describe('IdleValue', () => {
@@ -8,18 +9,18 @@ describe('IdleValue', () => {
             return 42;
         });
 
-        expect(didRun).toBe(false);
-        expect(idleValue.isInitialized).toBe(false);
-        expect(idleValue.value).toBe(42);
-        expect(didRun).toBe(true);
-        expect(idleValue.isInitialized).toBe(true);
+        expect(didRun).to.equal(false);
+        expect(idleValue.isInitialized).to.equal(false);
+        expect(idleValue.value).to.equal(42);
+        expect(didRun).to.equal(true);
     });
 
     it('should dispose the handle when the value is initialized', () => {
         const idleValue = new IdleValue(() => 42);
-        expect(idleValue.isInitialized).toBe(false);
-        expect(idleValue.value).toBe(42);
-        expect(idleValue.isInitialized).toBe(true);
+
+        expect(idleValue.isInitialized).to.equal(false);
+        expect(idleValue.value).to.equal(42);
+        expect(idleValue.isInitialized).to.equal(true);
     });
 
     it('should throw an error if the executor function throws an error', () => {
@@ -28,7 +29,7 @@ describe('IdleValue', () => {
             throw error;
         });
 
-        expect(() => idleValue.value).toThrowError(error);
+        expect(() => idleValue.value).to.throw(error);
     });
 
     it('should return the same value on subsequent calls', () => {
@@ -38,10 +39,10 @@ describe('IdleValue', () => {
             return count;
         });
 
-        expect(idleValue.value).toBe(1);
-        expect(idleValue.value).toBe(1);
-        expect(idleValue.value).toBe(1);
-        expect(idleValue.isInitialized).toBe(true);
+        expect(idleValue.value).to.equal(1);
+        expect(idleValue.value).to.equal(1);
+        expect(idleValue.value).to.equal(1);
+        expect(idleValue.isInitialized).to.equal(true);
     });
 
     it('should execute while idle', async () => {
@@ -52,10 +53,10 @@ describe('IdleValue', () => {
             return 42;
         });
 
-        expect(didRun).toBe(false);
-        expect(idleValue.isInitialized).toBe(false);
+        expect(didRun).to.equal(false);
+        expect(idleValue.isInitialized).to.equal(false);
         await wait(0);
-        expect(didRun).toBe(true);
-        expect(idleValue.isInitialized).toBe(true);
+        expect(didRun).to.equal(true);
+        expect(idleValue.isInitialized).to.equal(true);
     });
 });

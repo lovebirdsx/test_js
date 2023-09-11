@@ -1,4 +1,4 @@
-import { log } from 'console';
+import { expect } from 'chai';
 import { Graph, Node } from '../graph';
 
 describe('Graph', () => {
@@ -13,21 +13,21 @@ describe('Graph', () => {
         const node2 = graph.lookupOrInsertNode(2);
         const node3 = graph.lookupOrInsertNode(3);
 
-        expect(node1).toBeInstanceOf(Node);
-        expect(node2).toBeInstanceOf(Node);
-        expect(node3).toBeInstanceOf(Node);
+        expect(node1).to.be.instanceOf(Node);
+        expect(node2).to.be.instanceOf(Node);
+        expect(node3).to.be.instanceOf(Node);
 
         graph.insertEdge(1, 2);
         graph.insertEdge(2, 3);
 
-        expect(node1.outgoing.size).toBe(1);
-        expect(node1.outgoing.get('2')).toBe(node2);
-        expect(node2.incoming.size).toBe(1);
-        expect(node2.incoming.get('1')).toBe(node1);
-        expect(node2.outgoing.size).toBe(1);
-        expect(node2.outgoing.get('3')).toBe(node3);
-        expect(node3.incoming.size).toBe(1);
-        expect(node3.incoming.get('2')).toBe(node2);
+        expect(node1.outgoing.size).to.equal(1);
+        expect(node1.outgoing.get('2')).to.equal(node2);
+        expect(node2.incoming.size).to.equal(1);
+        expect(node2.incoming.get('1')).to.equal(node1);
+        expect(node2.outgoing.size).to.equal(1);
+        expect(node2.outgoing.get('3')).to.equal(node3);
+        expect(node3.incoming.size).to.equal(1);
+        expect(node3.incoming.get('2')).to.equal(node2);
     });
 
     it('should remove nodes and edges', () => {
@@ -39,9 +39,9 @@ describe('Graph', () => {
 
         graph.removeNode(2);
 
-        expect(graph.lookup(2)).toBeUndefined();
-        expect(graph.lookup(1)?.outgoing.size).toBe(0);
-        expect(graph.lookup(3)?.incoming.size).toBe(0);
+        expect(graph.lookup(2)).to.equal(undefined);
+        expect(graph.lookup(1)?.outgoing.size).to.equal(0);
+        expect(graph.lookup(3)?.incoming.size).to.equal(0);
     });
 
     it('should find roots', () => {
@@ -53,36 +53,34 @@ describe('Graph', () => {
 
         const roots = graph.roots();
 
-        expect(roots.length).toBe(1);
-        expect(roots[0].data).toBe(1);
+        expect(roots.length).to.equal(1);
+        expect(roots[0].data).to.equal(1);
     });
 
     it('root', () => {
         graph.insertEdge(1, 2);
         let roots = graph.roots();
-        expect(roots.length).toBe(1);
-        expect(roots[0].data).toBe(1);
+        expect(roots.length).to.equal(1);
+        expect(roots[0].data).to.equal(1);
 
         graph.insertEdge(2, 1);
         roots = graph.roots();
-        expect(roots.length).toBe(0);
+        expect(roots.length).to.equal(0);
     });
 
-    test('root complex', () => {
+    it('root complex', () => {
         graph.insertEdge(1, 2);
         graph.insertEdge(1, 3);
         graph.insertEdge(3, 4);
 
         const roots = graph.roots();
-        expect(roots.length).toBe(1);
+        expect(roots.length).to.equal(1);
     });
 
     it('should check if it is empty', () => {
-        expect(graph.isEmpty()).toBe(true);
-
+        expect(graph.isEmpty()).to.equal(true);
         graph.lookupOrInsertNode(1);
-
-        expect(graph.isEmpty()).toBe(false);
+        expect(graph.isEmpty()).to.equal(false);
     });
 
     it('should convert to string', () => {
@@ -104,8 +102,7 @@ describe('Graph', () => {
         graph.insertEdge(3, 1);
 
         const cycle = graph.findCycleSlow();
-
-        expect(cycle).toEqual([1, 2, 3]);
+        expect(cycle).to.be.deep.equal([1, 2, 3]);
     });
 
     it('should not find a cycle', () => {
@@ -116,7 +113,6 @@ describe('Graph', () => {
         graph.insertEdge(2, 3);
 
         const cycle = graph.findCycleSlow();
-
-        expect(cycle).toBeUndefined();
+        expect(cycle).to.equal(undefined);
     });
 });

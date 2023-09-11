@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import { createDecorator } from '../instantiation';
 import { InstantiationService } from '../instantiationService';
 
@@ -62,20 +64,20 @@ class Saver implements ISaver {
 describe('Dependency Injection', () => {
     it('should inject a dependency', () => {
         const logger = new Logger();
-        logger.log = jest.fn();
+        const logSpy = spy(logger, 'log');
         const fileSystem = new FileSystem(logger);
         fileSystem.readFile('test.txt');
-        expect(logger.log).toHaveBeenCalledTimes(1);
+        expect(logSpy.callCount).to.equal(1);
 
         const saver = new Saver(logger, fileSystem);
         saver.save('test.txt', { test: true });
-        expect(logger.log).toHaveBeenCalledTimes(3);
+        expect(logSpy.callCount).to.equal(3);
     });
 
     // 通过InstantiationService来创建服务
     it('should inject a dependency through InstantiationService', () => {
         const instantiationService = new InstantiationService();
         const logger = instantiationService.createInstance(Logger);
-        expect(logger).toBeInstanceOf(Logger);
+        expect(logger).to.be.instanceOf(Logger);
     });
 });
