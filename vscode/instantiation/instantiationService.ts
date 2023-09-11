@@ -20,7 +20,7 @@ class CyclicDependencyError extends Error {
 }
 
 export class InstantiationService implements IInstantiationService {
-    _serviceBrand: undefined;
+    declare readonly _serviceBrand: undefined;
 
     private readonly _globalGraph?: Graph<string>;
     private _globalGraphImplicitDependency?: string;

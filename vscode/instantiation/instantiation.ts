@@ -1,5 +1,3 @@
-import { SyncDescriptor } from './descriptors';
-
 export namespace _util {
     export const serviceIds = new Map<string, ServiceIdentifier<any>>();
 
@@ -60,13 +58,4 @@ export function createDecorator<T>(serviceId: string): ServiceIdentifier<T> {
 
     _util.serviceIds.set(serviceId, id);
     return id;
-}
-
-export const _registry: [ServiceIdentifier<any>, SyncDescriptor<any>][] = [];
-export function registerSingleton<T>(id: ServiceIdentifier<T>, ctor: { new(...args: any[]): T; }, supportsDelayedInstantiation: boolean): void {
-    _registry.push([id, new SyncDescriptor(ctor, [], supportsDelayedInstantiation)]);
-}
-
-export function getSingletonServiceDescriptors(): [ServiceIdentifier<any>, SyncDescriptor<any>][] {
-    return _registry;
 }
