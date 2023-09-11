@@ -1,4 +1,5 @@
 import { createDecorator } from '../instantiation';
+import { InstantiationService } from '../instantiationService';
 
 // 接口定义
 interface ILogger {
@@ -69,5 +70,12 @@ describe('Dependency Injection', () => {
         const saver = new Saver(logger, fileSystem);
         saver.save('test.txt', { test: true });
         expect(logger.log).toHaveBeenCalledTimes(3);
+    });
+
+    // 通过InstantiationService来创建服务
+    it('should inject a dependency through InstantiationService', () => {
+        const instantiationService = new InstantiationService();
+        const logger = instantiationService.createInstance(Logger);
+        expect(logger).toBeInstanceOf(Logger);
     });
 });
