@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "npm test",
+            "command": "npm run testNoTimeout",
             "name": "Run npm test",
             "request": "launch",
             "type": "node-terminal"

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Test vscode src tech",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "testNoTimeout": "mocha --no-timeout"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",

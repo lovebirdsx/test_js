@@ -34,6 +34,10 @@ export class InstantiationService implements IInstantiationService {
         this._globalGraph = _parent ? _parent._globalGraph : new Graph<string>((e) => e);
     }
 
+    createChild(services: ServiceCollection): IInstantiationService {
+        return new InstantiationService(services, this, this._enableTracing);
+    }
+
     createInstance<T>(descriptor: SyncDescriptor0<T>): T;
     createInstance<Ctor extends new(...args: any[]) => any, R extends InstanceType<Ctor>>(ctor: Ctor, ...args: GetLeadingNonServiceArgs<ConstructorParameters<Ctor>>): R;
     createInstance(ctorOrDescriptor: any | SyncDescriptor<any>, ...rest: any[]): any {
@@ -96,8 +100,6 @@ export class InstantiationService implements IInstantiationService {
         return instanceOrDesc;
     }
 
-    private readonly _activeInstantiations = new Set<ServiceIdentifier<any>>();
-
     private _getOrCreateServiceInstance<T>(id: ServiceIdentifier<T>, _trace: Trace): T {
         if (this._globalGraph && this._globalGraphImplicitDependency) {
             this._globalGraph.insertEdge(this._globalGraphImplicitDependency, String(id));
@@ -105,11 +107,26 @@ export class InstantiationService implements IInstantiationService {
 
         const thing = this._getServiceInstanceOrDescriptor(id);
         if (thing instanceof SyncDescriptor) {
-            return this._createAndCacheServiceInstance(id, thing, _trace.branch(id, true));
+            return this._safeCreateAndCacheServiceInstance(id, thing, _trace.branch(id, true));
         }
 
         _trace.branch(id, false);
         return thing;
+    }
+
+    private readonly _activeInstantiations = new Set<ServiceIdentifier<any>>();
+
+    private _safeCreateAndCacheServiceInstance<T>(id: ServiceIdentifier<T>, desc: SyncDescriptor<T>, _trace: Trace): T {
+        if (this._activeInstantiations.has(id)) {
+            throw new Error(`illegalState - cyclic dependency between services: ${id}`);
+        }
+
+        this._activeInstantiations.add(id);
+        try {
+            return this._createAndCacheServiceInstance(id, desc, _trace);
+        } finally {
+            this._activeInstantiations.delete(id);
+        }
     }
 
     private _createAndCacheServiceInstance<T>(id: ServiceIdentifier<T>, desc: SyncDescriptor<T>, _trace: Trace): T {
@@ -176,6 +193,7 @@ export class InstantiationService implements IInstantiationService {
     }
 
     private _createServiceInstance<T>(id: ServiceIdentifier<T>, ctor: any, args: any[], supportsDelayedInstantiation: boolean, _trace: Trace): T {
+        // 不支持延迟初始化则直接创建实例
         if (!supportsDelayedInstantiation) {
             return this._createInstance(ctor, args, _trace);
         }

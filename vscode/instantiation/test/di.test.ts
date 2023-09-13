@@ -23,17 +23,28 @@ const IFileSystem = createDecorator<IFileSystem>('FileSystem');
 
 interface ISaver {
     readonly _serviceBrand: undefined;
+    readonly id: string;
     save(path: string, obj: unknown): void
 }
 
 const ISaver = createDecorator<ISaver>('Saver');
 
+interface ILoader {
+    readonly _serviceBrand: undefined;
+    load(path: string): unknown;
+}
+
+const ILoader = createDecorator<ILoader>('Loader');
+
 // 接口实现
 class Logger implements ILogger {
+    static constructorCallCount = 0;
+
     declare readonly _serviceBrand: undefined;
 
     constructor() {
         this.log = this.log.bind(this);
+        Logger.constructorCallCount++;
     }
 
     log(message: string): void {
@@ -42,6 +53,8 @@ class Logger implements ILogger {
 }
 
 class FileSystem implements IFileSystem {
+    static constructorCallCount = 0;
+
     private static _files: Map<string, string> = new Map();
 
     static clearFiles(): void {
@@ -55,6 +68,7 @@ class FileSystem implements IFileSystem {
     declare readonly _serviceBrand: undefined;
 
     constructor(@ILogger private logger: ILogger) {
+        FileSystem.constructorCallCount++;
     }
 
     readFile(path: string): string {
@@ -69,12 +83,17 @@ class FileSystem implements IFileSystem {
 }
 
 class Saver implements ISaver {
+    static constructorCallCount = 0;
+
     declare readonly _serviceBrand: undefined;
 
     constructor(
+        readonly id: string,
         @ILogger private logger: ILogger,
         @IFileSystem private fileSystem: IFileSystem,
-    ) {}
+    ) {
+        Saver.constructorCallCount++;
+    }
 
     save(path: string, obj: unknown): void {
         this.logger.log(`Saving object to ${path}`);
@@ -83,11 +102,29 @@ class Saver implements ISaver {
     }
 }
 
-registerSingleton(ILogger, Logger, true);
+class Loader implements ILoader {
+    declare readonly _serviceBrand: undefined;
+
+    constructor(@IFileSystem private fileSystem: IFileSystem) {}
+
+    load(path: string): unknown {
+        const content = this.fileSystem.readFile(path);
+        return JSON.parse(content);
+    }
+}
+
+registerSingleton(ILogger, Logger, false);
 registerSingleton(IFileSystem, FileSystem, true);
 registerSingleton(ISaver, Saver, true);
+registerSingleton(ILoader, Loader, true);
 
 describe('Dependency Injection', () => {
+    beforeEach(() => {
+        Logger.constructorCallCount = 0;
+        FileSystem.constructorCallCount = 0;
+        Saver.constructorCallCount = 0;
+    });
+
     it('should inject a dependency', () => {
         const logger = new Logger();
         const logSpy = spy(logger, 'log');
@@ -95,9 +132,16 @@ describe('Dependency Injection', () => {
         fileSystem.readFile('test.txt');
         expect(logSpy.callCount).to.equal(1);
 
-        const saver = new Saver(logger, fileSystem);
+        const saver = new Saver('test', logger, fileSystem);
         saver.save('test.txt', { test: true });
         expect(logSpy.callCount).to.equal(3);
+        expect(saver.id).to.equal('test');
+    });
+
+    // 服务没有注册时会报错
+    it('should throw error when service is not registered', () => {
+        const instantiationService = new InstantiationService();
+        expect(() => instantiationService.createInstance(Saver, 'error')).to.throw();
     });
 
     // 通过InstantiationService来创建服务
@@ -108,8 +152,28 @@ describe('Dependency Injection', () => {
         }
 
         const instantiationService = new InstantiationService(services);
-        const saver = instantiationService.createInstance(Saver);
+        const saver = instantiationService.createInstance(Saver, 'test');
         saver.save('test.txt', 'hello');
         expect(FileSystem.getFile('test.txt')).to.equal('"hello"');
+    });
+
+    // 服务在后台会自动创建
+    it('should inject a dependency through InstantiationService', async () => {
+        const services = new ServiceCollection();
+        for (const [id, descriptor] of getSingletonServiceDescriptors()) {
+            services.set(id, descriptor);
+        }
+
+        const instantiationService = new InstantiationService(services);
+        const saver = instantiationService.createInstance(Saver, 'test');
+        // 虽然Saver依赖FileSystem，但因为没有调用FileSystem的方法，所以FileSystem不会被创建
+        // 这个是因为FileSystem配置成可以延迟创建
+        expect(FileSystem.constructorCallCount).to.equal(0);
+
+        // Logger不是延迟创建，所以会被创建
+        expect(Logger.constructorCallCount).to.equal(1);
+
+        saver.save('test.txt', 'hello');
+        expect(FileSystem.constructorCallCount).to.equal(1);
     });
 });

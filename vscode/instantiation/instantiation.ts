@@ -1,3 +1,5 @@
+import { ServiceCollection } from './serviceCollection';
+
 export namespace _util {
     export const serviceIds = new Map<string, ServiceIdentifier<any>>();
 
@@ -26,6 +28,8 @@ export interface IInstantiationService {
     createInstance<Ctor extends new (...args: any[]) => any, R extends InstanceType<Ctor>>(ctor: Ctor, ...args: GetLeadingNonServiceArgs<ConstructorParameters<Ctor>>): R;
 
     invokeFunction<R, TS extends any[] = []>(fn: (accessor: ServicesAccessor, ...args: TS) => R, ...args: TS): R;
+
+    createChild(services: ServiceCollection): IInstantiationService;
 }
 
 export const IInstantiationService = createDecorator<IInstantiationService>('instantiationService');
