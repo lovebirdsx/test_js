@@ -1,5 +1,5 @@
-import { once } from "./functional";
-import { Iterable } from "./iterator";
+import { once } from './functional';
+import { Iterable } from './iterator';
 
 export interface IDisposable {
     dispose(): void;
@@ -32,6 +32,8 @@ export function dispose<T extends IDisposable>(arg: T | Iterable<T> | undefined)
         arg.dispose();
         return arg;
     }
+
+    return undefined;
 }
 
 export class DisposableStore implements IDisposable {
