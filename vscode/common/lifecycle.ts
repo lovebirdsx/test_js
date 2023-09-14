@@ -87,3 +87,17 @@ export class DisposableStore implements IDisposable {
 export function toDisposable(fn: () => void): IDisposable {
     return { dispose: once(fn) };
 }
+
+export abstract class Disposable implements IDisposable {
+    static readonly None = Object.freeze<IDisposable>({ dispose() { } });
+
+    private readonly _store = new DisposableStore();
+
+    constructor() {
+        this._store.add(this);
+    }
+
+    dispose(): void {
+        this._store.dispose();
+    }
+}

@@ -5,6 +5,7 @@
   "rules": {
     "no-use-before-define": 0,
     "no-constant-condition": 0,
+    "no-return-assign": ["except-parens"],
 
     // 允许;在下一行，类似于：
     // const _enableAllTracing = false
