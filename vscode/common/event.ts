@@ -26,7 +26,7 @@ class UniqueContainer<T> {
 type ListenerContainer<T> = UniqueContainer<(e: T) => void>;
 type ListenerOrListeners<T> = ListenerContainer<T> | (ListenerContainer<T> | undefined)[];
 
-export class Emitter<T> {
+export class Emitter<T> implements IDisposable {
     private _disposed?: true;
     private _event?: Event<T>;
 
