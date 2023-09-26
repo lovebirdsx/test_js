@@ -22,8 +22,8 @@ function getNextName(name: string): string {
         return `${name}-1`;
     }
 
-    const id = Number.parseInt(name.substring(dashIndex + 1));
-    if (isNaN(id)) {
+    const id = Number.parseInt(name.substring(dashIndex + 1), 10);
+    if (Number.isNaN(id)) {
         return `${name}-1`;
     }
 
@@ -33,3 +33,8 @@ function getNextName(name: string): string {
 console.log(getNextName('hello'));
 console.log(getNextName('hello-1'));
 console.log(getNextName('hello-fuck'));
+
+const a: string[] = [];
+function getA(index: number): string {
+    return a[index]!;
+}
