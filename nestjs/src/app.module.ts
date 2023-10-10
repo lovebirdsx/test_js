@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { AppController, CalcController } from './feature/app/app.controller';
-import { AppService, CalcService } from './feature/app/app.service';
-import { MongoDbController } from './feature/mongodb/mongodb.controller';
-import { MongoDbService } from './feature/mongodb/mongodb.service';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { AppController, CalcController } from './app.controller';
+import { AppService, CalcService } from './app.service';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:27017/nestjs')],
-  controllers: [AppController, CalcController, MongoDbController],
-  providers: [AppService, CalcService, MongoDbService],
+  controllers: [AppController, CalcController],
+  providers: [AppService, CalcService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
