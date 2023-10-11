@@ -19,4 +19,8 @@ export class CatsService {
   async findAll(): Promise<Cat[]> {
     return await this.catModel.find().exec();
   }
+
+  async remove(id: string): Promise<any> {
+    return await this.catModel.findByIdAndRemove(id);
+  }
 }

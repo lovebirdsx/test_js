@@ -1,0 +1,16 @@
+@port=5001
+
+### 测试nestjs hello localhost
+GET http://localhost:{{port}}
+
+### 测试nestjs add
+GET http://localhost:{{port}}/calc/add?a=1&b=2
+
+### 测试nestjs sub
+GET http://localhost:{{port}}/calc/sub?a=1&b=2
+
+### 测试nestjs mul
+GET http://localhost:{{port}}/calc/mul?a=1&b=2
+
+### 测试nestjs div
+GET http://localhost:{{port}}/calc/div?a=1&b=2

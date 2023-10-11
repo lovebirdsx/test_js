@@ -1,0 +1,17 @@
+@port=5001
+
+### 测试nestjs mongo 获得cats
+GET http://localhost:{{port}}/cats
+
+### 测试nestjs mongo 添加cat
+POST http://localhost:{{port}}/cats HTTP/1.1
+content-type: application/json
+
+{
+    "name": "cat1",
+    "age": 1,
+    "breed": "breed1"
+}
+
+### 测试nestjs mongo 删除cat
+DELETE http://localhost:{{port}}/cats/6525f4840439daa7b32dc0f6
