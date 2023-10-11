@@ -1,6 +1,6 @@
 import { Connection } from 'mongoose';
 import { CatSchema } from './cats.schema';
-import { CAT_MODEL, DATABASE_CONNECTION } from 'src/const';
+import { CAT_MODEL, DATABASE_CONNECTION } from '../const';
 
 export const catsProviders = [
   {

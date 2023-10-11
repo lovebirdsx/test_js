@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import { MONGO_URI } from 'src/config';
-import { DATABASE_CONNECTION } from 'src/const';
+import { MONGO_URI } from '../config';
+import { DATABASE_CONNECTION } from '../const';
 
 export const databaseProviders = [
   {
