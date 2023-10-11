@@ -57,7 +57,8 @@ function getPassword() {
 }
 
 async function run() {
-    const uri = `mongodb+srv://lovebirdsx:${getPassword()}@cluster0.egbcdxd.mongodb.net/`;
+    // const uri = `mongodb+srv://lovebirdsx:${getPassword()}@cluster0.egbcdxd.mongodb.net/`;
+    const uri = 'mongodb://localhost:27017/';
     const client = new MongoClient(uri);
     await client.connect();
     const dbName = 'myDatabase';
