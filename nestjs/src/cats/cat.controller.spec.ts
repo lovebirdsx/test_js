@@ -2,35 +2,25 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CatsController } from './cats.controller';
 import { CatsService } from './cats.service';
 import { catsProviders } from './cats.providers';
-import { DATABASE_CONNECTION } from '../const';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
+import { DatabaseTestModule } from '../dababase/database.test.module';
 
 describe('CatsController', () => {
   let catsController: CatsController;
-  let mongo: MongoMemoryServer;
+  let app: TestingModule;
 
   beforeEach(async () => {
-    mongo = await MongoMemoryServer.create();
-    const connection = await mongoose.connect(mongo.getUri());
-    const app: TestingModule = await Test.createTestingModule({
+    app = await Test.createTestingModule({
+      imports: [DatabaseTestModule],
       controllers: [CatsController],
-      providers: [
-        CatsService,
-        ...catsProviders,
-        {
-          provide: DATABASE_CONNECTION,
-          useValue: connection,
-        },
-      ],
+      providers: [CatsService, ...catsProviders],
     }).compile();
 
     catsController = app.get(CatsController);
   });
 
   afterEach(async () => {
-    await mongoose.disconnect();
-    await mongo.stop();
+    // 正确释放DatabaseTestModule中的资源(触发：MemoryDatabaseService.onModuleDestroy)
+    await app.close();
   });
 
   describe('root', () => {

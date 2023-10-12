@@ -5,7 +5,9 @@ import { DATABASE_CONNECTION } from '../const';
 export const databaseProviders = [
   {
     provide: DATABASE_CONNECTION,
-    useFactory: async (): Promise<typeof mongoose> =>
-      await mongoose.connect(MONGO_URI),
+    useFactory: async (): Promise<mongoose.Mongoose> => {
+      const connection = await mongoose.connect(MONGO_URI);
+      return connection;
+    },
   },
 ];
