@@ -1,4 +1,5 @@
 {
-    "peacock.color": "#330e25"
+    "peacock.color": "#330e25",
+    "editor.tabSize": 2,
     // "terminal.integrated.defaultProfile.windows": "Command Prompt",
 }

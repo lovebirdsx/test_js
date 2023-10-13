@@ -1,0 +1,19 @@
+@port=5001
+
+### auth/login ok
+POST http://localhost:{{port}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "john",
+  "password": "changeme"
+}
+
+### auth/login fail
+POST http://localhost:{{port}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "john",
+  "password": "wrongpassword"
+}
