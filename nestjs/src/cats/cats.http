@@ -1,17 +1,33 @@
-@port=5001
+@port=3001
 
-### 测试nestjs mongo 获得cats
+### 获得所有cats
 GET http://localhost:{{port}}/cats
 
-### 测试nestjs mongo 添加cat
+### 添加cat
 POST http://localhost:{{port}}/cats HTTP/1.1
 content-type: application/json
 
 {
-    "name": "cat1",
+    "name": "cat2",
+    "age": 2,
+    "breed": "breed2"
+}
+
+### 错误的参数添加cat
+POST http://localhost:{{port}}/cats HTTP/1.1
+content-type: application/json
+
+{
+    "name": "c1",
     "age": 1,
     "breed": "breed1"
 }
 
-### 测试nestjs mongo 删除cat
+### 删除cat
 DELETE http://localhost:{{port}}/cats/6525f4840439daa7b32dc0f6
+
+### 以数字id删除cat
+DELETE http://localhost:{{port}}/cats/123
+
+### 删除所有cat
+DELETE http://localhost:{{port}}/cats

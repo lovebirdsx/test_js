@@ -53,10 +53,9 @@ describe('decorator', () => {
   it('parameter decorator', () => {
     function Param(type: string) {
       return function (target: any, key: string, index: number) {
-        console.log(`${target} Parameter ${index} of ${key} function is decorated`);
-        const parameters: string[] = Reflect.getOwnMetadata('required-parameters', target, key) || [];
-        parameters.push(type);
-        Reflect.defineMetadata('required-parameters', parameters, target, key);
+        const parameters: string[] = Reflect.getOwnMetadata('parameters', target, key) || [];
+        parameters[index] = type;
+        Reflect.defineMetadata('parameters', parameters, target, key);
       }
     }
 
@@ -65,20 +64,21 @@ describe('decorator', () => {
     }
 
     function apply(foo: Foo, ...args: any[]) {
-      const parameters: string[] = Reflect.getOwnMetadata('required-parameters', Foo, 'foo');
+      // 注意由于是拿实例方法，所以要用原型链(Foo.prototype)上的方法，而不是类(Foo)上的方法
+      const parameters: string[] = Reflect.getOwnMetadata('parameters', Foo.prototype, 'foo');
       if (args.length !== parameters.length) {
         throw new Error('Incorrect number of parameters');
       }
 
       for (let i = 0; i < args.length; i++) {
         if (typeof args[i] !== parameters[i]) {
-          throw new Error(`Incorrect type of parameter #${i}`);
+          throw new Error(`Incorrect type of parameter #${i}, expected ${parameters[i]} but got ${typeof args[i]}`);
         }
       }
 
       foo.foo.apply(foo, args);
     }
 
-    // apply(new Foo(), 'hello', 123);
+    apply(new Foo(), 'hello', 123);
   });
 });

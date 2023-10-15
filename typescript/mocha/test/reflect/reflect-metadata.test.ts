@@ -13,7 +13,6 @@ describe('Reflect metadata', () => {
 
   it('decorate method', () => {
     function methodDecorator(target: any, key: string, descriptor: PropertyDescriptor) {
-      console.log(target, key, descriptor);
       target.isMethodDecorated = true;
     }
 
