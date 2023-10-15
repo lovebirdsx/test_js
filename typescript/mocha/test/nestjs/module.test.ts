@@ -1,19 +1,7 @@
 import { expect } from 'chai';
 import 'reflect-metadata';
 
-describe('Reflect', () => {
-  it('should set and get metadata', () => {
-    const key = 'myKey';
-    const value = 'myValue';
-    const target = {};
-  
-    Reflect.defineMetadata(key, value, target);
-    const result = Reflect.getMetadata(key, target);
-  
-    expect(result).to.equal(value);
-  });
-  
-  // 演示nestjs中类似Module的装饰器
+describe('nestjs module', () => {
   it('nestjs module', () => {
     interface ModuleMetadata {
       imports?: any[];
