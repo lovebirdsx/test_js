@@ -19,6 +19,7 @@ export class CatsController {
     return this.catsService.findAll();
   }
 
+  // @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.catsService.remove(id);

@@ -23,7 +23,7 @@ content-type: application/json
 }
 
 ### 删除cat
-DELETE http://localhost:{{port}}/cats/652c9ca0d3536b9a634d0012
+DELETE http://localhost:{{port}}/cats/652c992b0fc6a2c1a86338a7
 
 ### 以数字id删除cat
 DELETE http://localhost:{{port}}/cats/123

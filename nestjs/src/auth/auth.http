@@ -1,4 +1,4 @@
-@port=5001
+@port=3001
 
 ### auth/login ok
 POST http://localhost:{{port}}/auth/login HTTP/1.1
@@ -32,4 +32,4 @@ content-type: application/json
 
 ### GET /profile 将上一步中的token放到header中
 GET http://localhost:{{port}}/profile HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzE4MjEzOCwiZXhwIjoxNjk3MjY4NTM4fQ.CSEKCeypkgmRPMNsATronPMv7feYHFJIrdtnPQ6iTVo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzQzMTk3MywiZXhwIjoxNjk3NTE4MzczfQ.Zqo7j31UszELQFySZKErszBGDgPkegsYqy6Sl7vdVwo

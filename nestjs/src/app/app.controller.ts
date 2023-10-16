@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AppService, CalcService } from './app.service';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { AuthService } from './auth/auth.service';
+import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { AppInterceptor } from './app.interceptor';
 
+@UseInterceptors(AppInterceptor)
 @Controller()
 export class AppController {
   constructor(

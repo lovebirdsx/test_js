@@ -1,4 +1,4 @@
-@port=5001
+@port=3001
 
 ### 测试nestjs hello localhost
 GET http://localhost:{{port}}
