@@ -1,4 +1,4 @@
-import { ArgumentsHost, ExceptionFilter, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ArgumentsHost, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -8,7 +8,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const stacks = exception instanceof HttpException ? exception.stack.split('\n') : null;
+    const stacks = exception instanceof HttpException ? exception.stack.split('\n') : undefined;
+    const errorResponse = exception instanceof HttpException ? exception.getResponse() : undefined;
 
     const json = {
       statusCode: status,
@@ -16,7 +17,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toLocaleString(),
       path: request.url,
       stack: stacks,
-    }
+      response: errorResponse,
+    };
 
     response.status(status).json(json);
   }

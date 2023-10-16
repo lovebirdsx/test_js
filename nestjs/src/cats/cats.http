@@ -18,13 +18,12 @@ POST http://localhost:{{port}}/cats HTTP/1.1
 content-type: application/json
 
 {
-    "name": "c1",
     "age": 1,
     "breed": "breed1"
 }
 
 ### 删除cat
-DELETE http://localhost:{{port}}/cats/6525f4840439daa7b32dc0f6
+DELETE http://localhost:{{port}}/cats/652c9ca0d3536b9a634d0012
 
 ### 以数字id删除cat
 DELETE http://localhost:{{port}}/cats/123
