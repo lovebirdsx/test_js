@@ -10,7 +10,7 @@ export enum Role {
   Developer = 'developer',
 }
 
-export interface SharedUser {
+export class SharedUser {
   userId: number;
   username: string;
   password: string;
