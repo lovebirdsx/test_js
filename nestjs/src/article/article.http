@@ -1,0 +1,47 @@
+@port=3001
+
+### 获得特定的article
+GET http://localhost:{{port}}/article/article2 HTTP/1.1
+
+### 获得所有article
+GET http://localhost:{{port}}/article HTTP/1.1
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+
+### 添加article1
+POST http://localhost:{{port}}/article HTTP/1.1
+content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+
+{
+    "id": "article1",
+    "title": "article1",
+    "isPublished": true,
+    "authorId": 2
+}
+
+### 添加article2
+POST http://localhost:{{port}}/article HTTP/1.1
+content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+
+{
+    "id": "article2",
+    "title": "article2",
+    "isPublished": false,
+    "authorId": 2
+}
+
+### 错误的参数添加article
+POST http://localhost:{{port}}/article HTTP/1.1
+content-type: application/json
+
+{
+    "isPublished": true,
+    "authorId": 1
+}
+
+### 删除article1
+DELETE http://localhost:{{port}}/article/article1 HTTP/1.1
+
+### 删除article2
+DELETE http://localhost:{{port}}/article/article2 HTTP/1.1

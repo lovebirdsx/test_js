@@ -1,6 +1,16 @@
 {
     "editor.tabSize": 2,
     "peacock.color": "#330e25",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "dist": true,
+        "node_modules": true
+    },
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#5b1942",
         "activityBar.background": "#5b1942",

@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CAT_MODEL } from '../const';
-import { Cat } from './cat.interface';
+import { Cat } from './cat.entity';
 import { CreateCatDto } from './cat.dto';
 
 @Injectable()
-export class CatsService {
+export class CatService {
   constructor(
     @Inject(CAT_MODEL)
     private catModel: Model<Cat>,

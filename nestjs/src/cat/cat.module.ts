@@ -1,17 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { CatsService } from './cats.service';
-import { catsProviders } from './cats.providers';
+import { CatService } from './cat.service';
+import { catProviders } from './cat.providers';
 import { DatabaseModule } from '../dababase/database.module';
-import { CatsController } from './cats.controller';
+import { CatController } from './cat.controller';
 import { LoggerMiddleware } from '../middleware/logger.middleware';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [CatsController],
-  providers: [CatsService, ...catsProviders],
+  controllers: [CatController],
+  providers: [CatService, ...catProviders],
 })
 export class CatsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(CatsController);
+    consumer.apply(LoggerMiddleware).forRoutes(CatController);
   }
 }

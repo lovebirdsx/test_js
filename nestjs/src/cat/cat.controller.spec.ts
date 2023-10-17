@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CatsController } from './cats.controller';
-import { CatsService } from './cats.service';
-import { catsProviders } from './cats.providers';
+import { CatController } from './cat.controller';
+import { CatService } from './cat.service';
+import { catProviders } from './cat.providers';
 import { DatabaseTestModule } from '../dababase/database.test.module';
 
-describe('CatsController', () => {
-  let catsController: CatsController;
+describe('CatController', () => {
+  let catsController: CatController;
   let app: TestingModule;
 
   beforeEach(async () => {
     app = await Test.createTestingModule({
       imports: [DatabaseTestModule],
-      controllers: [CatsController],
-      providers: [CatsService, ...catsProviders],
+      controllers: [CatController],
+      providers: [CatService, ...catProviders],
     }).compile();
 
-    catsController = app.get(CatsController);
+    catsController = app.get(CatController);
   });
 
   afterEach(async () => {
