@@ -3,6 +3,7 @@ import { AppService, CalcService } from './app.service';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AppInterceptor } from './app.interceptor';
+import { Public } from '../auth/auth.decorator';
 
 @UseInterceptors(AppInterceptor)
 @Controller()
@@ -12,18 +13,19 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
+  @Public()
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
 
+  @Public()
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Request() req) {
     return { ...req.user };
@@ -31,6 +33,7 @@ export class AppController {
 }
 
 @Controller('calc')
+@Public()
 export class CalcController {
   constructor(private readonly calcService: CalcService) {}
 
