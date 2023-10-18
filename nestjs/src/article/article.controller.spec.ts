@@ -3,6 +3,7 @@ import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { articleProviders } from './article.providers';
 import { DatabaseTestModule } from '../dababase/database.test.module';
+import { CaslModule } from '../casl/casl.module';
 
 describe('ArticleController', () => {
   let controller: ArticleController;
@@ -10,7 +11,7 @@ describe('ArticleController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [DatabaseTestModule],
+      imports: [DatabaseTestModule, CaslModule],
       controllers: [ArticleController],
       providers: [ArticleService, ...articleProviders],
     }).compile();

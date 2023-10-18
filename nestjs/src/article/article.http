@@ -1,16 +1,17 @@
 @port=3001
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzYwMzA3NSwiZXhwIjoxNjk3Njg5NDc1fQ.u3X6u690ssHXSVbQH9a1nwuSQ846EJgLOJkBjVtyOc4
 
 ### 获得特定的article
 GET http://localhost:{{port}}/article/article2 HTTP/1.1
 
 ### 获得所有article
 GET http://localhost:{{port}}/article HTTP/1.1
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+Authorization: Bearer {{token}}
 
 ### 添加article1
 POST http://localhost:{{port}}/article HTTP/1.1
 content-type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+Authorization: Bearer {{token}}
 
 {
     "id": "article1",
@@ -22,7 +23,7 @@ content-type: application/json
 ### 添加article2
 POST http://localhost:{{port}}/article HTTP/1.1
 content-type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTY5NzUxMTYzMiwiZXhwIjoxNjk3NTk4MDMyfQ._LCnl4RpiAvDABfkFgPQjfLG4fEt0V1S0I8TwwCdwnM
+# Authorization: Bearer {{token}}
 
 {
     "id": "article2",

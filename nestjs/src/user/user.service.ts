@@ -3,7 +3,7 @@ import { Role } from '../common/type';
 import { SharedUser } from '../common/type';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   private readonly _users: SharedUser[] = [
     {
       userId: 1,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Role, SharedArticle, SharedUser } from '../../common/type';
+import { Role, SharedArticle, SharedUser } from '../common/type';
 import { AbilityBuilder, ExtractSubjectType, InferSubjects, createMongoAbility } from '@casl/ability';
-import { Action } from '../../shared/enum';
+import { Action } from '../shared/enum';
 
 type Subjects = InferSubjects<typeof SharedUser | typeof SharedArticle> | 'all';
 
