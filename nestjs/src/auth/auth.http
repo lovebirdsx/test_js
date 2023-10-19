@@ -1,7 +1,14 @@
-@port=3001
+@port=3000
 
 ### auth/login ok
 POST http://localhost:{{port}}/auth/login HTTP/1.1
+
+### auth/login fail
+POST http://localhost:{{port}}/auth/login?code=695ub80022764364b56ce1fed626591e&redirect_uri=http://localhost:{{port}} HTTP/1.1
+
+
+### auth/login/local ok
+POST http://localhost:{{port}}/auth/login/local HTTP/1.1
 content-type: application/json
 
 {
@@ -9,13 +16,13 @@ content-type: application/json
   "password": "changeme"
 }
 
-### auth/login fail
-POST http://localhost:{{port}}/auth/login HTTP/1.1
+### auth/login/local fail
+POST http://localhost:{{port}}/auth/login/local HTTP/1.1
 content-type: application/json
 
 {
   "username": "john",
-  "password": "wrongpassword"
+  "password": "xxxxx"
 }
 
 ### GET /profile

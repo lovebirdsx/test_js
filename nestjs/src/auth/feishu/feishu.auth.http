@@ -1,0 +1,7 @@
+@port=3000
+
+### auth/login ok
+GET http://localhost:{{port}}/auth/feishu HTTP/1.1
+
+### cats
+GET http://localhost:{{port}}/cats HTTP/1.1

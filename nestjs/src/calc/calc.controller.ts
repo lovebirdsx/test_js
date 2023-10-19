@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { CalcService } from '../app/app.service';
+import { CalcService } from './calc.service';
 import { Public } from '../auth/auth.decorator';
 
 @Controller('calc')

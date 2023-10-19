@@ -1,0 +1,10 @@
+@port=3000
+
+### set
+GET http://localhost:{{port}}/cookie/set HTTP/1.1
+
+### get
+GET http://localhost:{{port}}/cookie/get HTTP/1.1
+
+### clear
+GET http://localhost:{{port}}/cookie/clear HTTP/1.1

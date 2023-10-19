@@ -2,22 +2,31 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local/local.strategy';
+import { LocalAuthStrategy } from './local/local.auth.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './const';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { JwtAuthStrategy } from './jwt/jwt.auth.strategy';
+import { ConfigService } from '@nestjs/config';
+import { FeishuGuard } from './feishu/feishu.auth.guard';
+import { FeishuAuthModule } from './feishu/feishu.auth.moudule';
+import { FeishuAuthService } from './feishu/feishu.auth.service';
 
 // 参考：https://docs.nestjs.cn/10/security?id=%e8%ae%a4%e8%af%81%ef%bc%88authentication%ef%bc%89
 @Module({
   imports: [
     UserModule,
+    FeishuAuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') },
+        };
+      },
+      inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, LocalAuthStrategy, JwtAuthStrategy, FeishuGuard, FeishuAuthService],
+  exports: [AuthService, FeishuGuard, FeishuAuthService],
 })
 export class AuthModule {}

@@ -5,7 +5,7 @@ import { Cat } from './cat.entity';
 import { Roles } from '../role/role.decorator';
 import { Role } from '../common/type';
 
-@Controller('cats')
+@Controller('cat')
 export class CatController {
   constructor(private readonly catService: CatService) {}
 

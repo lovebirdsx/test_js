@@ -14,20 +14,26 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this._reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
+    const isPublic = this._reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (isPublic) {
       return true;
     }
 
     const result = await super.canActivate(context);
-
-    if (result) {
-      // 确保user是一个完整的对象（譬如必然包含role字段）
-      const request = context.switchToHttp().getRequest();
-      const user = await this._userService.findOne(request.user.username);
-      request.user = user;
+    if (!result) {
+      return false;
     }
 
-    return result as boolean;
+    // 确保user是一个完整的对象（譬如必然包含role字段）
+    const request = context.switchToHttp().getRequest();
+    const user = await this._userService.findOne(request.user.username);
+    if (!user) {
+      return false;
+    }
+
+    return true;
   }
 }
