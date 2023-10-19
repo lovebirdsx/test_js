@@ -8,7 +8,7 @@ import { UserModule } from '../user/user.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { ConfigModule } from '@nestjs/config';
-import { JwtAuthGuard } from '../auth/auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/auth.guard';
 import { ArticleModule } from '../article/article.module';
 import { PoliciesGuard } from '../policy/policy.guard';
 import { PolicyModule } from '../policy/policy.module';
