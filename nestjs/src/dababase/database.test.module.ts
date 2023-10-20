@@ -1,8 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  MemoryDatabaseService,
-  memoryDatabaseProviders,
-} from './database.test.providers';
+import { MemoryDatabaseService, memoryDatabaseProviders } from './database.test.providers';
 
 @Module({
   providers: [MemoryDatabaseService, ...memoryDatabaseProviders],

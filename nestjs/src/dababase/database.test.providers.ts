@@ -31,9 +31,7 @@ export class MemoryDatabaseService implements OnModuleDestroy {
 export const memoryDatabaseProviders = [
   {
     provide: DATABASE_CONNECTION,
-    useFactory: async (
-      service: MemoryDatabaseService,
-    ): Promise<typeof mongoose> => {
+    useFactory: async (service: MemoryDatabaseService): Promise<typeof mongoose> => {
       return await service.connect();
     },
     inject: [MemoryDatabaseService],
