@@ -10,7 +10,7 @@ export class UserService {
       userId: 1,
       username: 'john',
       provider: 'local',
-      privateId: '',
+      providerId: '',
       password: 'changeme',
       role: Role.User,
     },
@@ -18,7 +18,7 @@ export class UserService {
       userId: 2,
       username: 'maria',
       provider: 'local',
-      privateId: '',
+      providerId: '',
       password: 'guess',
       role: Role.User,
     },
@@ -26,7 +26,7 @@ export class UserService {
       userId: 3,
       username: 'chris',
       provider: 'local',
-      privateId: '',
+      providerId: '',
       password: 'secret',
       role: Role.User,
     },
@@ -34,7 +34,7 @@ export class UserService {
       userId: 4,
       username: 'admin',
       provider: 'local',
-      privateId: '',
+      providerId: '',
       password: 'admin',
       role: Role.Admin,
     },
@@ -42,7 +42,7 @@ export class UserService {
       userId: 5,
       username: 'developer',
       provider: 'local',
-      privateId: '',
+      providerId: '',
       password: 'developer',
       role: Role.Developer,
     },
@@ -53,7 +53,7 @@ export class UserService {
   }
 
   async findOrCreate(profile: FeishuProfile) {
-    const user = this._users.find((user) => user.privateId === profile.openId);
+    const user = this._users.find((user) => user.providerId === profile.openId);
     if (user) {
       return user;
     }
@@ -62,7 +62,7 @@ export class UserService {
       userId: this._users.length + 1,
       username: profile.name,
       provider: 'lark',
-      privateId: profile.openId,
+      providerId: profile.openId,
       password: profile.openId,
       role: Role.User,
     };

@@ -13,7 +13,7 @@ export enum Role {
 export class SharedUser {
   userId: number;
   provider: 'lark' | 'local';
-  privateId: string;
+  providerId: string;
   username: string;
   password: string;
   role: Role;
