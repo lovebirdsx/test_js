@@ -1,0 +1,13 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "hello": "echo 'hello'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
