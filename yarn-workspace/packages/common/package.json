@@ -1,13 +1,20 @@
 {
   "name": "common",
   "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
+  "description": "Common package for MonoRepo",
+  "main": "dist/index.js",
   "scripts": {
-    "hello": "echo 'hello'"
+    "test": "echo \"todo\"",
+    "build": "tsc -p tsconfig.build.json"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "yarn",
+    "workspaces",
+    "monorepo"
+  ],
+  "author": "nick@master-class.io",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
 }
