@@ -2,14 +2,16 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
-    "hello": "node ./src/main.js"
+    "build": "tsc -p tsconfig.build.json",
+    "prestart": "yarn build",
+    "start": "node ./dist/frontend/src/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "common": "^1.0.0"
+    "dotenv": "^16.3.1",
+    "typescript": "^5.3.3"
   }
 }

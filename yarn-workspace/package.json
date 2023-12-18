@@ -6,7 +6,8 @@
     "build": "lerna run build"
   },
   "workspaces": [
-    "packages/*"
+    "packages/frontend",
+    "packages/backend"
   ],
   "dependencies": {
     "lerna": "^8.0.1"
