@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "backend:start": "yarn workspace backend run start",
+    "build": "lerna run build"
+  },
   "workspaces": [
     "packages/*"
   ],
