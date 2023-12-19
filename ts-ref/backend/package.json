@@ -8,7 +8,7 @@
     "watch": "tsc -b -w",
     "prestart": "yarn build",
     "start": "node dist/src/main.js",
-    "clean": "rimraf dist && rimraf node_modules"
+    "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
     "common": "*"
