@@ -5,7 +5,7 @@
     "build": "lerna run build",
     "watch": "lerna run watch --parallel",
     "start": "lerna run start",
-    "clean": "lerna run clean"
+    "clean": "lerna run clean && rimraf node_modules"
   },
   "workspaces": ["common", "frontend", "backend"],
   "devDependencies": {

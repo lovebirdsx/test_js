@@ -6,11 +6,14 @@
 
 注意：
 
-* [tsconfig.json](./tsconfig.json)中references中只需要加入common即可
-* frontend和backend不需要配置，也可以实现正常的引用，重命名等操作
+* [tsconfig.json](./tsconfig.json)中references中只需要加入需要解析的模块即可
 
 ``` json
-"references": [
-    { "path": "./common" }    
-]
+{
+ "references": [
+    { "path": "./common" },
+    { "path": "./backend" },
+    { "path": "./frontend" }
+  ]
+}
 ```
