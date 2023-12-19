@@ -1,0 +1,13 @@
+{
+  "name": "common",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

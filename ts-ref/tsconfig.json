@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "strict": true,
+    "composite": true,
+    "declarationMap": true,
+    "declaration": true
+  },
+  "compileOnSave": true
+}

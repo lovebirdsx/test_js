@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "watch": "yarn workspaces run watch"
+  },
+  "workspaces": ["common", "frontend", "backend"]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w"
+  },
+  "dependencies": {
+    "common": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
