@@ -1,11 +1,14 @@
 {
   "name": "common",
   "version": "0.1.0",
+  "main": "dist/src/index.js",
   "private": true,
   "license": "MIT",
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc -b -w"
+    "start": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

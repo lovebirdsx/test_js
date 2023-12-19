@@ -2,8 +2,13 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "yarn workspaces run build",
-    "watch": "yarn workspaces run watch"
+    "build": "lerna run build",
+    "watch": "lerna run watch --parallel",
+    "start": "lerna run start",
+    "clean": "lerna run clean"
   },
-  "workspaces": ["common", "frontend", "backend"]
+  "workspaces": ["common", "frontend", "backend"],
+  "devDependencies": {
+    "lerna": "^8.0.1"
+  }
 }

@@ -5,7 +5,10 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc -b -w"
+    "watch": "tsc -b -w",
+    "prestart": "yarn build",
+    "start": "node dist/src/main.js",
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "common": "*"
