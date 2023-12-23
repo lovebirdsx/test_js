@@ -3,12 +3,26 @@
   "license": "MIT",
   "scripts": {
     "build": "lerna run build",
+    "postinstall": "yarn build",
     "watch": "lerna run watch --parallel",
     "start": "lerna run start",
-    "clean": "lerna run clean && rm -rf node_modules"
+    "clean": "lerna run clean && rm -rf node_modules",
+    "lint": "eslint \"{frontend,backend,common}/**/*.ts\" --fix"
   },
-  "workspaces": ["common", "frontend", "backend"],
+  "workspaces": [
+    "common",
+    "frontend",
+    "backend"
+  ],
   "devDependencies": {
-    "lerna": "^8.0.1"
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.1",
+    "lerna": "^8.0.1",
+    "prettier": "^3.1.1"
   }
 }
