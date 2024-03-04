@@ -165,6 +165,7 @@ describe('Dependency Injection', () => {
 
         const instantiationService = new InstantiationService(services);
         const saver = instantiationService.createInstance(Saver, 'test');
+
         // 虽然Saver依赖FileSystem，但因为没有调用FileSystem的方法，所以FileSystem不会被创建
         // 这个是因为FileSystem配置成可以延迟创建
         expect(FileSystem.constructorCallCount).toEqual(0);
