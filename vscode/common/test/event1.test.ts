@@ -1,14 +1,12 @@
-import { expect } from 'chai';
-
-interface Event<T> {
+interface Event1<T> {
     (listener: (e: T) => void): void;
 }
 
 class Emitter<T> {
     private listeners: ((e: T) => void)[] = [];
-    private _event?: Event<T>;
+    private _event?: Event1<T>;
 
-    get event(): Event<T> {
+    get event(): Event1<T> {
         this._event ??= (listener: (e: T) => void) => {
             this.listeners.push(listener);
         };
@@ -32,7 +30,7 @@ describe('Event1', () => {
         let callCount = 0;
         emitter.event(() => callCount++);
         emitter.fire('test');
-        expect(callCount).to.equal(1);
+        expect(callCount).toEqual(1);
     });
 
     it('should fire event with data', () => {
@@ -40,6 +38,6 @@ describe('Event1', () => {
         let data = '';
         emitter.event((e) => data = e);
         emitter.fire('test');
-        expect(data).to.equal('test');
+        expect(data).toEqual('test');
     });
 });

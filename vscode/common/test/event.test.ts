@@ -1,22 +1,21 @@
-import { expect } from 'chai';
 import { Emitter } from '../event';
 
 describe('Event', () => {
-    it('should fire event', () => {
+    it('should fire event - empty', () => {
         const emitter = new Emitter<string>();
         let callCount = 0;
         emitter.event(() => callCount++);
         emitter.fire('test');
-        expect(callCount).to.equal(1);
+        expect(callCount).toEqual(1);
         emitter.dispose();
     });
 
-    it('should fire event with data', () => {
+    it('should fire event - with data', () => {
         const emitter = new Emitter<string>();
         let data = '';
         emitter.event((e) => data = e);
         emitter.fire('test');
-        expect(data).to.equal('test');
+        expect(data).toEqual('test');
         emitter.dispose();
     });
 });

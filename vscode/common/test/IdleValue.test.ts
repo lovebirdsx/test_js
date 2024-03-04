@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { IdleValue, wait } from '../async';
 
 describe('IdleValue', () => {
@@ -9,18 +8,18 @@ describe('IdleValue', () => {
             return 42;
         });
 
-        expect(didRun).to.equal(false);
-        expect(idleValue.isInitialized).to.equal(false);
-        expect(idleValue.value).to.equal(42);
-        expect(didRun).to.equal(true);
+        expect(didRun).toEqual(false);
+        expect(idleValue.isInitialized).toEqual(false);
+        expect(idleValue.value).toEqual(42);
+        expect(didRun).toEqual(true);
     });
 
     it('should dispose the handle when the value is initialized', () => {
         const idleValue = new IdleValue(() => 42);
 
-        expect(idleValue.isInitialized).to.equal(false);
-        expect(idleValue.value).to.equal(42);
-        expect(idleValue.isInitialized).to.equal(true);
+        expect(idleValue.isInitialized).toEqual(false);
+        expect(idleValue.value).toEqual(42);
+        expect(idleValue.isInitialized).toEqual(true);
     });
 
     it('should throw an error if the executor function throws an error', () => {
@@ -29,7 +28,7 @@ describe('IdleValue', () => {
             throw error;
         });
 
-        expect(() => idleValue.value).to.throw(error);
+        expect(() => idleValue.value).toThrow(error);
     });
 
     it('should return the same value on subsequent calls', () => {
@@ -39,10 +38,10 @@ describe('IdleValue', () => {
             return count;
         });
 
-        expect(idleValue.value).to.equal(1);
-        expect(idleValue.value).to.equal(1);
-        expect(idleValue.value).to.equal(1);
-        expect(idleValue.isInitialized).to.equal(true);
+        expect(idleValue.value).toEqual(1);
+        expect(idleValue.value).toEqual(1);
+        expect(idleValue.value).toEqual(1);
+        expect(idleValue.isInitialized).toEqual(true);
     });
 
     it('should execute while idle', async () => {
@@ -53,10 +52,10 @@ describe('IdleValue', () => {
             return 42;
         });
 
-        expect(didRun).to.equal(false);
-        expect(idleValue.isInitialized).to.equal(false);
+        expect(didRun).toEqual(false);
+        expect(idleValue.isInitialized).toEqual(false);
         await wait(0);
-        expect(didRun).to.equal(true);
-        expect(idleValue.isInitialized).to.equal(true);
+        expect(didRun).toEqual(true);
+        expect(idleValue.isInitialized).toEqual(true);
     });
 });

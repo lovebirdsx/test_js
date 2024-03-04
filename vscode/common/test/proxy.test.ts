@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-
 describe('Proxy', () => {
     it('observe prop modification', () => {
         let setCallCount = 0;
@@ -14,7 +12,7 @@ describe('Proxy', () => {
         };
         const proxy = new Proxy(data, handler);
         proxy.foo = 'bar';
-        expect(proxy.foo).to.equal('bar');
-        expect(setCallCount).to.equal(1);
+        expect(proxy.foo).toEqual('bar');
+        expect(setCallCount).toEqual(1);
     });
 });
