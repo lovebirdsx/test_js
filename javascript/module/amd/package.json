@@ -1,0 +1,9 @@
+{
+  "name": "test-amd",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "dependencies": {
+    "requirejs": "^2.3.6"
+  }
+}
