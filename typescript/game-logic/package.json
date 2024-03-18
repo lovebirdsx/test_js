@@ -1,0 +1,14 @@
+{
+  "name": "game-logic",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "lovebirdsx@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "watch": "tsc-watch --compiler ../../node_modules/typescript/bin/tsc --onSuccess \"node dist/game/main.js\""
+  },
+  "devDependencies": {
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.4.2"
+  }
+}
