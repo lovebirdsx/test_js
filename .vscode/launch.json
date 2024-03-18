@@ -22,6 +22,24 @@
             "args": [
                 "${workspaceFolder}/electron_ts"
             ],
-        }       
+        },
+        {
+            "name": "Test Promise",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "test-promise"
+            ]
+        },
+        {
+            "name": "Test Await",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "test-await"
+            ]
+        }
     ]
 }

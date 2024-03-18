@@ -1,0 +1,16 @@
+{
+  "name": "test_js_javascript",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test-co": "node generator/async/co.js",
+    "test-base": "node generator/async/base.js"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "node-fetch": "^3.3.2",
+    "thunkify": "^2.1.2"
+  }
+}

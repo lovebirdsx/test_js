@@ -11,7 +11,7 @@
         "noUncheckedIndexedAccess": true,
         "skipLibCheck": true,
         "jsx": "react",
-        "lib": ["ESNext"], // 可以解决错误: typescript declarations of 'x' must have identical modifiers.
+        // "lib": ["ESNext"], // 可以解决错误: typescript declarations of 'x' must have identical modifiers.
         "sourceMap": true,
         "noImplicitAny": true,
         "strictBindCallApply": true,
