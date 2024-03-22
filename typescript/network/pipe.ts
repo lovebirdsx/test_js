@@ -23,7 +23,7 @@ const isServer = args[isServerIndex + 1] === 'true';
 if (isServer) {
   const server = createServer();
   server.listen(pipeName);
-  
+
   server.on('connection', (socket) => {
     const rl = readline.createInterface({
       input: socket,
