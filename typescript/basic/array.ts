@@ -61,7 +61,7 @@ function testArray() {
                 all.splice(all.indexOf(id2), 1);
             });
 
-            return all[0] * range;
+            return all[0]! * range;
         }
 
         function testFor(array: Foo[]) {
