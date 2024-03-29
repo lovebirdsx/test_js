@@ -1,0 +1,19 @@
+{
+  "name": "test-gulp-ts",
+  "version": "1.0.0",
+  "description": "gulp test",
+  "main": "main.js",
+  "author": "lovebirdsx@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "list-task": "gulp --tasks",
+    "default": "gulp"
+  },
+  "devDependencies": {
+    "@types/gulp": "^4.0.17",
+    "del": "^7.1.0",
+    "gulp": "^4.0.2",
+    "gulp-util": "^3.0.8",
+    "ts-node": "^10.9.2"
+  }
+}

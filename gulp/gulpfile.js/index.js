@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
+const gutil = require('gulp-util');
 require('./ts');
 
 gulp.task('compress', function () {
@@ -15,6 +16,7 @@ function clean(cb) {
 }
 
 function build(cb) {
+  gutil.log('build');
   cb();
 }
 
