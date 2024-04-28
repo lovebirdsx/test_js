@@ -1,9 +1,3 @@
-/* eslint-disable no-redeclare */
-/* eslint-disable dot-notation */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 function TestEnum() {
     function testBasic() {
         enum Days {
@@ -56,8 +50,8 @@ function TestEnum() {
             B = 'NameB',
         }
 
-        console.log(Foo['A']);
-        console.log(Foo['B']);
+        console.log(Foo.A);
+        console.log(Foo.B);
     }
 
     function testEnumValue() {
