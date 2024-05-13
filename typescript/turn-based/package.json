@@ -1,0 +1,10 @@
+{
+  "name": "turn-based",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "lovebird",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/main.ts"
+  }
+}
