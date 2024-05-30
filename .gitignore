@@ -4,3 +4,4 @@ typescript/**/*.js
 typescript_out
 tools/protoc.exe
 tmp
+*.log
