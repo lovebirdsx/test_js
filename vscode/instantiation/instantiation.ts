@@ -1,3 +1,4 @@
+import { SyncDescriptor0 } from './descriptors';
 import { ServiceCollection } from './serviceCollection';
 
 export namespace _util {
@@ -25,6 +26,7 @@ export type GetLeadingNonServiceArgs<TArgs extends any[]> =
 export interface IInstantiationService {
     readonly _serviceBrand: undefined;
 
+    createInstance<T>(descriptor: SyncDescriptor0<T>): T;
     createInstance<Ctor extends new (...args: any[]) => any, R extends InstanceType<Ctor>>(ctor: Ctor, ...args: GetLeadingNonServiceArgs<ConstructorParameters<Ctor>>): R;
 
     invokeFunction<R, TS extends any[] = []>(fn: (accessor: ServicesAccessor, ...args: TS) => R, ...args: TS): R;
@@ -59,6 +61,8 @@ export function createDecorator<T>(serviceId: string): ServiceIdentifier<T> {
         }
         storeServiceDependency(id, target, index);
     };
+
+    id.toString = () => serviceId;
 
     _util.serviceIds.set(serviceId, id);
     return id;
