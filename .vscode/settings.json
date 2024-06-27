@@ -20,5 +20,4 @@
         "titleBar.inactiveBackground": "#330e2599",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "editor.codeLens": true
 }
