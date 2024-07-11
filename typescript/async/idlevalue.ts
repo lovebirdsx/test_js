@@ -1,6 +1,6 @@
 import { getIdleCallbackService } from "./idlecallbak";
 import { IDisposable } from "./lifeCycle";
-import { ResolvablePromise } from "./promise";
+import { IPromiseWithStatus, ResolvablePromise } from "./promise";
 
 export type TAsyncExecutor<T> = (step: () => Promise<void>) => Promise<T>;
 
@@ -77,6 +77,87 @@ export class AsyncIdleValue<T> implements IDisposable {
   public Dispose(): void {
     if (this.StepHandle !== undefined) {
       getIdleCallbackService().Cancel(this.StepHandle);
+    }
+  }
+}
+
+export class GeneratorIdleValue<T> implements IDisposable {
+  private MyValue?: T;
+  private Error?: Error;
+  private Handle?: number;
+  private MyIsInitialized = false;
+  private MyStepCount = 0;
+  private readonly ReadyRp = new ResolvablePromise<void>();
+  private readonly Generator = this.GeneratorFun();
+
+  public constructor(private readonly GeneratorFun: () => Generator<undefined, T>) {
+    this.Handle = getIdleCallbackService().Call(
+      () => {
+        this.Next(true);
+      }
+    )
+  }
+
+  private Next(isContinue: boolean): void {
+    try {
+      const result = this.Generator.next();
+      this.MyStepCount++;
+      if (result.done) {
+        this.MyValue = result.value;
+        this.MyIsInitialized = true;
+        this.ReadyRp.Resolve();
+      }
+    } catch (err) {
+      this.MyIsInitialized = true;
+      this.Error = err as Error;
+      this.ReadyRp.Reject(err as Error);
+    }
+
+    if (this.MyIsInitialized) {
+      getIdleCallbackService().Cancel(this.Handle!);
+      this.Handle = undefined;
+    } else {
+      if (isContinue) {
+        this.Handle = getIdleCallbackService().Call(() => {
+          this.Next(isContinue);
+        });
+      }
+    }
+  }
+
+  public get StepCount(): number {
+    return this.MyStepCount;
+  }
+
+  public get IsInitialized(): boolean {
+    return this.MyIsInitialized;
+  }
+
+  public get Value(): T {
+    if (this.Handle !== undefined) {
+      getIdleCallbackService().Cancel(this.Handle);
+      this.Handle = undefined;
+    }
+
+    while (!this.MyIsInitialized) {
+      this.Next(false);
+    }
+
+    if (this.Error !== undefined) {
+      throw this.Error;
+    }
+
+    return this.MyValue!;
+  }
+
+  public get Ready(): IPromiseWithStatus<void> {
+    return this.ReadyRp;
+  }
+
+  public Dispose(): void {
+    if (this.Handle !== undefined) {
+      getIdleCallbackService().Cancel(this.Handle);
+      this.Handle = undefined;
     }
   }
 }
