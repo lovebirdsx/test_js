@@ -1,0 +1,25 @@
+{
+  "uid": "fa33b6b780e84d30a87dd43da9a9caa6",
+  "objType": "entity",
+  "name": "entity-100001",
+  "components": {
+    "baseInfoComponent": {
+      "aoiLevel": 1
+    },
+    "entityStateComponent": {
+      "state": "idle",
+      "onStateChange": [
+        {
+          "state": "idle",
+          "actions": [
+            {
+              "type": "changeEntityState",
+              "entityId": "fa33b6b780e84d30a87dd43da9a9caa6",
+              "state": "active"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

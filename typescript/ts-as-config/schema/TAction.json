@@ -1,0 +1,61 @@
+{
+  "anyOf": [
+    {
+      "$ref": "#/definitions/IChangeEntityStateAction"
+    },
+    {
+      "$ref": "#/definitions/ISetEntityVisibilityAction"
+    }
+  ],
+  "definitions": {
+    "IChangeEntityStateAction": {
+      "type": "object",
+      "properties": {
+        "entityId": {
+          "description": "实体id",
+          "type": "string"
+        },
+        "state": {
+          "description": "状态",
+          "type": "string"
+        },
+        "type": {
+          "description": "类型",
+          "type": "string",
+          "const": "changeEntityState"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "entityId",
+        "state",
+        "type"
+      ]
+    },
+    "ISetEntityVisibilityAction": {
+      "type": "object",
+      "properties": {
+        "entityId": {
+          "description": "实体id",
+          "type": "string"
+        },
+        "visible": {
+          "description": "是否可见",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "类型",
+          "type": "string",
+          "const": "setEntityVisibility"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "entityId",
+        "type",
+        "visible"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

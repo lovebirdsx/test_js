@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "properties": {
+    "objType": {
+      "description": "类型",
+      "type": "string",
+      "const": "quest"
+    },
+    "uid": {
+      "description": "唯一id",
+      "type": "string"
+    },
+    "type": {
+      "$ref": "#/definitions/EQuestType",
+      "description": "类型"
+    },
+    "name": {
+      "description": "名称",
+      "type": "string"
+    },
+    "level": {
+      "description": "开启等级",
+      "type": "number"
+    },
+    "tree": {
+      "description": "行为树逻辑",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "level",
+    "name",
+    "objType",
+    "tree",
+    "type",
+    "uid"
+  ],
+  "definitions": {
+    "EQuestType": {
+      "type": "string",
+      "enum": [
+        "main",
+        "branch"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

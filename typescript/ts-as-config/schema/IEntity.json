@@ -1,0 +1,154 @@
+{
+  "type": "object",
+  "properties": {
+    "objType": {
+      "description": "类型",
+      "type": "string",
+      "const": "entity"
+    },
+    "uid": {
+      "description": "唯一id",
+      "type": "string"
+    },
+    "name": {
+      "description": "名称",
+      "type": "string"
+    },
+    "components": {
+      "description": "组件列表",
+      "type": "object",
+      "properties": {
+        "baseInfoComponent": {
+          "$ref": "#/definitions/IBaseInfoComponent",
+          "description": "基础信息组件"
+        },
+        "entityStateComponent": {
+          "description": "实体状态组件",
+          "$ref": "#/definitions/IEntityStateComponent"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "baseInfoComponent"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "components",
+    "name",
+    "objType",
+    "uid"
+  ],
+  "definitions": {
+    "IBaseInfoComponent": {
+      "type": "object",
+      "properties": {
+        "aoiLevel": {
+          "description": "aoi等级",
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "aoiLevel"
+      ]
+    },
+    "IEntityStateComponent": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "状态",
+          "type": "string"
+        },
+        "onStateChange": {
+          "description": "状态变化时触发的行为列表",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string"
+              },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/TAction"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "actions",
+              "state"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "onStateChange",
+        "state"
+      ]
+    },
+    "TAction": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/IChangeEntityStateAction"
+        },
+        {
+          "$ref": "#/definitions/ISetEntityVisibilityAction"
+        }
+      ]
+    },
+    "IChangeEntityStateAction": {
+      "type": "object",
+      "properties": {
+        "entityId": {
+          "description": "实体id",
+          "type": "string"
+        },
+        "state": {
+          "description": "状态",
+          "type": "string"
+        },
+        "type": {
+          "description": "类型",
+          "type": "string",
+          "const": "changeEntityState"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "entityId",
+        "state",
+        "type"
+      ]
+    },
+    "ISetEntityVisibilityAction": {
+      "type": "object",
+      "properties": {
+        "entityId": {
+          "description": "实体id",
+          "type": "string"
+        },
+        "visible": {
+          "description": "是否可见",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "类型",
+          "type": "string",
+          "const": "setEntityVisibility"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "entityId",
+        "type",
+        "visible"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

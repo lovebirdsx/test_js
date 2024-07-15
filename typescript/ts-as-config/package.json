@@ -1,0 +1,15 @@
+{
+  "name": "ts-as-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gen": "ts-node ./src/tool/gen-schema.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "typescript-json-schema": "^0.64.0"
+  }
+}

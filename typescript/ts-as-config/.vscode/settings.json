@@ -1,0 +1,16 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "config/level/*.json"
+      ],
+      "url": "./schema/IEntity.json"
+    },
+    {
+      "fileMatch": [
+        "config/quest/*.json"
+      ],
+      "url": "./schema/IQuest.json"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "uid": "07638a69dfa24e51ad9768b63e2d7d70",
+  "objType": "entity",
+  "name": "entity-100002",
+  "components": {
+    "baseInfoComponent": {
+      "aoiLevel": 2
+    }
+  }
+}
