@@ -1,10 +1,12 @@
 # 说明
 
-* 用于测试webpack的工程
-* 可以将相关的ts文件打包成一个js文件
+* 测试webpack打包和热更新功能
+* [参考](https://github.com/dxps/nodejs-backend-webpack-hmr)
+* 执行`yarn start:dev`后，修改`src/lib.ts`中的版本号，可以在控制台看到热更新效果
 
 ## 指令
 
 * `yarn`：安装
-* `yarn watch`：监控文件变化，生成打包文件，如果有文件变化，会自动重新打包
-* `nodemon dist/main.js`：运行打包之后的js，文件有变化，会自动重启
+* `yarn build`：打包
+* `yarn start`：启动
+* `yarn start:dev`：监控文件变化，启动，并支持热更新

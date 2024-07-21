@@ -1,7 +1,10 @@
+const webpack = require('webpack');
+
 module.exports = {
-    entry: {
-        main: './src/main.ts',
-    },
+    entry: [
+        'webpack/hot/poll?1000',
+        './src/main.ts',
+    ],
     output: {
         filename: '[name].js',
     },
@@ -17,6 +20,9 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.ts']
+        extensions: ['.ts', '.js'],
     },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ],
 }
