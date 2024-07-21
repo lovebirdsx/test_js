@@ -1,6 +1,6 @@
 module.exports = {
     entry: {
-        app: './src/main.ts',
+        main: './src/main.ts',
     },
     output: {
         filename: '[name].js',
