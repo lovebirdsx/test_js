@@ -117,6 +117,19 @@ export function dispose<T extends IDisposable>(arg: T | Iterable<T> | undefined)
     return undefined;
 }
 
+function setParentOfDisposable(child: IDisposable, parent: IDisposable | null): void {
+	disposableTracker?.setParent(child, parent);
+}
+
+function setParentOfDisposables(children: IDisposable[], parent: IDisposable | null): void {
+    if (!disposableTracker) {
+        return;
+    }
+    for (const child of children) {
+        disposableTracker.setParent(child, parent);
+    }
+}
+
 export class DisposableStore implements IDisposable {
     static DISABLE_DISPOSED_WARNING = false;
 
@@ -128,9 +141,14 @@ export class DisposableStore implements IDisposable {
             return;
         }
 
+        markAsDisposed(this);
         this._isDisposed = true;
         this.clear();
     }
+
+	public get isDisposed(): boolean {
+		return this._isDisposed;
+	}
 
     clear(): void {
         if (this._toDispose.size === 0) {
@@ -153,6 +171,7 @@ export class DisposableStore implements IDisposable {
             throw new Error('Cannot register a disposable on itself!');
         }
 
+        setParentOfDisposable(t, this);
         if (this._isDisposed) {
             if (!DisposableStore.DISABLE_DISPOSED_WARNING) {
                 console.warn(new Error('Trying to add a disposable to a DisposableStore that has already been disposed of. The added object will be leaked!').stack);
@@ -164,16 +183,6 @@ export class DisposableStore implements IDisposable {
         return t;
     }
 }
-
-function setParentOfDisposables(children: IDisposable[], parent: IDisposable | null): void {
-    if (!disposableTracker) {
-        return;
-    }
-    for (const child of children) {
-        disposableTracker.setParent(child, parent);
-    }
-}
-
 
 /**
  * Combine multiple disposable values into a single {@link IDisposable}.
@@ -199,6 +208,8 @@ export abstract class Disposable implements IDisposable {
     }
 
     dispose(): void {
+        markAsDisposed(this);
+
         this._store.dispose();
     }
 

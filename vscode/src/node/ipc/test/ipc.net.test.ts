@@ -1,8 +1,3 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
 import * as assert from 'assert';
 import { EventEmitter } from 'events';
 import { AddressInfo, connect, createServer, Server, Socket } from 'net';
@@ -143,7 +138,6 @@ suite('IPC, Socket Protocol', () => {
 	});
 
 	test('read/write', async () => {
-
 		const a = new Protocol(new NodeSocket(ether.a));
 		const b = new Protocol(new NodeSocket(ether.b));
 		const bMessages = new MessageStream(b);
@@ -163,9 +157,7 @@ suite('IPC, Socket Protocol', () => {
 		b.dispose();
 	});
 
-
 	test('read/write, object data', async () => {
-
 		const a = new Protocol(new NodeSocket(ether.a));
 		const b = new Protocol(new NodeSocket(ether.b));
 		const bMessages = new MessageStream(b);
@@ -189,7 +181,6 @@ suite('IPC, Socket Protocol', () => {
 });
 
 suite('PersistentProtocol reconnection', () => {
-
 	ensureNoDisposablesAreLeakedInTestSuite();
 
 	test('acks get piggybacked with messages', async () => {
