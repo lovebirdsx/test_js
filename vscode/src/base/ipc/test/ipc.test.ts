@@ -195,9 +195,9 @@ class TestChannelClient implements ITestService {
 	}
 }
 
-describe('Base IPC', function () {
+suite('Base IPC', function () {
 
-	it('createProtocolPair', async function () {
+	test('createProtocolPair', async function () {
 		const [clientProtocol, serverProtocol] = createProtocolPair();
 
 		const b1 = VSBuffer.alloc(0);
@@ -213,13 +213,13 @@ describe('Base IPC', function () {
 		assert.strictEqual(b3, b4);
 	});
 
-	describe('one to one', function () {
+	suite('one to one', function () {
 		let server: IPCServer;
 		let client: IPCClient;
 		let service: TestService;
 		let ipcService: ITestService;
 
-		beforeEach(function () {
+		setup(function () {
 			service = new TestService();
 			const testServer = new TestIPCServer();
 			server = testServer;
@@ -230,17 +230,17 @@ describe('Base IPC', function () {
 			ipcService = new TestChannelClient(client.getChannel(TestChannelId));
 		});
 
-		afterEach(function () {
+		teardown(function () {
 			client.dispose();
 			server.dispose();
 		});
 
-		it('call success', async function () {
+		test('call success', async function () {
 			const r = await ipcService.marco();
 			return assert.strictEqual(r, 'polo');
 		});
 
-		it('call error', async function () {
+		test('call error', async function () {
 			try {
 				await ipcService.error('nice error');
 				return assert.fail('should not reach here');
@@ -249,7 +249,7 @@ describe('Base IPC', function () {
 			}
 		});
 
-		it('cancel call with cancelled cancellation token', async function () {
+		test('cancel call with cancelled cancellation token', async function () {
 			try {
 				await ipcService.neverCompleteCT(CancellationToken.Cancelled);
 				return assert.fail('should not reach here');
@@ -258,7 +258,7 @@ describe('Base IPC', function () {
 			}
 		});
 
-		it('cancel call with cancellation token (sync)', function () {
+		test('cancel call with cancellation token (sync)', function () {
 			const cts = new CancellationTokenSource();
 			const promise = ipcService.neverCompleteCT(cts.token).then(
 				_ => assert.fail('should not reach here'),
@@ -270,7 +270,7 @@ describe('Base IPC', function () {
 			return promise;
 		});
 
-		it('cancel call with cancellation token (async)', function () {
+		test('cancel call with cancellation token (async)', function () {
 			const cts = new CancellationTokenSource();
 			const promise = ipcService.neverCompleteCT(cts.token).then(
 				_ => assert.fail('should not reach here'),
@@ -282,7 +282,7 @@ describe('Base IPC', function () {
 			return promise;
 		});
 
-		it('listen to events', async function () {
+		test('listen to events', async function () {
 			const messages: string[] = [];
 
 			ipcService.onPong(msg => messages.push(msg));
@@ -299,12 +299,12 @@ describe('Base IPC', function () {
 			assert.deepStrictEqual(messages, ['hello', 'world']);
 		});
 
-		it('buffers in arrays', async function () {
+		test('buffers in arrays', async function () {
 			const r = await ipcService.buffersLength([VSBuffer.alloc(2), VSBuffer.alloc(3)]);
 			return assert.strictEqual(r, 5);
 		});
 
-		it('round trips numbers', () => {
+		test('round trips numbers', () => {
 			const input = [
 				0,
 				1,
@@ -321,13 +321,13 @@ describe('Base IPC', function () {
 		});
 	});
 
-	describe('one to one (proxy)', function () {
+	suite('one to one (proxy)', function () {
 		let server: IPCServer;
 		let client: IPCClient;
 		let service: TestService;
 		let ipcService: ITestService;
 
-		beforeEach(function () {
+		setup(function () {
 			service = new TestService();
 			const testServer = new TestIPCServer();
 			server = testServer;
@@ -338,17 +338,17 @@ describe('Base IPC', function () {
 			ipcService = ProxyChannel.toService(client.getChannel(TestChannelId));
 		});
 
-		afterEach(function () {
+		teardown(function () {
 			client.dispose();
 			server.dispose();
 		});
 
-		it('call success', async function () {
+		test('call success', async function () {
 			const r = await ipcService.marco();
 			return assert.strictEqual(r, 'polo');
 		});
 
-		it('call error', async function () {
+		test('call error', async function () {
 			try {
 				await ipcService.error('nice error');
 				return assert.fail('should not reach here');
@@ -357,7 +357,7 @@ describe('Base IPC', function () {
 			}
 		});
 
-		it('listen to events', async function () {
+		test('listen to events', async function () {
 			const messages: string[] = [];
 
 			ipcService.onPong(msg => messages.push(msg));
@@ -374,19 +374,19 @@ describe('Base IPC', function () {
 			assert.deepStrictEqual(messages, ['hello', 'world']);
 		});
 
-		it('buffers in arrays', async function () {
+		test('buffers in arrays', async function () {
 			const r = await ipcService.buffersLength([VSBuffer.alloc(2), VSBuffer.alloc(3)]);
 			return assert.strictEqual(r, 5);
 		});
 	});
 
-	describe('one to one (proxy, extra context)', function () {
+	suite('one to one (proxy, extra context)', function () {
 		let server: IPCServer;
 		let client: IPCClient;
 		let service: TestService;
 		let ipcService: ITestService;
 
-		beforeEach(function () {
+		setup(function () {
 			service = new TestService();
 			const testServer = new TestIPCServer();
 			server = testServer;
@@ -397,19 +397,19 @@ describe('Base IPC', function () {
 			ipcService = ProxyChannel.toService(client.getChannel(TestChannelId), { context: 'Super Context' });
 		});
 
-		afterEach(function () {
+		teardown(function () {
 			client.dispose();
 			server.dispose();
 		});
 
-		it('call extra context', async function () {
+		test('call extra context', async function () {
 			const r = await ipcService.context();
 			return assert.strictEqual(r, 'Super Context');
 		});
 	});
 
-	describe('one to many', function () {
-		it('all clients get pinged', async function () {
+	suite('one to many', function () {
+		test('all clients get pinged', async function () {
 			const service = new TestService();
 			const channel = new TestChannel(service);
 			const server = new TestIPCServer();
@@ -437,7 +437,7 @@ describe('Base IPC', function () {
 			server.dispose();
 		});
 
-		it('server gets pings from all clients (broadcast channel)', async function () {
+		test('server gets pings from all clients (broadcast channel)', async function () {
 			const server = new TestIPCServer();
 
 			const client1 = server.createConnection('client1');

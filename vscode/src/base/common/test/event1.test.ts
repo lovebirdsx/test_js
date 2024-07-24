@@ -1,3 +1,5 @@
+import * as assert from 'assert';
+
 interface Event1<T> {
     (listener: (e: T) => void): void;
 }
@@ -24,20 +26,20 @@ class Emitter<T> {
  * 上面的事件处理方案，缺乏移除监听者的功能
  * 会导致内存泄漏
  */
-describe('Event1', () => {
-    it('should fire event', () => {
+suite('Event1', () => {
+    test('should fire event', () => {
         const emitter = new Emitter<string>();
         let callCount = 0;
         emitter.event(() => callCount++);
         emitter.fire('test');
-        expect(callCount).toEqual(1);
+        assert.strictEqual(callCount, 1);
     });
 
-    it('should fire event with data', () => {
+    test('should fire event with data', () => {
         const emitter = new Emitter<string>();
         let data = '';
         emitter.event((e) => data = e);
         emitter.fire('test');
-        expect(data).toEqual('test');
+        assert.strictEqual(data, 'test');
     });
 });

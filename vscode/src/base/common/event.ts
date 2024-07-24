@@ -182,6 +182,39 @@ export namespace Event {
 
 		return emitter.event;
 	}
+
+	/**
+	 * Maps an event of one type into an event of another type using a mapping function, similar to how
+	 * `Array.prototype.map` works.
+	 *
+	 * *NOTE* that this function returns an `Event` and it MUST be called with a `DisposableStore` whenever the returned
+	 * event is accessible to "third parties", e.g the event is a public property. Otherwise a leaked listener on the
+	 * returned event causes this utility to leak a listener on the original event.
+	 *
+	 * @param event The event source for the new event.
+	 * @param map The mapping function.
+	 * @param disposable A disposable store to add the new EventEmitter to.
+	 */
+	export function map<I, O>(event: Event<I>, map: (i: I) => O, disposable?: DisposableStore): Event<O> {
+		return snapshot((listener, thisArgs = null, disposables?) => event(i => listener.call(thisArgs, map(i)), null, disposables), disposable);
+	}
+
+	export interface NodeEventEmitter {
+		on(event: string | symbol, listener: Function): unknown;
+		removeListener(event: string | symbol, listener: Function): unknown;
+	}
+
+	/**
+	 * Creates an {@link Event} from a node event emitter.
+	 */
+	export function fromNodeEventEmitter<T>(emitter: NodeEventEmitter, eventName: string, map: (...args: any[]) => T = id => id): Event<T> {
+		const fn = (...args: any[]) => result.fire(map(...args));
+		const onFirstListenerAdd = () => emitter.on(eventName, fn);
+		const onLastListenerRemove = () => emitter.removeListener(eventName, fn);
+		const result = new Emitter<T>({ onWillAddFirstListener: onFirstListenerAdd, onDidRemoveLastListener: onLastListenerRemove });
+
+		return result.event;
+	}
 }
 
 export class EventProfiling {

@@ -1,5 +1,7 @@
-describe('Proxy', () => {
-    it('observe prop modification', () => {
+import * as assert from 'assert';
+
+suite('Proxy', () => {
+    test('observe prop modification', () => {
         let setCallCount = 0;
 
         const data = {};
@@ -12,7 +14,7 @@ describe('Proxy', () => {
         };
         const proxy = new Proxy(data, handler);
         proxy.foo = 'bar';
-        expect(proxy.foo).toEqual('bar');
-        expect(setCallCount).toEqual(1);
+        assert.strictEqual(proxy.foo, 'bar');
+        assert.strictEqual(setCallCount, 1);
     });
 });

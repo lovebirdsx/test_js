@@ -1,3 +1,5 @@
+import * as assert from 'assert';
+
 interface Event1<T> {
     (listener: (e: T) => any): void;
 }
@@ -30,16 +32,16 @@ class Emitter1<T> {
 /**
  * 手动移除监听者的方案，但是编写有心智负担
  */
-describe('Event2', () => {
-    it('should fire event', () => {
+suite('Event2', () => {
+    test('should fire event', () => {
         const emitter = new Emitter1<string>();
         let callCount = 0;
         const listener = () => callCount++;
         emitter.event(listener);
         emitter.fire('test');
-        expect(callCount).toEqual(1);
+        assert.strictEqual(callCount, 1);
         emitter.removeListener(listener);
         emitter.fire('test');
-        expect(callCount).toEqual(1);
+        assert.strictEqual(callCount, 1);
     });
 });

@@ -1,21 +1,22 @@
 import { Emitter } from '../event';
+import * as assert from 'assert';
 
-describe('Event', () => {
-    it('should fire event - empty', () => {
+suite('Event', () => {
+    test('should fire event - empty', () => {
         const emitter = new Emitter<string>();
         let callCount = 0;
         emitter.event(() => callCount++);
         emitter.fire('test');
-        expect(callCount).toEqual(1);
+        assert.strictEqual(callCount, 1);
         emitter.dispose();
     });
 
-    it('should fire event - with data', () => {
+    test('should fire event - with data', () => {
         const emitter = new Emitter<string>();
         let data = '';
         emitter.event((e) => data = e);
         emitter.fire('test');
-        expect(data).toEqual('test');
+        assert.strictEqual(data, 'test');
         emitter.dispose();
     });
 });

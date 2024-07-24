@@ -1,3 +1,4 @@
+import * as assert from 'assert';
 import { spy } from 'sinon';
 import { createDecorator } from '../instantiation';
 import { InstantiationService } from '../instantiationService';
@@ -117,34 +118,34 @@ registerSingleton(IFileSystem, FileSystem, true);
 registerSingleton(ISaver, Saver, true);
 registerSingleton(ILoader, Loader, true);
 
-describe('Dependency Injection', () => {
-    beforeEach(() => {
+suite('Dependency Injection', () => {
+    setup(() => {
         Logger.constructorCallCount = 0;
         FileSystem.constructorCallCount = 0;
         Saver.constructorCallCount = 0;
     });
 
-    it('should inject a dependency', () => {
+    test('should inject a dependency', () => {
         const logger = new Logger();
         const logSpy = spy(logger, 'log');
         const fileSystem = new FileSystem(logger);
         fileSystem.readFile('test.txt');
-        expect(logSpy.callCount).toEqual(1);
+        assert.equal(logSpy.callCount, 1);
 
         const saver = new Saver('test', logger, fileSystem);
         saver.save('test.txt', { test: true });
-        expect(logSpy.callCount).toEqual(3);
-        expect(saver.id).toEqual('test');
+        assert.equal(logSpy.callCount, 3);
+        assert.equal(saver.id, 'test');
     });
 
     // 服务没有注册时会报错
-    it('should throw error when service is not registered', () => {
+    test('should throw error when service is not registered', () => {
         const instantiationService = new InstantiationService();
-        expect(() => instantiationService.createInstance(Saver, 'error')).toThrow();
+        assert.throws(() => instantiationService.createInstance(Saver, 'error'));
     });
 
     // 通过InstantiationService来创建服务
-    it('should inject a dependency through InstantiationService', () => {
+    test('should inject a dependency through InstantiationService', () => {
         const services = new ServiceCollection();
         for (const [id, descriptor] of getSingletonServiceDescriptors()) {
             services.set(id, descriptor);
@@ -153,11 +154,11 @@ describe('Dependency Injection', () => {
         const instantiationService = new InstantiationService(services);
         const saver = instantiationService.createInstance(Saver, 'test');
         saver.save('test.txt', 'hello');
-        expect(FileSystem.getFile('test.txt')).toEqual('"hello"');
+        assert.equal(FileSystem.getFile('test.txt'), '"hello"');
     });
 
     // 服务在后台会自动创建
-    it('should inject a dependency through InstantiationService', async () => {
+    test('should inject a dependency through InstantiationService', async () => {
         const services = new ServiceCollection();
         for (const [id, descriptor] of getSingletonServiceDescriptors()) {
             services.set(id, descriptor);
@@ -168,12 +169,12 @@ describe('Dependency Injection', () => {
 
         // 虽然Saver依赖FileSystem，但因为没有调用FileSystem的方法，所以FileSystem不会被创建
         // 这个是因为FileSystem配置成可以延迟创建
-        expect(FileSystem.constructorCallCount).toEqual(0);
+        assert.equal(FileSystem.constructorCallCount, 0);
 
         // Logger不是延迟创建，所以会被创建
-        expect(Logger.constructorCallCount).toEqual(1);
+        assert.equal(Logger.constructorCallCount, 1);
 
         saver.save('test.txt', 'hello');
-        expect(FileSystem.constructorCallCount).toEqual(1);
+        assert.equal(FileSystem.constructorCallCount, 1);
     });
 });
