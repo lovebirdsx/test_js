@@ -13,7 +13,6 @@ import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../base/test/util
 import { flakySuite } from '../../../base/test/testUtils';
 
 class MessageStream extends Disposable {
-
 	private _currentComplete: ((data: VSBuffer) => void) | null;
 	private _messages: VSBuffer[];
 
@@ -70,7 +69,6 @@ class EtherStream extends EventEmitter {
 }
 
 class Ether {
-
 	private readonly _a: EtherStream;
 	private readonly _b: EtherStream;
 
@@ -85,9 +83,7 @@ class Ether {
 		return <any>this._b;
 	}
 
-	constructor(
-		private readonly _wireLatency = 0
-	) {
+	constructor(private readonly _wireLatency = 0) {
 		this._a = new EtherStream(this, 'a');
 		this._b = new EtherStream(this, 'b');
 		this._ab = [];
@@ -107,7 +103,6 @@ class Ether {
 	}
 
 	private _deliver(): void {
-
 		if (this._ab.length > 0) {
 			const data = Buffer.concat(this._ab);
 			this._ab.length = 0;
@@ -123,7 +118,6 @@ class Ether {
 			setTimeout(() => this._deliver(), 0);
 			return;
 		}
-
 	}
 }
 
