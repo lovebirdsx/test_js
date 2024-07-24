@@ -1,6 +1,43 @@
 import { once } from './functional';
 import { Iterable } from './iterator';
 
+export interface IDisposableTracker {
+	/**
+	 * Is called on construction of a disposable.
+	*/
+	trackDisposable(disposable: IDisposable): void;
+
+	/**
+	 * Is called when a disposable is registered as child of another disposable (e.g. {@link DisposableStore}).
+	 * If parent is `null`, the disposable is removed from its former parent.
+	*/
+	setParent(child: IDisposable, parent: IDisposable | null): void;
+
+	/**
+	 * Is called after a disposable is disposed.
+	*/
+	markAsDisposed(disposable: IDisposable): void;
+
+	/**
+	 * Indicates that the given object is a singleton which does not need to be disposed.
+	*/
+	markAsSingleton(disposable: IDisposable): void;
+}
+
+/**
+ * Enables logging of potentially leaked disposables.
+ *
+ * A disposable is considered leaked if it is not disposed or not registered as the child of
+ * another disposable. This tracking is very simple an only works for classes that either
+ * extend Disposable or use a DisposableStore. This means there are a lot of false positives.
+ */
+const TRACK_DISPOSABLES = false;
+let disposableTracker: IDisposableTracker | null = null;
+
+export function setDisposableTracker(tracker: IDisposableTracker | null): void {
+	disposableTracker = tracker;
+}
+
 export interface IDisposable {
     dispose(): void;
 }
@@ -82,6 +119,25 @@ export class DisposableStore implements IDisposable {
 
         return t;
     }
+}
+
+function setParentOfDisposables(children: IDisposable[], parent: IDisposable | null): void {
+	if (!disposableTracker) {
+		return;
+	}
+	for (const child of children) {
+		disposableTracker.setParent(child, parent);
+	}
+}
+
+
+/**
+ * Combine multiple disposable values into a single {@link IDisposable}.
+ */
+export function combinedDisposable(...disposables: IDisposable[]): IDisposable {
+	const parent = toDisposable(() => dispose(disposables));
+	setParentOfDisposables(disposables, parent);
+	return parent;
 }
 
 export function toDisposable(fn: () => void): IDisposable {

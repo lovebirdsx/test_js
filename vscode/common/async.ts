@@ -1,4 +1,119 @@
+import { CancellationToken, CancellationTokenSource } from './cancellation';
+import { CancellationError } from './errors';
 import { IDisposable } from './lifecycle';
+
+export function isThenable<T>(obj: unknown): obj is Promise<T> {
+	return !!obj && typeof (obj as unknown as Promise<T>).then === 'function';
+}
+
+export interface CancelablePromise<T> extends Promise<T> {
+	cancel(): void;
+}
+
+export function createCancelablePromise<T>(callback: (token: CancellationToken) => Promise<T>): CancelablePromise<T> {
+	const source = new CancellationTokenSource();
+
+	const thenable = callback(source.token);
+	const promise = new Promise<T>((resolve, reject) => {
+		const subscription = source.token.onCancellationRequested(() => {
+			subscription.dispose();
+			source.dispose();
+			reject(new CancellationError());
+		});
+		Promise.resolve(thenable).then(value => {
+			subscription.dispose();
+			source.dispose();
+			resolve(value);
+		}, err => {
+			subscription.dispose();
+			source.dispose();
+			reject(err);
+		});
+	});
+
+	return <CancelablePromise<T>>new class {
+		cancel() {
+			source.cancel();
+		}
+		then<TResult1 = T, TResult2 = never>(resolve?: ((value: T) => TResult1 | Promise<TResult1>) | undefined | null, reject?: ((reason: any) => TResult2 | Promise<TResult2>) | undefined | null): Promise<TResult1 | TResult2> {
+			return promise.then(resolve, reject);
+		}
+		catch<TResult = never>(reject?: ((reason: any) => TResult | Promise<TResult>) | undefined | null): Promise<T | TResult> {
+			return this.then(undefined, reject);
+		}
+		finally(onfinally?: (() => void) | undefined | null): Promise<T> {
+			return promise.finally(onfinally);
+		}
+	};
+}
+
+/**
+ * Returns a promise that resolves with `undefined` as soon as the passed token is cancelled.
+ * @see {@link raceCancellationError}
+ */
+export function raceCancellation<T>(promise: Promise<T>, token: CancellationToken): Promise<T | undefined>;
+
+/**
+ * Returns a promise that resolves with `defaultValue` as soon as the passed token is cancelled.
+ * @see {@link raceCancellationError}
+ */
+export function raceCancellation<T>(promise: Promise<T>, token: CancellationToken, defaultValue: T): Promise<T>;
+
+export function raceCancellation<T>(promise: Promise<T>, token: CancellationToken, defaultValue?: T): Promise<T | undefined> {
+	return new Promise((resolve, reject) => {
+		const ref = token.onCancellationRequested(() => {
+			ref.dispose();
+			resolve(defaultValue);
+		});
+		promise.then(resolve, reject).finally(() => ref.dispose());
+	});
+}
+
+/**
+ * Returns a promise that rejects with an {@CancellationError} as soon as the passed token is cancelled.
+ * @see {@link raceCancellation}
+ */
+export function raceCancellationError<T>(promise: Promise<T>, token: CancellationToken): Promise<T> {
+	return new Promise((resolve, reject) => {
+		const ref = token.onCancellationRequested(() => {
+			ref.dispose();
+			reject(new CancellationError());
+		});
+		promise.then(resolve, reject).finally(() => ref.dispose());
+	});
+}
+
+/**
+ * Returns as soon as one of the promises resolves or rejects and cancels remaining promises
+ */
+export async function raceCancellablePromises<T>(cancellablePromises: CancelablePromise<T>[]): Promise<T> {
+	let resolvedPromiseIndex = -1;
+	const promises = cancellablePromises.map((promise, index) => promise.then(result => { resolvedPromiseIndex = index; return result; }));
+	try {
+		const result = await Promise.race(promises);
+		return result;
+	} finally {
+		cancellablePromises.forEach((cancellablePromise, index) => {
+			if (index !== resolvedPromiseIndex) {
+				cancellablePromise.cancel();
+			}
+		});
+	}
+}
+
+export function raceTimeout<T>(promise: Promise<T>, timeout: number, onTimeout?: () => void): Promise<T | undefined> {
+	let promiseResolve: ((value: T | undefined) => void) | undefined = undefined;
+
+	const timer = setTimeout(() => {
+		promiseResolve?.(undefined);
+		onTimeout?.();
+	}, timeout);
+
+	return Promise.race([
+		promise.finally(() => clearTimeout(timer)),
+		new Promise<T | undefined>(resolve => promiseResolve = resolve)
+	]);
+}
 
 export interface IdleDeadline {
     didTimeout: boolean;
@@ -76,4 +191,24 @@ export async function wait(timeout: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, timeout);
     });
+}
+
+export function timeout(millis: number): CancelablePromise<void>;
+export function timeout(millis: number, token: CancellationToken): Promise<void>;
+export function timeout(millis: number, token?: CancellationToken): CancelablePromise<void> | Promise<void> {
+	if (!token) {
+		return createCancelablePromise(token => timeout(millis, token));
+	}
+
+	return new Promise((resolve, reject) => {
+		const handle = setTimeout(() => {
+			disposable.dispose();
+			resolve();
+		}, millis);
+		const disposable = token.onCancellationRequested(() => {
+			clearTimeout(handle);
+			disposable.dispose();
+			reject(new CancellationError());
+		});
+	});
 }
