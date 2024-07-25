@@ -1,7 +1,9 @@
 {
   "require": "ts-node/register",
-  "spec": "./**/*test.ts",
+  "spec": "src/**/*test.ts",
   "timeout": 5000,
+  "extension": ["ts"],
+  "watch": true,
   "ui": "tdd",
   "colors": true
 }
