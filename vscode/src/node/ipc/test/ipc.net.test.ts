@@ -7,10 +7,13 @@ import { VSBuffer } from '../../../base/common/buffer';
 import { Emitter, Event } from '../../../base/common/event';
 import { Disposable, DisposableStore } from '../../../base/common/lifecycle';
 import { ILoadEstimator, PersistentProtocol, Protocol, ProtocolConstants, SocketCloseEvent, SocketDiagnosticsEventType } from '../../../base/ipc/ipc.net';
-import { createRandomIPCHandle, createStaticIPCHandle, NodeSocket, WebSocketNodeSocket } from '../ipc.net';
+import { createRandomIPCHandle, createStaticIPCHandle, connect as ipcConnect, NodeSocket, serve as ipcServe, WebSocketNodeSocket } from '../ipc.net';
 import { runWithFakedTimers } from '../../../base/test/timeTravelScheduler';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../base/test/utils';
 import { flakySuite } from '../../../base/test/testUtils';
+import { CancellationToken } from '../../../base/common/cancellation';
+import { IServerChannel, ProxyChannel } from '../../../base/ipc/ipc';
+import { CancellationError } from '../../../base/common/errors';
 
 class MessageStream extends Disposable {
 	private _currentComplete: ((data: VSBuffer) => void) | null;
@@ -750,4 +753,118 @@ suite('WebSocketNodeSocket', () => {
 			});
 		});
 	}
+});
+
+suite('node ipc', () => {
+	class TestService implements ITestService {
+
+		private readonly _onPong = new Emitter<string>();
+		readonly onPong = this._onPong.event;
+	
+		marco(): Promise<string> {
+			return Promise.resolve('polo');
+		}
+	
+		error(message: string): Promise<void> {
+			return Promise.reject(new Error(message));
+		}
+	
+		neverComplete(): Promise<void> {
+			return new Promise(_ => { });
+		}
+	
+		neverCompleteCT(cancellationToken: CancellationToken): Promise<void> {
+			if (cancellationToken.isCancellationRequested) {
+				return Promise.reject(new CancellationError());
+			}
+	
+			return new Promise((_, e) => cancellationToken.onCancellationRequested(() => e(new CancellationError())));
+		}
+	
+		buffersLength(buffers: VSBuffer[]): Promise<number> {
+			return Promise.resolve(buffers.reduce((r, b) => r + b.buffer.length, 0));
+		}
+	
+		ping(msg: string): void {
+			this._onPong.fire(msg);
+		}
+	
+		context(context?: unknown): Promise<unknown> {
+			return Promise.resolve(context);
+		}
+	}
+
+	interface ITestService {
+		marco(): Promise<string>;
+		error(message: string): Promise<void>;
+		neverComplete(): Promise<void>;
+		neverCompleteCT(cancellationToken: CancellationToken): Promise<void>;
+		buffersLength(buffers: VSBuffer[]): Promise<number>;
+		context(): Promise<unknown>;
+	
+		onPong: Event<string>;
+	}
+	
+	class TestChannel implements IServerChannel {
+	
+		constructor(private service: ITestService) { }
+	
+		call(_: unknown, command: string, arg: any, cancellationToken: CancellationToken): Promise<any> {
+			switch (command) {
+				case 'marco': return this.service.marco();
+				case 'error': return this.service.error(arg);
+				case 'neverComplete': return this.service.neverComplete();
+				case 'neverCompleteCT': return this.service.neverCompleteCT(cancellationToken);
+				case 'buffersLength': return this.service.buffersLength(arg);
+				default: return Promise.reject(new Error('not implemented'));
+			}
+		}
+	
+		listen(_: unknown, event: string, arg?: any): Event<any> {
+			switch (event) {
+				case 'onPong': return this.service.onPong;
+				default: throw new Error('not implemented');
+			}
+		}
+	}
+
+	test('simple', async () => {
+		const pipeName = createRandomIPCHandle();
+		const server  = await ipcServe(pipeName);
+		const service = new TestService();
+		const channel = new TestChannel(service);
+		server.registerChannel('test', channel);
+		const client = await ipcConnect(pipeName, 'client-test');
+		const proxy = client.getChannel('test');
+
+		const pong = proxy.call('marco');
+		assert.strictEqual(await pong, 'polo');
+
+		client.dispose();
+		server.dispose();
+	});
+
+	test('proxy', async () => {
+		const pipeName = createRandomIPCHandle();
+		const server  = await ipcServe(pipeName);
+		const service = new TestService();
+
+		server.registerChannel('test', ProxyChannel.fromService(service));
+		const client = await ipcConnect(pipeName, 'client-test');
+
+		const clService = ProxyChannel.toService<ITestService>(client.getChannel('test'));
+		
+		// 调用服务端的方法
+		const pong = await clService.marco();
+		assert.strictEqual(pong, 'polo');
+
+		// 等待服务端的事件
+		const waitPong = Event.toPromise(clService.onPong);
+		service.ping('hello');
+		const msg = await waitPong;
+		assert.strictEqual(msg, 'hello');
+
+		client.dispose();
+		server.dispose();
+	});
 });
