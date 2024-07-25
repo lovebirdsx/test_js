@@ -7,15 +7,15 @@ import { createHash } from 'crypto';
 import { Server as NetServer, Socket, createServer, createConnection } from 'net';
 import { tmpdir } from 'os';
 import { createDeflateRaw, ZlibOptions, InflateRaw, DeflateRaw, createInflateRaw } from 'zlib';
-import { VSBuffer } from '../../base/common/buffer';
-import { onUnexpectedError } from '../../base/common/errors';
-import { Emitter, Event } from '../../base/common/event';
-import { Disposable, IDisposable } from '../../base/common/lifecycle';
-import { join } from '../../base/common/path';
-import { Platform, platform } from '../../base/common/platform';
-import { generateUuid } from '../../base/common/uuid';
-import { ClientConnectionEvent, IPCServer } from '../../base/ipc/ipc';
-import { ChunkStream, Client, ISocket, Protocol, SocketCloseEvent, SocketCloseEventType, SocketDiagnostics, SocketDiagnosticsEventType } from '../../base/ipc/ipc.net';
+import { VSBuffer } from '../../../common/buffer';
+import { onUnexpectedError } from '../../../common/errors';
+import { Emitter, Event } from '../../../common/event';
+import { Disposable, IDisposable } from '../../../common/lifecycle';
+import { join } from '../../../common/path';
+import { Platform, platform } from '../../../common/platform';
+import { generateUuid } from '../../../common/uuid';
+import { ClientConnectionEvent, IPCServer } from '../common/ipc';
+import { ChunkStream, Client, ISocket, Protocol, SocketCloseEvent, SocketCloseEventType, SocketDiagnostics, SocketDiagnosticsEventType } from '../common/ipc.net';
 
 export class NodeSocket implements ISocket {
 

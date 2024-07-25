@@ -3,10 +3,10 @@ import { SyncDescriptor, SyncDescriptor0 } from './descriptors';
 import { Graph } from './graph';
 import { GetLeadingNonServiceArgs, IInstantiationService, ServiceIdentifier, ServicesAccessor, _util } from './instantiation';
 import { ServiceCollection } from './serviceCollection';
-import { Event } from '../common/event';
-import { LinkedList } from '../common/linkedList';
-import { IdleValue } from '../common/async';
-import { toDisposable } from '../common/lifecycle';
+import { Event } from '../../base/common/event';
+import { LinkedList } from '../../base/common/linkedList';
+import { IdleValue } from '../../base/common/async';
+import { toDisposable } from '../../base/common/lifecycle';
 
 const _enableAllTracing = false
     || true // DO NOT CHECK IN!

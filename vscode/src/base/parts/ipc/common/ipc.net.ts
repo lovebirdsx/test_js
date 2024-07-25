@@ -1,6 +1,6 @@
-import { VSBuffer } from '../common/buffer';
-import { Emitter, Event } from '../common/event';
-import { Disposable, DisposableStore, IDisposable } from '../common/lifecycle';
+import { VSBuffer } from '../../../common/buffer';
+import { Emitter, Event } from '../../../common/event';
+import { Disposable, DisposableStore, IDisposable } from '../../../common/lifecycle';
 import { IIPCLogger, IMessagePassingProtocol, IPCClient } from './ipc';
 
 export const enum SocketDiagnosticsEventType {

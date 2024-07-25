@@ -1,14 +1,14 @@
-import { getRandomElement } from '../common/arrays';
-import { CancelablePromise, createCancelablePromise, timeout } from '../common/async';
-import { VSBuffer } from '../common/buffer';
-import { CancellationToken, CancellationTokenSource } from '../common/cancellation';
-import { memoize } from '../common/decorators';
-import { CancellationError, ErrorNoTelemetry } from '../common/errors';
-import { Emitter, Event, EventMultiplexer, Relay } from '../common/event';
-import { combinedDisposable, DisposableStore, dispose, IDisposable, toDisposable } from '../common/lifecycle';
-import { revive } from '../common/marshalling';
-import * as strings from '../common/strings';
-import { isFunction, isUndefinedOrNull } from '../common/types';
+import { getRandomElement } from '../../../common/arrays';
+import { CancelablePromise, createCancelablePromise, timeout } from '../../../common/async';
+import { VSBuffer } from '../../../common/buffer';
+import { CancellationToken, CancellationTokenSource } from '../../../common/cancellation';
+import { memoize } from '../../../common/decorators';
+import { CancellationError, ErrorNoTelemetry } from '../../../common/errors';
+import { Emitter, Event, EventMultiplexer, Relay } from '../../../common/event';
+import { combinedDisposable, DisposableStore, dispose, IDisposable, toDisposable } from '../../../common/lifecycle';
+import { revive } from '../../../common/marshalling';
+import * as strings from '../../../common/strings';
+import { isFunction, isUndefinedOrNull } from '../../../common/types';
 
 /**
  * An `IChannel` is an abstraction over a collection of commands.

@@ -1,9 +1,9 @@
 import * as assert from 'assert';
-import { timeout } from '../../common/async';
-import { VSBuffer } from '../../common/buffer';
-import { CancellationToken, CancellationTokenSource } from '../../common/cancellation';
-import { CancellationError, isCancellationError } from '../../common/errors';
-import { Emitter, Event } from '../../common/event';
+import { timeout } from '../../../../common/async';
+import { VSBuffer } from '../../../../common/buffer';
+import { CancellationToken, CancellationTokenSource } from '../../../../common/cancellation';
+import { CancellationError, isCancellationError } from '../../../../common/errors';
+import { Emitter, Event } from '../../../../common/event';
 import { BufferReader, BufferWriter, ClientConnectionEvent, deserialize, IChannel, IMessagePassingProtocol, IPCClient, IPCServer, IServerChannel, ProxyChannel, serialize } from '../ipc';
 
 class QueueProtocol implements IMessagePassingProtocol {
