@@ -1,0 +1,23 @@
+{
+  "name": "@mytest/test",
+  "version": "1.0.0",
+  "main": "out/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "node out/test.js",
+    "test:watch": "nodemon out/test.js",
+    "clean": "rm -rf out"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447",
+  "dependencies": {
+    "@mytest/common": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/module-alias": "^2.0.4",
+    "module-alias": "^2.2.3"
+  }
+}
