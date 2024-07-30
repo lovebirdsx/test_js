@@ -1,0 +1,22 @@
+{
+  "name": "test-eslint",
+  "version": "1.0.0",
+  "description": "eslint tests",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:watch": "nodemon --ext ts,js,mjs --exec \"yarn lint\"",
+    "lint:out-config": "node -e \"import('./eslint.config.mjs').then(config => console.log(config.default))\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^7.18.0"
+  }
+}
