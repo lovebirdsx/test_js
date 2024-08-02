@@ -17,7 +17,8 @@ if (pipeNameIndex === -1 || isServerIndex === -1) {
   process.exit(1);
 }
 
-const pipeName = args[pipeNameIndex + 1]!;
+// windows下的命名管道格式为 \\.\pipe\pipename
+const pipeName = `\\\\.\\pipe\\${args[pipeNameIndex + 1]}`;
 const isServer = args[isServerIndex + 1] === 'true';
 
 if (isServer) {
@@ -31,7 +32,8 @@ if (isServer) {
     });
 
     rl.on('line', (input) => {
-      console.log(input);
+      console.log(`${input}`);
+      console.log('');
     });
   });
 } else {

@@ -16,11 +16,13 @@
         "ts-node": "^10.6.0",
         "ts-proto": "^1.115.4",
         "typedjson": "^1.8.0",
+        "ws": "^8.18.0",
         "xmlhttprequest": "^1.8.0"
     },
     "devDependencies": {
         "@babel/preset-typescript": "^7.16.7",
         "@types/jest": "^29.5.12",
+        "@types/ws": "^8.5.12",
         "@typescript-eslint/eslint-plugin": "^7.16.0",
         "@typescript-eslint/parser": "^7.16.0",
         "eslint": "^8.7.0",
