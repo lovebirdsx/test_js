@@ -1,4 +1,4 @@
-import { Equal, Expect, ExpectNot } from "./utils";
+import { Equal, Expect, ExpectNot } from './utils';
 
 interface Foo {
     name: string;
@@ -19,7 +19,7 @@ type T = Combine<Foo, Bar>
 const foobar = {
     name: '',
     id: 0,
-}
+};
 
 type A = 'A' | 'C'
 type B = 'B'
@@ -46,5 +46,3 @@ type cases = [
     ExpectNot<Equal<typeof t1, typeof t2>>,
     Expect<Equal<typeof t2, typeof t3>>,
 ]
-
-

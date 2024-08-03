@@ -1,6 +1,6 @@
-import { Equal, Expect } from "./utils";
+import { Equal, Expect } from './utils';
 
-type TypeName<T> = 
+type TypeName<T> =
     T extends string ? 'string' :
     T extends number ? 'number' :
     T extends boolean ? 'boolean' :
@@ -20,7 +20,7 @@ type Cases = [
 interface Thing {
     a: number;
     b: string;
-    
+
     foo(s: string): void;
     foo(s: number): void;
 }
@@ -34,8 +34,8 @@ const thing: Thing = {
         } else {
             console.log('number', s);
         }
-    }
-}
+    },
+};
 
 thing.foo('hello');
 thing.foo(88);

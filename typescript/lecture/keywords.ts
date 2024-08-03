@@ -21,17 +21,14 @@ interface IBase {
 interface Point {
     x: number;
     y: number;
-};
-  
+}
+
 declare function plot(point: Point): void;
 
 const pos2d = { x: 10, y: 25 };
 plot(pos2d);
 const pos3d = { x: 10, y: 25, z: 0 };
 plot(pos3d);
-
-declare function getPost(postId: number): Promise<Post>;
-declare function getUser(userId: number): Promise<User>;
 
 interface User {
     id: number;
@@ -45,8 +42,9 @@ interface Post {
     body: string;
 }
 
-function authorOfPost(postId: number): Promise<User> {
-    return getPost(postId).then(post => getUser(post.id)); // ❌ post.id
-}
+declare function getPost(postId: number): Promise<Post>;
+declare function getUser(userId: number): Promise<User>;
 
-  
+function authorOfPost(postId: number): Promise<User> {
+    return getPost(postId).then((post) => getUser(post.id)); // ❌ post.id
+}

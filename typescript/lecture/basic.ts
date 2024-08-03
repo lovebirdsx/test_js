@@ -1,4 +1,4 @@
-import { ExpectNot, Equal, Expect } from "./utils";
+import { ExpectNot, Equal, Expect } from './utils';
 
 type Cases = [
     ExpectNot<Equal<1, 2>>,
@@ -12,7 +12,6 @@ interface A {
 interface B {
     id: number;
 }
-
 
 type C = A & B;
 
@@ -48,24 +47,24 @@ interface Person {
     id: string;
 }
 
-// type T3 = NamedItem & Person;
-const t3: T3 = {
-    name: 'name',
-    age: 12,
-    id: undefined as never,
-}
-
 type T3 = {
     name: string;
     age: number;
     id: never;
 }
 
+// type T3 = NamedItem & Person;
+const t3: T3 = {
+    name: 'name',
+    age: 12,
+    id: undefined as never,
+};
+
 type T5 = keyof(T3)
 
 function double(x: number | string): number | string {
     if (typeof x === 'number') {
-        return 2 *x;
+        return 2 * x;
     }
     return (2 * Number(x)).toString();
 }
@@ -74,7 +73,7 @@ type Square = {
     type: 'square',
     size: number;
 };
-  
+
 type Rectangle = {
     type: 'rectangle'
     width: number;
@@ -89,6 +88,10 @@ function area(shape: Shape) {
             return shape.size * shape.size;
         case 'rectangle':
             return shape.width * shape.height;
+        default: {
+            const _exhaustiveCheck: never = shape;
+            return _exhaustiveCheck;
+        }
     }
 }
 

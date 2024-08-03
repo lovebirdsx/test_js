@@ -1,4 +1,4 @@
-import { Equal, Expect } from "./utils";
+import { Equal, Expect } from './utils';
 
 type Cases = [
     Expect<Equal<string & number, never>>,

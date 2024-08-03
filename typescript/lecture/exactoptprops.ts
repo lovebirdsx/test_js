@@ -1,6 +1,6 @@
 function f1(obj: { a?: string, b?: string | undefined }) {
-    let a  = obj.a;
-    let b = obj.b;
+    const { a } = obj;
+    const { b } = obj;
     obj.a = 'hello';
     obj.b = 'hello';
     // obj.a = undefined;
@@ -9,11 +9,11 @@ function f1(obj: { a?: string, b?: string | undefined }) {
 }
 
 function f2(obj: { a?: string }) {
-    obj.a?.length;
     if ('a' in obj) {
-        obj.a.length;
+        console.log(obj.a);
     }
-    if (obj.hasOwnProperty('a')) {
-        obj.a.length;
+
+    if (Object.prototype.hasOwnProperty.call(obj, 'a')) {
+        console.log(obj.a);
     }
 }

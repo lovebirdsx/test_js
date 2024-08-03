@@ -1,4 +1,4 @@
-import { Equal, Expect, ExpectNot, Extends } from "./utils";
+import { Equal, Expect, Extends } from './utils';
 
 type ToArray1<T> = T extends any ? T[] : never;
 type ToArray2<T> = [T] extends any ? T[] : never;

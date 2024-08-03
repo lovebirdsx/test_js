@@ -1,4 +1,4 @@
-//#region literal
+// #region literal
 
 type EventName<T extends string> = `${T}Changed`;
 type T0 = EventName<'foo'>
@@ -15,37 +15,38 @@ type StringDashNumber = `${string}-${number}`
 const sds: StringDashString = 'hello-world';
 const sdn: StringDashNumber = 'hello-88';
 
-//#endregion
+// #endregion
 
-//#region String format
+// #region String format
 
-type PlaceHolder<T extends string> =  T extends `${string}{${infer P}}${infer R}` ? P | PlaceHolder<R> : never;
+type PlaceHolder<T extends string> = T extends `${string}{${infer P}}${infer R}` ? P | PlaceHolder<R> : never;
 declare function format<S extends string>(template: S, args: Record<PlaceHolder<S>, unknown>): string;
 
-let text = format('Name: {name}, Age: {age}', {name: 'lovebird', age: '18'});
+const text = format('Name: {name}, Age: {age}', { name: 'lovebird', age: '18' });
 
-//#endregion
+// #endregion
 
-//#region Routing
+// #region Routing
 
 type RoutingParamName<T extends string> =
-    T extends `${string}/:${infer P}/${infer R}` ? P | RoutingParamName<R> : 
+    T extends `${string}/:${infer P}/${infer R}` ? P | RoutingParamName<R> :
     T extends `${string}:${infer P}` ? P : never;
 
 declare function handleGet<R extends string>(route: R, handle: (params: Record<RoutingParamName<R>, string>) => void): void;
-handleGet('/posts/:postId/:commentId', params => {
+handleGet('/posts/:postId/:commentId', (params) => {
     if (params.commentId) {
         //
     }
     if (params.postId) {
         //
     }
-})
+});
 
-//#endregion
+// #endregion
 
-//#region Dotted Paths
+// #region Dotted Paths
 
+// eslint-disable-next-line no-use-before-define
 type SubKeys<T, K extends string> = K extends keyof T ? `${K}.${PathKeys<T[K]>}` : never;
 
 type PathKeys<T> = object extends T ? string :
@@ -66,21 +67,21 @@ const obj = {
     cars: [
         { make: 'Ford', age: 10 },
         { make: 'Trabant', age: 35 },
-    ]
+    ],
 } as const;
 
 const cars = [
     { make: 'Ford', age: 10 },
     { make: 'Trabant', age: 35 },
-] as const
+] as const;
 
 const age = getProp(obj, 'age');
 const car0Name = getProp(obj, 'cars.0.make');
-const car1Name = getProp(cars, '0.make')
+const car1Name = getProp(cars, '0.make');
 
-//#endregion
+// #endregion
 
-//#region Mapped type 'as' clauses
+// #region Mapped type 'as' clauses
 
 type OnPropChangeMethods<T> = {
     [P in keyof T & string as `${P}Changed`]: (cb: (newValue: T[P]) => void) => void;
@@ -88,9 +89,9 @@ type OnPropChangeMethods<T> = {
 
 declare function makeWatchedObject<T>(obj: T): T & OnPropChangeMethods<T>;
 
-let homer = makeWatchedObject({
+const homer = makeWatchedObject({
     firstName: 'Hommer',
     age: 42,
-})
+});
 
-//#endregion
+// #endregion
