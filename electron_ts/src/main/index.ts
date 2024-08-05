@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, MessageChannelMain } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { initIPC } from './ipc';
@@ -70,6 +70,18 @@ const createWindow = (): void => {
 
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+    const { port1, port2 } = new MessageChannelMain();
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.postMessage('port', 'message from main process', [port2]);
+
+        port1.start();
+        port1.postMessage('hello from main process');
+    });
+
+    port1.on('message', (event) => {
+        console.log('message from renderer:', event.data);
+    });
 
     // Open the DevTools.
     if (state.isShowDevTools) {

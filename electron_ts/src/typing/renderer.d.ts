@@ -12,6 +12,7 @@ declare module 'electronAPI' {
     declare global {
         interface Window {
             electronAPI: IElectronAPI;
+            port: MessagePort;
         }
     }
 }

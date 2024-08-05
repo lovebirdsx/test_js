@@ -127,6 +127,13 @@ export class Main extends React.Component<unknown, IMainState> {
                     >
                         Log
                     </button>
+                    <button
+                        onClick={() => {
+                            window.port.postMessage('hello from renderer');
+                        }}
+                    >
+                        MessagePort.Post
+                    </button>
                 </p>
                 {this.renderFile()}
             </div>

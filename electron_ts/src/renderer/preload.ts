@@ -40,3 +40,25 @@ const electronAPI: IElectronAPI = {
 };
 
 contextBridge.exposeInMainWorld('electronAPI', electronAPI);
+
+window.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.on('port', (event) => {
+        console.log('event', event);
+        const port = (event as any).ports[0] as MessagePort;
+
+        // 必须调用 start() 方法，否则无法接收消息
+        port.start();
+
+        port.postMessage(`hello from renderer`);
+
+        // https://www.electronjs.org/zh/docs/latest/api/context-bridge
+        // 要让渲染进程能够使用 MessagePort，需要将其暴露到 window 对象中
+        contextBridge.exposeInMainWorld('port', {
+            postMessage: (message: any) => port.postMessage(message),
+        });
+
+        port.onmessage = (ev) => {
+            console.log('renderer received', ev.data);
+        };
+    });
+});
