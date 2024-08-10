@@ -1,6 +1,13 @@
 {
-  "name": "test-webpack-ref-lib",
+  "name": "@test-webpack-ref/lib",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "out/src/index.js",
+  "exports": {
+    ".": "./out/src/index.js",
+    "./*": "./out/src/*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  }
 }

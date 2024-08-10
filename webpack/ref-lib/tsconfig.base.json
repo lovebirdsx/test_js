@@ -11,8 +11,8 @@
 
 		// 引用需要在这里配置，unity-ts中的tsconfig.json中配置无效
     "paths": {
-      "@lib": ["./packages/lib/src"],
-      "@lib/*": ["./packages/lib/src/*"],
+      "@test-webpack-ref/lib": ["./packages/lib/src"],
+      "@test-webpack-ref/lib/*": ["./packages/lib/src/*"],
     }
   }
 }

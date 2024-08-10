@@ -1,5 +1,5 @@
 {
-  "name": "test-webpack-ref-app",
+  "name": "@test-webpack-ref/app",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -9,6 +9,9 @@
     "prewatch": "rm -rf dist",
     "watch": "webpack --watch",
     "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@test-webpack-ref/lib": "1.0.0"
   },
   "devDependencies": {
     "ts-loader": "^9.5.1",
