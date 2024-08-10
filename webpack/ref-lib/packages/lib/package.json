@@ -8,6 +8,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "clean": "rm -rf out",
+    "build": "tsc",
+    "watch": "tsc --watch"
   }
 }

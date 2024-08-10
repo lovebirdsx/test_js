@@ -4,5 +4,27 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
-  "workspaces": ["packages/*"]
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean:lib": "npm run --prefix packages/lib clean",
+    "clean:app": "npm run --prefix packages/app clean",
+    "clean:packages": "rm -rf node_modules",
+    "clean": "npm-run-all clean:lib clean:app clean:packages",
+
+    "build:lib": "npm run --prefix packages/lib build",
+    "build:app": "npm run --prefix packages/app build",
+    "build": "npm-run-all --parallel build:lib build:app",
+
+    "watch:lib": "npm run --prefix packages/lib watch",
+    "watch:app": "npm run --prefix packages/app watch",
+    "watch:app-run": "npm run --prefix packages/app start:watch",
+    "watch": "npm-run-all --parallel watch:lib watch:app watch:app-run",
+
+    "start": "npm run --prefix packages/app start"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }

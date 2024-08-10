@@ -4,16 +4,17 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rm -rf dist",
+    "clean": "rm -rf dist node_modules out",
     "build": "webpack",
-    "prewatch": "rm -rf dist",
     "watch": "webpack --watch",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "start:watch": "shx mkdir -p dist && shx touch dist/main.js && nodemon dist/main.js"
   },
   "dependencies": {
     "@test-webpack-ref/lib": "1.0.0"
   },
   "devDependencies": {
+    "shx": "^0.3.4",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.3",
     "webpack": "^5.93.0",
