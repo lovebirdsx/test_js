@@ -1,0 +1,19 @@
+{
+  "name": "test-webpack-ref-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "webpack",
+    "prewatch": "rm -rf dist",
+    "watch": "webpack --watch",
+    "start": "node dist/main.js"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.3",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
