@@ -1,7 +1,7 @@
 {
-    "name": "test_js",
+    "name": "test_markdown_it",
     "version": "1.0.0",
-    "description": "",
+    "description": "Test for markdown-it",
     "main": "index.js",
     "dependencies": {
         "@types/node": "^17.0.45",
@@ -9,6 +9,7 @@
         "@types/react-dom": "^18.0.11",
         "co": "^4.6.0",
         "immer": "^9.0.12",
+        "markdown-it": "^14.1.0",
         "node-fetch": "^3.3.2",
         "path": "^0.12.7",
         "reflect-metadata": "^0.1.13",
@@ -22,6 +23,7 @@
     "devDependencies": {
         "@babel/preset-typescript": "^7.16.7",
         "@types/jest": "^29.5.12",
+        "@types/markdown-it": "^14.1.2",
         "@types/ws": "^8.5.12",
         "@typescript-eslint/eslint-plugin": "^7.16.0",
         "@typescript-eslint/parser": "^7.16.0",
@@ -39,11 +41,8 @@
         "madge": "madge -c --extensions ts,tsx ./typescript",
         "watch": "tsc-watch --onSuccess \"sh tools/on_watch_success.sh\""
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/lovebirdsx/test_js.git"
-    },
-    "author": "",
+    "repository": "git+https://github.com/lovebirdsx/test_js.git",
+    "author": "lovebird <lovebirdsx@gmail.com>",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/lovebirdsx/test_js/issues"
