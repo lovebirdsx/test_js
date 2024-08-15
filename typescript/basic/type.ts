@@ -1,5 +1,23 @@
-/* eslint-disable no-unused-vars */
 function TestType() {
+    function testAs() {
+        interface IFoo {
+            name: string;
+            age: number;
+        }
+
+        const foo = {} as IFoo; // 编译器不会报错
+
+        function createDefaultFoo(): IFoo {
+            return {
+                name: 'default',
+                age: 0,
+            };
+        }
+
+        // 使用该方式，确保不会漏写IFoo的字段
+        const foo2 = createDefaultFoo();
+    }
+
     function testUnknown() {
         let a: unknown;
         console.log(typeof a);
@@ -59,6 +77,7 @@ function TestType() {
         }
 
         function infiniteLoop(): never {
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 console.log('hello');
             }
