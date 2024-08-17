@@ -5,10 +5,13 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "start": "bun run index.ts",
+    "test": "bun test",
+    "test:watch": "bun --watch test",
     "watch": "bun --watch run index.ts",
     "build": "bun build ./index.ts --compile --outfile dist/test-bun"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.0",
     "@types/bun": "^1.1.6"
   },
   "dependencies": {
@@ -16,5 +19,6 @@
     "figlet": "^1.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
-  }
+  },
+  "license": "MIT"
 }

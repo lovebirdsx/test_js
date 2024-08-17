@@ -16,47 +16,47 @@ describe('decorator', () => {
       miao() {
         return 'miao';
       }
-      
+
       woof() {
         return 'woof';
       }
     }
 
     const cat = new Cat();
-    expect(() => cat.meow = () => 'woof').to.throw(TypeError);
-    expect(() => cat.miao = () => 'woof').to.not.throw(TypeError);
+    expect(() => { cat.meow = () => 'woof'; }).to.throw(TypeError);
+    expect(() => { cat.miao = () => 'woof'; }).to.not.throw(TypeError);
   });
 
   it('class decorator', () => {
     function superHero(isSuperHero: boolean) {
-      return function (target: any) {
+      return (target: any) => {
         target.isSuperHero = isSuperHero;
         if (isSuperHero) {
           target.power = 'flight';
         }
-      }
+      };
     }
 
     @superHero(true)
     class MySuperHero {}
 
-    expect((MySuperHero as any).isSuperHero).to.be.true;
+    expect((MySuperHero as any).isSuperHero).equal(true);
     expect((MySuperHero as any).power).to.equal('flight');
 
     @superHero(false)
     class MyRegularHero {}
 
-    expect((MyRegularHero as any).isSuperHero).to.be.false;
-    expect((MyRegularHero as any).power).to.be.undefined;
+    expect((MyRegularHero as any).isSuperHero).equal(false);
+    expect((MyRegularHero as any).power).equal(undefined);
   });
 
   it('parameter decorator', () => {
     function Param(type: string) {
-      return function (target: any, key: string, index: number) {
+      return (target: any, key: string, index: number) => {
         const parameters: string[] = Reflect.getOwnMetadata('parameters', target, key) || [];
         parameters[index] = type;
         Reflect.defineMetadata('parameters', parameters, target, key);
-      }
+      };
     }
 
     class Foo {
@@ -71,12 +71,14 @@ describe('decorator', () => {
       }
 
       for (let i = 0; i < args.length; i++) {
+        // eslint-disable-next-line valid-typeof
         if (typeof args[i] !== parameters[i]) {
           throw new Error(`Incorrect type of parameter #${i}, expected ${parameters[i]} but got ${typeof args[i]}`);
         }
       }
 
-      foo.foo.apply(foo, args);
+      // eslint-disable-next-line prefer-spread
+      foo.foo.apply(foo, args as any);
     }
 
     apply(new Foo(), 'hello', 123);

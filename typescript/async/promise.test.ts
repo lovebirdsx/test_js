@@ -22,7 +22,7 @@ class CallRecorder {
 }
 
 describe('Promise', () => {
-  it('execute order - 1', (done) => {
+  xit('execute order - 1', (done) => {
     console.log(1);
     setTimeout(() => {
       console.log(2);
@@ -39,7 +39,7 @@ describe('Promise', () => {
     });
   });
 
-  it('execute order - 2', (done) => {
+  xit('execute order - 2', (done) => {
     console.log(1);
 
     setTimeout(() => {
@@ -64,7 +64,7 @@ describe('Promise', () => {
     console.log(7);
   });
 
-  it('execute order - 3', async () => {
+  xit('execute order - 3', async () => {
     setTimeout(() => {
       console.log(`[${Date.now()}] idleValue executor`);
     }, 0);

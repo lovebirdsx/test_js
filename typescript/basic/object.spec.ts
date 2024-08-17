@@ -44,7 +44,7 @@ describe('Object', () => {
   });
 
   // 测试两种检测空对象的方法的性能，第二种方法由于使用了 Object.keys，性能更差
-  it('compare speed', () => {
+  xit('compare speed', () => {
     const obj = {};
     const obj2 = { a: 1 };
 

@@ -12,20 +12,20 @@ describe('Reflect', () => {
 
   it('has', () => {
     const obj = { a: 1 };
-    expect(Reflect.has(obj, 'a')).to.be.true;
-    expect(Reflect.has(obj, 'b')).to.be.false;
+    expect(Reflect.has(obj, 'a')).equal(true);
+    expect(Reflect.has(obj, 'b')).equal(false);
   });
 
   it('delete', () => {
-    const obj = { a: 1 };
-    expect(Reflect.has(obj, 'a')).to.be.true;
+    const obj = { a: 1 } as { a?: number };
+    expect(Reflect.has(obj, 'a')).equal(true);
     Reflect.deleteProperty(obj, 'a');
-    expect(Reflect.has(obj, 'a')).to.be.false;
+    expect(Reflect.has(obj, 'a')).equal(false);
 
     Reflect.set(obj, 'a', 1);
-    expect(Reflect.has(obj, 'a')).to.be.true;
+    expect(Reflect.has(obj, 'a')).equal(true);
     delete obj.a;
-    expect(Reflect.has(obj, 'a')).to.be.false;
+    expect(Reflect.has(obj, 'a')).equal(false);
   });
 
   it('ownKeys', () => {

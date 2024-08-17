@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import 'reflect-metadata';
 
 describe('Reflect metadata', () => {
   it('decorate class', () => {
@@ -8,21 +9,21 @@ describe('Reflect metadata', () => {
 
     class Foo {}
     Reflect.decorate([classDecorator], Foo);
-    expect((Foo as any).isClassDecorated).to.be.true;
+    expect((Foo as any).isClassDecorated).equal(true);
   });
 
   it('decorate method', () => {
-    function methodDecorator(target: any, key: string, descriptor: PropertyDescriptor) {
-      target.isMethodDecorated = true;
+    function methodDecorator(target: Object, key: string, descriptor: TypedPropertyDescriptor<any>) {
+      (target as any).isMethodDecorated = true;
     }
 
     class Foo {
       foo() {}
     }
 
-    Reflect.decorate([methodDecorator], Foo, 'foo');
-    
-    expect((Foo as any).isMethodDecorated).to.be.true;
+    Reflect.decorate([methodDecorator as MethodDecorator], Foo, 'foo');
+
+    expect((Foo as any).isMethodDecorated).equal(true);
   });
 
   it('metadata', () => {
@@ -61,10 +62,10 @@ describe('Reflect metadata', () => {
 
   it('defineMetadata', () => {
     class Foo {}
-  
+
     Reflect.defineMetadata('key', 'value', Foo);
     const result = Reflect.getMetadata('key', Foo);
-  
+
     expect(result).to.equal('value');
   });
 
@@ -73,13 +74,13 @@ describe('Reflect metadata', () => {
       bar() {}
     }
 
-    expect(Reflect.hasMetadata('key', Foo)).to.be.false;
+    expect(Reflect.hasMetadata('key', Foo)).equal(false);
     Reflect.defineMetadata('key', 'value', Foo);
-    expect(Reflect.hasMetadata('key', Foo)).to.be.true;
+    expect(Reflect.hasMetadata('key', Foo)).equal(true);
 
-    expect(Reflect.hasMetadata('key', Foo, 'bar')).to.be.false;
+    expect(Reflect.hasMetadata('key', Foo, 'bar')).equal(false);
     Reflect.defineMetadata('key', 'value', Foo, 'bar');
-    expect(Reflect.hasMetadata('key', Foo, 'bar')).to.be.true;
+    expect(Reflect.hasMetadata('key', Foo, 'bar')).equal(true);
   });
 
   it('hasOwnMetadata', () => {
@@ -93,13 +94,13 @@ describe('Reflect metadata', () => {
       @Reflect.metadata('key', 'valueB')
       methodB() {}
     }
-    
+
     // 注意，这里的 key 是继承自父类的
-    expect(Reflect.hasMetadata('key', B.prototype, 'methodA')).to.be.true;
-    expect(Reflect.hasMetadata('key', B.prototype, 'methodB')).to.be.true;
-    
+    expect(Reflect.hasMetadata('key', B.prototype, 'methodA')).equal(true);
+    expect(Reflect.hasMetadata('key', B.prototype, 'methodB')).equal(true);
+
     // 注意，这里的 key 是自身的
-    expect(Reflect.hasOwnMetadata('key', B.prototype, 'methodA')).to.be.false;
-    expect(Reflect.hasOwnMetadata('key', B.prototype, 'methodB')).to.be.true;
+    expect(Reflect.hasOwnMetadata('key', B.prototype, 'methodA')).equal(false);
+    expect(Reflect.hasOwnMetadata('key', B.prototype, 'methodB')).equal(true);
   });
 });

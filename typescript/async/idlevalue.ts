@@ -88,7 +88,7 @@ export class GeneratorIdleValue<T> implements IDisposable {
   private MyIsInitialized = false;
   private MyStepCount = 0;
   private readonly ReadyRp = new ResolvablePromise<void>();
-  private readonly Generator = this.GeneratorFun();
+  private readonly Generator;
 
   public constructor(private readonly GeneratorFun: () => Generator<undefined, T>) {
     this.Handle = getIdleCallbackService().Call(
@@ -96,6 +96,8 @@ export class GeneratorIdleValue<T> implements IDisposable {
         this.Next(true);
       }
     )
+
+    this.Generator = this.GeneratorFun();
   }
 
   private Next(isContinue: boolean): void {

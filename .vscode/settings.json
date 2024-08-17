@@ -1,5 +1,25 @@
 {
     "editor.tabSize": 2,
+    "[typescript]": {
+		"editor.codeLens": true
+	},
+    "[javascript]": {
+        "editor.codeLens": true
+    },
+    "[javascriptreact]": {
+        "editor.codeLens": true
+    },
+    "[typescriptreact]": {
+        "editor.codeLens": true
+    },
+    "typescript.referencesCodeLens.enabled": false,
+	"typescript.implementationsCodeLens.enabled": false,
+    "jestrunner.jestCommand": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "jestrunner.codeLens": [
+        "run",
+        "debug",
+        "watch"
+    ],
     "jestrunner.runOptions": [
         "--detectOpenHandles",
     ],
@@ -22,4 +42,5 @@
         "titleBar.inactiveBackground": "#330e2599",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
+    "typescript.tsdk": "node_modules/typescript/lib",
 }

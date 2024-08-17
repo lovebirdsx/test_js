@@ -1,0 +1,22 @@
+{
+  "maxWorkers": 4,
+  "preset": "ts-jest",
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "testRegex": ".*\\.(spec|test)\\.(tsx?|jsx?)$",
+  "testPathIgnorePatterns": [
+    "<rootDir>/nestjs/",
+    "<rootDir>/redux/",
+    "<rootDir>/vscode/",
+    "<rootDir>/bun/",
+    "<rootDir>/react_native/",
+    "<rootDir>/yarn-workspace/",
+    "<rootDir>/typescript/test_framework/",
+    "<rootDir>/javascript/msw/"
+  ],
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/src/$1"
+  },
+  "testEnvironment": "jsdom"
+}

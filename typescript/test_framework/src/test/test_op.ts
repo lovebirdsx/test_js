@@ -73,7 +73,7 @@ export class TestContext {
             throw new Error('suite stack is empty');
         }
 
-        const parentSuite = this.suiteStack[this.suiteStack.length - 1];
+        const parentSuite = this.suiteStack[this.suiteStack.length - 1]!;
         parentSuite.cases.push(suite);
         this.suiteStack.push(suite);
     }
