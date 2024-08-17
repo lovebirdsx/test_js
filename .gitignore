@@ -5,3 +5,5 @@ typescript_out
 tools/protoc.exe
 tmp
 *.log
+bun.lockb
+yarn-error.log

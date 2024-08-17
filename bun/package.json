@@ -1,0 +1,21 @@
+{
+  "name": "test-bun",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "start": "bun run index.ts",
+    "watch": "bun --watch run index.ts",
+    "build:win": "bun build --compile --target=bun-windows-x64 ./index.ts --outfile test-bun",
+    "build": "bun build ./index.ts --compile --outfile test-bun"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.6"
+  },
+  "dependencies": {
+    "@types/figlet": "^1.5.8",
+    "figlet": "^1.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
