@@ -4,12 +4,10 @@ const rename = require('gulp-rename');
 const gutil = require('gulp-util');
 require('./ts');
 
-gulp.task('compress', function () {
-  return gulp.src('src/**/*.js') // 指定要处理的文件
-    .pipe(uglify()) // 压缩文件
-    .pipe(rename({ extname: '.min.js' })) // 重命名
-    .pipe(gulp.dest('dist/js')); // 指定处理后的文件输出目录
-});
+gulp.task('compress', () => gulp.src('src/**/*.js')
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest('dist/js')));
 
 function clean(cb) {
   cb();

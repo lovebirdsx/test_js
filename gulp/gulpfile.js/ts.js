@@ -4,11 +4,9 @@ const ts = require('gulp-typescript');
 
 const tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('tsc', () => {
-    return tsProject.src()
+gulp.task('tsc', () => tsProject.src()
         .pipe(tsProject())
-        .js.pipe(gulp.dest('dist'));
-});
+        .js.pipe(gulp.dest('dist')));
 
 gulp.task('run', (cb) => {
     exec('node dist/main.js', (err, stdout, stderr) => {
