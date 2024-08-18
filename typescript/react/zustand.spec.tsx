@@ -74,6 +74,32 @@ describe('zustand', () => {
     expect(controlCount).toBe(1);
   });
 
+  it('async action', async () => {
+    interface BearState {
+      bears: number;
+      increasePopulation: () => Promise<void>;
+    }
+    const useBearStoreAsync = create<BearState>((set) => ({
+      bears: 0,
+      increasePopulation: async () => {
+        await new Promise((resolve) => { setTimeout(resolve, 1); });
+        set((state) => ({ bears: state.bears + 1 }));
+      },
+    }));
+
+    let renderCount = 0;
+    function BearCounter() {
+      const bears = useBearStoreAsync((state) => state.bears);
+      renderCount++;
+      return <h1>{`${bears} around here ...`}</h1>;
+    }
+
+    render(<BearCounter />);
+    await act(() => useBearStoreAsync.getState().increasePopulation());
+
+    expect(renderCount).toBe(2);
+  });
+
   it('modify state outsize react', () => {
     let renderCount = 0;
     function BearCounter() {
