@@ -1,8 +1,7 @@
 {
-    "name": "test_markdown_it",
+    "name": "test_js",
     "version": "1.0.0",
-    "description": "Test for markdown-it",
-    "main": "index.js",
+    "description": "Test js/ts",
     "engines": {
         "node": ">=20.16.0"
     },
@@ -46,13 +45,9 @@
         "typescript": "^5.5.4"
     },
     "scripts": {
+        "clean": "rm -rf node_modules",
         "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --silent",
-        "test:watch": "yarn test --watch",
-        "test-promise": "ts-node typescript/basic/promise.ts",
-        "test-await": "ts-node typescript/basic/await.ts",
-        "test-check-path": "ts-node typescript/behavior_tree/check_path.ts",
-        "madge": "madge -c --extensions ts,tsx ./typescript",
-        "watch": "tsc-watch --onSuccess \"sh tools/on_watch_success.sh\""
+        "test:watch": "yarn test --watch"
     },
     "repository": "git+https://github.com/lovebirdsx/test_js.git",
     "author": "lovebird <lovebirdsx@gmail.com>",
