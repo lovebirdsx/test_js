@@ -11,7 +11,7 @@
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "co": "^4.6.0",
-        "immer": "^9.0.12",
+        "immer": "^10.1.1",
         "markdown-it": "^14.1.0",
         "node-fetch": "^3.3.2",
         "path": "^0.12.7",
@@ -23,7 +23,8 @@
         "ts-proto": "^1.115.4",
         "typedjson": "^1.8.0",
         "ws": "^8.18.0",
-        "xmlhttprequest": "^1.8.0"
+        "xmlhttprequest": "^1.8.0",
+        "zustand": "^4.5.5"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.25.3",
