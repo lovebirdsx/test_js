@@ -5,6 +5,7 @@
     "^.+\\.tsx?$": "ts-jest"
   },
   "testRegex": ".*\\.(spec|test)\\.(tsx?|jsx?)$",
+  "setupFiles": ["<rootDir>/jest.setup.mjs"],
   "testPathIgnorePatterns": [
     "<rootDir>/nestjs/",
     "<rootDir>/redux/",
