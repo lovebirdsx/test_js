@@ -1,4 +1,13 @@
 {
+  "mochaExplorer.require": ["tsx", "global-jsdom/register"],
+  "[typescript]": {
+    "editor.codeLens": true
+  },
+  "[typescriptreact]": {
+    "editor.codeLens": true
+  },
+  "typescript.referencesCodeLens.enabled": false,
+  "typescript.implementationsCodeLens.enabled": false,
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#5f2704",
     "activityBar.background": "#5f2704",
@@ -17,6 +26,5 @@
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveBackground": "#2e130299",
     "titleBar.inactiveForeground": "#e7e7e799"
-  },
-  "peacock.color": "#2e1302"
+  }
 }

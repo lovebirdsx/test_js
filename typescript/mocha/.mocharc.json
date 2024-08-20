@@ -1,6 +1,11 @@
 {
-  "watch": true,
-  "require": "ts-node/register",
-  "spec": "test/**/*.test.ts",
-  "extension": ["ts"]
+  "require": ["global-jsdom/register"],
+  "import": "tsx",
+  "spec": [
+    "test/**/*.test.ts",
+    "test/**/*.test.tsx"
+  ],
+  "extension": [
+    "ts"
+  ]
 }
