@@ -1,4 +1,6 @@
-import { add, divide, multiply, subtract } from "./foo";
+import {
+    add, divide, multiply, subtract,
+} from './foo';
 
 function main() {
     console.log('Hello World!');

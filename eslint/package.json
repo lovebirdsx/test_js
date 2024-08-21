@@ -4,7 +4,8 @@
   "description": "eslint tests",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint .",
+    "tsc-check": "tsc --noEmit",
+    "lint": "yarn tsc-check && eslint .",
     "lint:fix": "eslint . --fix",
     "lint:watch": "nodemon --ext ts,js,mjs --exec \"yarn lint\"",
     "lint:out-config": "node -e \"import('./eslint.config.mjs').then(config => console.log(config.default))\""
