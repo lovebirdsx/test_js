@@ -18,7 +18,7 @@
     "jestrunner.debugOptions": {
         "runtimeArgs": ["--no-warnings", "--experimental-vm-modules"],
     },
-    "jestrunner.disableCodeLens": true,
+    "jestrunner.disableCodeLens": false,
     "jestrunner.runOptions": [
         "--detectOpenHandles",
     ],
