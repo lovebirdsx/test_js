@@ -1,8 +1,8 @@
 {
     "editor.tabSize": 2,
     "[typescript]": {
-		"editor.codeLens": true
-	},
+        "editor.codeLens": true
+    },
     "[javascript]": {
         "editor.codeLens": true
     },
@@ -13,8 +13,11 @@
         "editor.codeLens": true
     },
     "typescript.referencesCodeLens.enabled": false,
-	"typescript.implementationsCodeLens.enabled": false,
+    "typescript.implementationsCodeLens.enabled": false,
     "jestrunner.jestCommand": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "jestrunner.debugOptions": {
+        "runtimeArgs": ["--no-warnings", "--experimental-vm-modules"],
+    },
     "jestrunner.disableCodeLens": true,
     "jestrunner.runOptions": [
         "--detectOpenHandles",
