@@ -3031,6 +3031,11 @@ hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
+html-beautify@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/html-beautify/-/html-beautify-1.0.4.tgz#09b2cf5806fa0dbd7e3dbe649d6598316d4794e0"
+  integrity sha512-IssqMH0VBjJCWjsXi6Q33/Yup0+4q9lmge+mdw3+KtaT9Vyg0m+pHYP3VyZq0BFt3rLMjiTIUUiCkKeoZ2Yosw==
+
 html-encoding-sniffer@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/html-encoding-sniffer/-/html-encoding-sniffer-3.0.0.tgz#2cb1a8cf0db52414776e5b2a7a04d5dd98158de9"

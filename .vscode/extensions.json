@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "firsttris.vscode-jest-runner",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "ritwickdey.liveserver"
   ]
 }
