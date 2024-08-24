@@ -52,7 +52,7 @@ interface IStringElement {
   size: 'large' | 'normal' | 'small';
 }
 
-interface IHorizontalLineElement {
+interface ILineElement {
   type: 'line';
   color: string;
 }
@@ -61,7 +61,7 @@ interface IHorizontalLineElement {
 
 // #region Layout Decorator
 
-type TElement = IStringElement | IHorizontalLineElement;
+type TElement = IStringElement | ILineElement;
 
 interface ILayoutOptions {
   position: 'prefix' | 'suffix';
@@ -81,7 +81,7 @@ function renderStringElement(key: string, { content, size }: IStringElement): Re
   }
 }
 
-function renderLineElement(key: string, { color }: IHorizontalLineElement): React.JSX.Element {
+function renderLineElement(key: string, { color }: ILineElement): React.JSX.Element {
   return <hr key={key} style={{ color }} />;
 }
 
