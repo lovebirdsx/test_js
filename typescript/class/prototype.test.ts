@@ -25,15 +25,29 @@ describe('prototype', () => {
       name = 'Tom';
 
       age?: number;
+
+      leg?: number;
+
+      constructor() {
+        this.leg = 4;
+      }
+
+      meow() {
+        return 'meow';
+      }
     }
 
     const cat = new Cat();
     const properties = Object.getOwnPropertyDescriptors(cat);
-    const keys = Object.keys(properties);
 
-    expect(keys).toEqual(['name', 'age']);
+    const keys = Object.keys(properties);
+    expect(keys).toEqual(['name', 'age', 'leg']);
+
     expect(properties.name.value).toEqual('Tom');
     expect(properties.age).toBeDefined();
     expect(properties.age?.value).toBeUndefined();
+    expect(properties.leg).toBeDefined();
+
+    expect(properties.meow).toBeUndefined();
   });
 });

@@ -27,7 +27,7 @@ function liveHtml() {
 
   const s = new Simple();
   const v = objToInterface(s);
-  const html = toHtml(<ObjectComponent value={s} prototype={Simple.prototype} onModify={(v) => {
+  const html = toHtml(<ObjectComponent value={s} Ctor={Simple} onModify={(v) => {
     console.log('onModify', v);
   }} />, 'Decorator');
   const path = join(__dirname, 'temp', 'decorator.live.html');

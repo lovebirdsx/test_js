@@ -2,6 +2,7 @@ import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 // #region Types
+type TCtor<T> = new (...args: any[]) => T;
 type ToInterface<T> = { [K in keyof T]: T[K] };
 type ToPlain<T> = T extends Object ? ToInterface<T> : T;
 
@@ -212,10 +213,9 @@ export function renderType(type: string) {
 // #endregion
 
 // #region Renderer Registry
-
 interface IPropsBase<T> {
   value: ToPlain<T>;
-  prototype?: T;
+  Ctor?: TCtor<T>;
 }
 
 interface IProps<T> extends IPropsBase<T> {
@@ -235,10 +235,6 @@ class RendererRegistry {
   get<T>(type: string): TComponent<T> {
     return this.map.get(type) as TComponent<T>;
   }
-
-  // getRenderer<T>(value: T): TComponent<T> {
-
-  // }
 }
 
 const rendererRegistry = new RendererRegistry();
@@ -272,8 +268,37 @@ function getKeyName<T extends Obj>(target: T, propertyKey: string): string {
   return meta?.name ?? propertyKey;
 }
 
-export function ObjectComponent<T extends Obj>({ value, onModify, prototype }:IProps<T>) {
-  const keys = Object.keys(value) as (keyof T)[];
+function getRenderType<T extends Obj>(target: T, propertyKey: string): string | undefined {
+  const meta = getMeta(target, propertyKey);
+  return meta?.renderType;
+}
+
+function getRenderer<T extends Obj, U>(target: T, propertyKey: string, value: U): TComponent<U> {
+  const renderType = getRenderType(target, propertyKey);
+  if (renderType) {
+    return rendererRegistry.get(renderType);
+  }
+
+  return rendererRegistry.get(typeof value);
+}
+
+const keysByPrototype = new Map<TCtor<any>, string[]>();
+export function getKeysByCtor<T>(Ctor: TCtor<T>): (keyof T)[] {
+  let keys = keysByPrototype.get(Ctor);
+  if (!keys) {
+    const instance = new Ctor();
+    const properties = Object.getOwnPropertyDescriptors(instance);
+    keys = Object.keys(properties);
+
+    keysByPrototype.set(Ctor, keys);
+  }
+
+  return keys as (keyof T)[];
+}
+
+export function ObjectComponent<T extends Obj>({ value, onModify, Ctor }: IProps<T>) {
+  const keys = getKeysByCtor(Ctor!);
+  const prototype = Ctor?.prototype;
   return (
     <div>
       {keys.map((key) => {
@@ -286,7 +311,16 @@ export function ObjectComponent<T extends Obj>({ value, onModify, prototype }:IP
           elements.push(attr.render(`prefix_${i}`));
         });
 
-        elements.push(<div key={'content'}>{getKeyName(prototype!, key as string)}:{`${v}`}</div>);
+        const Renderer = getRenderer(prototype!, key as string, v);
+        const valueElement = <Renderer onModify={
+            (newValue) => {
+              onModify({ ...value, [key]: newValue });
+            }
+          }
+          value={v as any}
+        />;
+
+        elements.push(<div key={'content'}>{getKeyName(prototype!, key as string)}:{valueElement}</div>);
 
         suffixAttributes.forEach((attr, i) => {
           elements.push(attr.render(`suffix_${i}`));

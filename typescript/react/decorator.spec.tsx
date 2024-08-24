@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import {
+  getKeysByCtor,
   ObjectComponent, objToInterface, prefix,
   suffix,
 } from './common';
@@ -16,6 +17,19 @@ describe('react decorator', () => {
     const p = new Person();
     const obj = objToInterface(p);
     expect(obj).toEqual({ name: 'Tom', age: 20 });
+  });
+
+  it('get keys by ctor', () => {
+    class Person {
+      name = 'Tom';
+      age?: number;
+    }
+
+    const keys1 = getKeysByCtor(Person);
+    expect(keys1).toEqual(['name', 'age']);
+
+    const keys2 = getKeysByCtor(Person);
+    expect(keys1).toEqual(keys2);
   });
 
   it('keys order', () => {
@@ -57,7 +71,7 @@ describe('react decorator', () => {
     }
 
     const v = objToInterface(new Simple());
-    const html = renderToString(<ObjectComponent value={v} prototype={Simple.prototype} onModify={() => {}} />);
+    const html = renderToString(<ObjectComponent value={v} Ctor={Simple} onModify={() => {}} />);
     console.log(html);
   });
 });
