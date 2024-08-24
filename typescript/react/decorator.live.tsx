@@ -1,5 +1,5 @@
 import React from 'react';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import {
   prefix, objToInterface, ObjectComponent, toHtml, name,
