@@ -47,7 +47,7 @@
     "scripts": {
         "clean": "rm -rf node_modules",
         "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --silent",
-        "test:watch": "yarn test --watch"
+        "test:watch": "yarn test --watch --onlyChanged"
     },
     "repository": "git+https://github.com/lovebirdsx/test_js.git",
     "author": "lovebird <lovebirdsx@gmail.com>",
