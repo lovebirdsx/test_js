@@ -1,5 +1,5 @@
 import React from 'react';
-import { writeFileSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import {
   prefix, objToInterface, ObjectComponent, toHtml, name,
@@ -31,6 +31,7 @@ function liveHtml() {
     console.log('onModify', v);
   }} />, 'Decorator');
   const path = join(__dirname, 'temp', 'decorator.live.html');
+  mkdirSync(join(__dirname, 'temp'), { recursive: true });
   writeFileSync(path, html, 'utf8');
 
   console.log('writeFileSync: ', path);
