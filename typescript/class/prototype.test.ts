@@ -42,6 +42,7 @@ describe('prototype', () => {
 
     const keys = Object.keys(properties);
     expect(keys).toEqual(['name', 'age', 'leg']);
+    expect(Object.getOwnPropertyNames(cat)).toEqual(['name', 'age', 'leg']);
 
     expect(properties.name.value).toEqual('Tom');
     expect(properties.age).toBeDefined();

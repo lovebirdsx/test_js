@@ -225,7 +225,7 @@ interface IProps<T> extends IPropsBase<T> {
 
 type TComponent<T> = React.ComponentType<IProps<T>>;
 
-class RendererRegistry {
+class RenderRegistry {
   private map = new Map<string, TComponent<any>>();
 
   register<T>(type: string, component: TComponent<T>) {
@@ -237,7 +237,7 @@ class RendererRegistry {
   }
 }
 
-const rendererRegistry = new RendererRegistry();
+const renderRegistry = new RenderRegistry();
 
 // #endregion
 
@@ -251,7 +251,7 @@ const IntComponent: TComponent<number> = ({ value, onModify }) => (
   />
 );
 
-rendererRegistry.register(typeof 0, IntComponent);
+renderRegistry.register(typeof 0, IntComponent);
 
 const StringComponent: TComponent<string> = ({ value, onModify }) => (
   <input
@@ -261,7 +261,7 @@ const StringComponent: TComponent<string> = ({ value, onModify }) => (
   />
 );
 
-rendererRegistry.register(typeof '', StringComponent);
+renderRegistry.register(typeof '', StringComponent);
 
 function getKeyName<T extends Obj>(target: T, propertyKey: string): string {
   const meta = getMeta(target, propertyKey);
@@ -276,10 +276,10 @@ function getRenderType<T extends Obj>(target: T, propertyKey: string): string | 
 function getRenderer<T extends Obj, U>(target: T, propertyKey: string, value: U): TComponent<U> {
   const renderType = getRenderType(target, propertyKey);
   if (renderType) {
-    return rendererRegistry.get(renderType);
+    return renderRegistry.get(renderType);
   }
 
-  return rendererRegistry.get(typeof value);
+  return renderRegistry.get(typeof value);
 }
 
 const keysByPrototype = new Map<TCtor<any>, string[]>();
@@ -336,7 +336,7 @@ export function ObjectComponent<T extends Obj>({ value, onModify, Ctor }: IProps
   );
 }
 
-rendererRegistry.register(typeof {}, ObjectComponent);
+renderRegistry.register(typeof {}, ObjectComponent);
 
 // #endregion
 
