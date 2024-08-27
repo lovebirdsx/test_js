@@ -1,3 +1,4 @@
+/* eslint-disable no-proto */
 describe('prototype', () => {
   it('class', () => {
     class Cat {
@@ -9,6 +10,8 @@ describe('prototype', () => {
     const cat = new Cat();
     expect(cat.meow()).toEqual('meow');
     expect(cat.meow).toEqual(Cat.prototype.meow);
+
+    expect(cat.constructor).toEqual(Cat);
   });
 
   it('static field', () => {
