@@ -3,7 +3,13 @@
   "compilerOptions": {
     "outDir": "./dist",
     "paths": {
-      "common": ["../common/src"]}
+      "common": [
+        "../common/src"
+      ],
+      "common/*": [
+        "../common/src/*"
+      ],
+    }
   },
   "references": [
     {
