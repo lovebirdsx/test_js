@@ -3,5 +3,6 @@
     "target": "ESNext",
     "module": "commonjs",
     "strict": true,
+    "skipLibCheck": true,
   }
 }

@@ -1,8 +1,3 @@
-import { getName, hello } from 'common';
+import { hello } from 'common/util';
 
-function main() {
-  hello();
-  console.log('frontend', getName());
-}
-
-main();
+hello();

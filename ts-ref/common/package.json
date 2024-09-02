@@ -10,8 +10,5 @@
     "start": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rm -rf dist && rm -rf node_modules"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
   }
 }

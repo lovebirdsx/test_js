@@ -1,6 +1,10 @@
 {
   "extends": "../tsconfig.base-lib.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["src/*"]
+    },
     "outDir": "./dist"
   }
 }
