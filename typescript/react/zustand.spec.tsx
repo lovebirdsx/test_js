@@ -181,38 +181,50 @@ describe('zustand', () => {
 
   it('slice pattern', () => {
     interface BearSlice {
-      bears: number;
-      addBear: () => void;
-      eatFish: () => void;
+      bear: {
+        count: number;
+        add: () => void;
+        eatFish: () => void;
+      }
     }
 
     interface FishSlice {
-      fishes: number;
-      addFish: () => void;
+      fish: {
+        count: number;
+        add: () => void;
+      }
     }
 
     interface SharedSlice {
-      addBoth: () => void;
-      getBoth: () => number;
+      shared: {
+        addBoth: () => void;
+        getBoth: () => number;
+      }
     }
 
     const createBearSlice: StateCreator<BearSlice & FishSlice, [], [], BearSlice> = (set) => ({
-      bears: 0,
-      addBear: () => set((state) => ({ bears: state.bears + 1 })),
-      eatFish: () => set((state) => ({ fishes: state.fishes - 1 })),
+      bear: {
+        count: 0,
+        add: () => set((state) => ({ bear: { ...state.bear, count: state.bear.count + 1 } })),
+        eatFish: () => set((state) => ({ fish: { ...state.fish, count: state.fish.count - 1 } })),
+      },
     });
 
     const createFishSlice: StateCreator<FishSlice, [], [], FishSlice> = (set) => ({
-      fishes: 0,
-      addFish: () => set((state) => ({ fishes: state.fishes + 1 })),
+      fish: {
+        count: 0,
+        add: () => set((state) => ({ fish: { ...state.fish, count: state.fish.count + 1 } })),
+      },
     });
 
     const createSharedSlice: StateCreator<BearSlice & FishSlice, [], [], SharedSlice> = (set, get) => ({
-      addBoth: () => {
-        get().addBear();
-        get().addFish();
+      shared: {
+        addBoth: () => {
+          get().bear.add();
+          get().fish.add();
+        },
+        getBoth: () => get().bear.count + get().fish.count,
       },
-      getBoth: () => get().bears + get().fishes,
     });
 
     const useBoundStore = create<BearSlice & FishSlice & SharedSlice>()(
@@ -225,14 +237,14 @@ describe('zustand', () => {
 
     let bearRenderCount = 0;
     function BearCounter() {
-      const bears = useBoundStore((state) => state.bears);
+      const bears = useBoundStore((state) => state.bear.count);
       bearRenderCount++;
       return <h1>{`${bears} around here ...`}</h1>;
     }
 
     let fishRenderCount = 0;
     function FishCounter() {
-      const fishes = useBoundStore((state) => state.fishes);
+      const fishes = useBoundStore((state) => state.fish.count);
       fishRenderCount++;
       return <h1>{`${fishes} around here ...`}</h1>;
     }
@@ -247,15 +259,15 @@ describe('zustand', () => {
     }
 
     render(<App />);
-    act(() => useBoundStore.getState().addBoth());
+    act(() => useBoundStore.getState().shared.addBoth());
     expect(bearRenderCount).toBe(2);
     expect(fishRenderCount).toBe(2);
 
-    act(() => useBoundStore.getState().eatFish());
+    act(() => useBoundStore.getState().bear.eatFish());
     expect(bearRenderCount).toBe(2);
     expect(fishRenderCount).toBe(3);
 
-    act(() => useBoundStore.getState().addFish());
+    act(() => useBoundStore.getState().fish.add());
     expect(bearRenderCount).toBe(2);
     expect(fishRenderCount).toBe(4);
   });
