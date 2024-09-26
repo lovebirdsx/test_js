@@ -271,4 +271,111 @@ describe('zustand', () => {
     expect(bearRenderCount).toBe(2);
     expect(fishRenderCount).toBe(4);
   });
+
+  it('subscribe', () => {
+    interface Foo {
+      count: number;
+      increase: (count: number) => void;
+    }
+
+    const useFooStore = create<Foo>((set, get, api) => ({
+      count: 0,
+      increase: (count: number) => {
+        set((state) => ({ count: state.count + count }));
+      },
+    }));
+
+    let count = 0;
+    let callCount = 0;
+    const unsubscribe = useFooStore.subscribe((state) => {
+      callCount++;
+      count = state.count;
+    });
+
+    useFooStore.getState().increase(1);
+    useFooStore.getState().increase(1);
+
+    expect(count).toBe(2);
+    expect(callCount).toBe(2);
+  });
+
+  it('event', () => {
+    interface Disposable {
+      dispose(): void;
+    }
+
+    type Event<T> = (listener: (e: T) => void) => Disposable;
+
+    class Emitter<T> {
+      private listeners: Array<(event: T) => void> = [];
+
+      public event: Event<T> = (listener: (e: T) => void): Disposable => {
+        this.listeners.push(listener);
+        return {
+          dispose: () => {
+            const index = this.listeners.indexOf(listener);
+            if (index >= 0) {
+              this.listeners.splice(index, 1);
+            }
+          },
+        };
+      };
+
+      public fire(event: T): void {
+        for (const listener of this.listeners.slice()) {
+          listener(event);
+        }
+      }
+    }
+
+    interface Foo {
+      count: number;
+      increase: (count: number) => void;
+      decrease: (count: number) => void;
+      onCountChange: Event<number>;
+    }
+
+    const useFooStore = create<Foo & { countChangeEmitter: Emitter<number> }>(
+      (set) => {
+        const countChangeEmitter = new Emitter<number>();
+
+        return {
+          count: 0,
+          countChangeEmitter,
+          decrease: (count: number) => {
+            set((state) => {
+              const newCount = state.count - count;
+              state.countChangeEmitter.fire(newCount);
+              return { count: newCount };
+            });
+          },
+          increase: (count: number) => {
+            set((state) => {
+              const newCount = state.count + count;
+              state.countChangeEmitter.fire(newCount);
+              return { count: newCount };
+            });
+          },
+          onCountChange: countChangeEmitter.event,
+        };
+      },
+    );
+
+    const fooStore = useFooStore.getState();
+
+    let callCount = 0;
+    let count = 0;
+    const disposable = fooStore.onCountChange((newCount) => {
+      callCount++;
+      count = newCount;
+    });
+
+    fooStore.increase(1);
+    fooStore.decrease(1);
+
+    expect(count).toBe(0);
+    expect(callCount).toBe(2);
+
+    disposable.dispose();
+  });
 });
