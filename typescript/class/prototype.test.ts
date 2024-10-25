@@ -14,6 +14,35 @@ describe('prototype', () => {
     expect(cat.constructor).toEqual(Cat);
   });
 
+  it('prototype chain', () => {
+    class Animal {
+      move() {
+        return 'move';
+      }
+    }
+
+    class Cat extends Animal {
+      meow() {
+        return 'meow';
+      }
+    }
+
+    const cat = new Cat();
+
+    expect(cat.move).toEqual(Animal.prototype.move);
+    expect(cat.meow).toEqual(Cat.prototype.meow);
+
+    expect(cat.constructor).toEqual(Cat);
+    expect(cat.constructor.prototype).toEqual(Cat.prototype);
+
+    expect(cat.constructor.prototype.constructor).toEqual(Cat);
+    expect(Object.getPrototypeOf(cat)).toEqual(Cat.prototype);
+    expect(Cat.prototype.constructor).toEqual(Cat);
+    expect(Animal.prototype).toEqual(Object.getPrototypeOf(Cat.prototype));
+
+    expect(Animal.prototype === Cat.prototype).toBeFalsy();
+  });
+
   it('static field', () => {
     class Cat {
       static category = 'animal';
