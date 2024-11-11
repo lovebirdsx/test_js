@@ -51,7 +51,15 @@ const code = `
     await waitCondition(() => conditionOk);
   }
 
-  test();
+  function test2() {
+    for (let i = 0; i < 1000000000; i++) {
+      if (i % 10000000 === 0) {
+        log('test2', i);
+      }
+    }
+  }
+
+  test2();
 `;
 
 async function main() {
