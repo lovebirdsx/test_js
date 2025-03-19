@@ -1,0 +1,15 @@
+{
+  "name": "aot",
+  "version": "1.0.0",
+  "main": "fib.js",
+  "scripts": {
+    "build": "bytenode -c -o fib.jsc fib.js",
+    "start": "node fib.js && bytenode fib.jsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bytenode": "^1.5.7"
+  }
+}
